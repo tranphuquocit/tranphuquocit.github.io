@@ -38,6 +38,8 @@ body {
   cursor: pointer;
   font-size: 15px;
   margin-right: 8px;
+  color: white;
+  text-decoration: auto;
 }
 
 .teamcode-header .right-header .menu .menu-active {
@@ -47,74 +49,4 @@ body {
 .teamcode-header .right-header .menu .menu-active,
 .teamcode-header .right-header .menu .menu-btn:hover {
   color: rgb(255, 174, 0);
-}
-
-/* Đây là phần css về nội dung của trang web */
-.teamcode-container {
-  display: flex;
-  margin-top: 100px;
-  font-family:Arial, Helvetica, sans-serif;
-  justify-content: space-between;
-}
-.teamcode-content .left-container {
-  display: flex;
-  flex-direction: column;
-  padding-top: 70px;
-}
-.teamcode-content .left-container .title-welcome {
-  font-size: 16px;
-  color: #4a4343;
-  font-weight: 600;
-}
-.teamcode-content .left-container .title-itme {
-  font-size: 30px;
-  margin-top: 10px;
-  font-weight: 600;
-  opacity: .7;
-}
-.teamcode-content .left-container .title-name {
-  color: #d82112;
-}
-.teamcode-content .left-container .teamcode-desc {
-  color: #4a4343;
-  font-weight: 600;
-  margin-top: 5px;
-}
-.teamcode-content .left-container .img-framework {
-  margin-top: 30px;
-  position: relative;
-}
-.teamcode-content .left-container .img-framework img {
-  width: 200px;
-}
-.teamcode-content .left-container .img-framework .img-javascript {
-  position: absolute;
-  width: 416px;
-  top: -18px;
-  left: 225px;
-}
-.teamcode-container .right-container {
-  margin-right: -28px;
-  margin-top: 30px;
-}
-.teamcode-content .right-container img {
-  width: 400px;
-  opacity: .6;
-}
-
-.teamcode-content .teamcode-content-leaning {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-}
-.teamcode-content .teamcode-content-leaning .title-leaning {
-  font-size: 20px;
-  color: #b3b3b3;
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-.teamcode-content .teamcode-content-leaning .img-vsc {
-  width: 600px;
-  margin: 10px 50px;
 }
