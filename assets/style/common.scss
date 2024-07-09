@@ -1,0 +1,35 @@
+// Color Palette
+$xanh-duong-chu-dao: #074da3; // Màu xanh dương ban đầu
+$xanh-duong-sang: #4d9bdc; // Một màu xanh dương sáng hơn
+$xanh-duong-dam: #003366; // Một màu xanh dương đậm hơn
+$xanh-duong-nhat: #add8e6; // Một màu xanh nhạt
+$xanh-duong-da-troi: #87ceeb; // Một màu xanh da trời
+
+$trang: #ffffff; // Màu trắng
+$den: #000000; // Màu đen
+$xam-nhat: #f2f2f2; // Một màu xám nhạt
+
+$cam: #ffb347; // Một màu cam
+$cam-do: #ff6347; // Một màu cam đỏ
+$do: #ffd700; // Một màu vàng
+
+// Typography
+$base-font-family: 'Roboto', sans-serif;
+$heading-font-family: 'Montserrat', sans-serif;
+$base-font-size: 16px;
+$base-line-height: 1.5;
+
+// Spacing
+$base-spacing: 16px;
+$small-spacing: $base-spacing / 2;
+$large-spacing: $base-spacing * 2;
+
+// Breakpoints
+$breakpoint-small: 576px;
+$breakpoint-medium: 768px;
+$breakpoint-large: 992px;
+$breakpoint-xlarge: 1200px;
+
+// Misc
+$border-radius: 4px;
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
