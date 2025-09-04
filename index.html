@@ -1,55 +1,481 @@
-<!DOCTYPE html><html lang="en"><head>
-  <!--
-  Project: Angular Jira clone
-  Homepage: ...
-  -----
-  Last Modified: Monday, 29th June 2020 9:41:59 am
-  Modified By: ...
-  -----
-  Copyright 2020 ...
-  -->
-  <meta charset="utf-8">
-  <title>Angular Jira Clone with Akita and TailwindCSS - by </title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="title" content="Angular Jira Clone with Akita">
-  <meta name="description" content="A simplified Jira clone built with Angular and Akita">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Bài test Canvas - Giao diện mới</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+  <style>
+    /* ----- General Page Styling ----- */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f7f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h3 {
+      color: #1a2533;
+      font-weight: 600;
+    }
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="...">
-  <meta property="og:title" content="Angular Jira Clone with Akita">
-  <meta property="og:description" content="A simplified Jira clone built with Angular and Akita">
-  <meta property="og:image" content="...">
+    /* ----- Canvas Container ----- */
+    #canvas-container {
+      margin: 20px auto;
+      width: 1480px;
+      height: 1510px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    canvas {
+      border: 1px solid #ddd;
+      display: block; /* Removes bottom space */
+    }
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="...">
-  <meta name="twitter:title" content="Angular Jira Clone with Akita">
-  <meta name="twitter:description" content="A simplified Jira clone built with Angular and Akita">
-  <meta name="twitter:image" content="...">
-  
-  <link rel="image_src" href="assets/favicon.png" type="image/png">
-  <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
-  <link rel="icon" href="assets/favicon.png" type="image/png">
-  
-<style>@charset "UTF-8";body,html{height:100%;width:100%}html{-webkit-tap-highlight-color:transparent}[class*=ant-]::-ms-clear,[class^=ant-]::-ms-clear{display:none}*,:after,:before{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;--antd-wave-shadow-color:#1890ff;--scroll-bar:0}body{margin:0;color:#000000d9;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-variant:tabular-nums;line-height:1.5715;background-color:#fff;font-feature-settings:"tnum"}@-webkit-keyframes antFadeIn{0%{opacity:0}to{opacity:1}}@-webkit-keyframes antFadeOut{0%{opacity:1}to{opacity:0}}@-webkit-keyframes antMoveDownIn{0%{transform:translateY(100%);transform-origin:0 0;opacity:0}to{transform:translateY(0);transform-origin:0 0;opacity:1}}@-webkit-keyframes antMoveDownOut{0%{transform:translateY(0);transform-origin:0 0;opacity:1}to{transform:translateY(100%);transform-origin:0 0;opacity:0}}@-webkit-keyframes antMoveLeftIn{0%{transform:translate(-100%);transform-origin:0 0;opacity:0}to{transform:translate(0);transform-origin:0 0;opacity:1}}@-webkit-keyframes antMoveLeftOut{0%{transform:translate(0);transform-origin:0 0;opacity:1}to{transform:translate(-100%);transform-origin:0 0;opacity:0}}@-webkit-keyframes antMoveRightIn{0%{transform:translate(100%);transform-origin:0 0;opacity:0}to{transform:translate(0);transform-origin:0 0;opacity:1}}@-webkit-keyframes antMoveRightOut{0%{transform:translate(0);transform-origin:0 0;opacity:1}to{transform:translate(100%);transform-origin:0 0;opacity:0}}@-webkit-keyframes antMoveUpIn{0%{transform:translateY(-100%);transform-origin:0 0;opacity:0}to{transform:translateY(0);transform-origin:0 0;opacity:1}}@-webkit-keyframes antMoveUpOut{0%{transform:translateY(0);transform-origin:0 0;opacity:1}to{transform:translateY(-100%);transform-origin:0 0;opacity:0}}@-webkit-keyframes loadingCircle{to{transform:rotate(360deg)}}@-webkit-keyframes waveEffect{to{box-shadow:0 0 #1890ff;box-shadow:0 0 0 6px #1890ff;box-shadow:0 0 0 6px var(--antd-wave-shadow-color)}}@-webkit-keyframes fadeEffect{to{opacity:0}}@-webkit-keyframes antSlideUpIn{0%{transform:scaleY(.8);transform-origin:0 0;opacity:0}to{transform:scaleY(1);transform-origin:0 0;opacity:1}}@-webkit-keyframes antSlideUpOut{0%{transform:scaleY(1);transform-origin:0 0;opacity:1}to{transform:scaleY(.8);transform-origin:0 0;opacity:0}}@-webkit-keyframes antSlideDownIn{0%{transform:scaleY(.8);transform-origin:100% 100%;opacity:0}to{transform:scaleY(1);transform-origin:100% 100%;opacity:1}}@-webkit-keyframes antSlideDownOut{0%{transform:scaleY(1);transform-origin:100% 100%;opacity:1}to{transform:scaleY(.8);transform-origin:100% 100%;opacity:0}}@-webkit-keyframes antSlideLeftIn{0%{transform:scaleX(.8);transform-origin:0 0;opacity:0}to{transform:scaleX(1);transform-origin:0 0;opacity:1}}@-webkit-keyframes antSlideLeftOut{0%{transform:scaleX(1);transform-origin:0 0;opacity:1}to{transform:scaleX(.8);transform-origin:0 0;opacity:0}}@-webkit-keyframes antSlideRightIn{0%{transform:scaleX(.8);transform-origin:100% 0;opacity:0}to{transform:scaleX(1);transform-origin:100% 0;opacity:1}}@-webkit-keyframes antSlideRightOut{0%{transform:scaleX(1);transform-origin:100% 0;opacity:1}to{transform:scaleX(.8);transform-origin:100% 0;opacity:0}}@-webkit-keyframes antZoomIn{0%{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}@-webkit-keyframes antZoomOut{0%{transform:scale(1)}to{transform:scale(.2);opacity:0}}@-webkit-keyframes antZoomBigIn{0%{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}@-webkit-keyframes antZoomBigOut{0%{transform:scale(1)}to{transform:scale(.8);opacity:0}}@-webkit-keyframes antZoomUpIn{0%{transform:scale(.8);transform-origin:50% 0;opacity:0}to{transform:scale(1);transform-origin:50% 0}}@-webkit-keyframes antZoomUpOut{0%{transform:scale(1);transform-origin:50% 0}to{transform:scale(.8);transform-origin:50% 0;opacity:0}}@-webkit-keyframes antZoomLeftIn{0%{transform:scale(.8);transform-origin:0 50%;opacity:0}to{transform:scale(1);transform-origin:0 50%}}@-webkit-keyframes antZoomLeftOut{0%{transform:scale(1);transform-origin:0 50%}to{transform:scale(.8);transform-origin:0 50%;opacity:0}}@-webkit-keyframes antZoomRightIn{0%{transform:scale(.8);transform-origin:100% 50%;opacity:0}to{transform:scale(1);transform-origin:100% 50%}}@-webkit-keyframes antZoomRightOut{0%{transform:scale(1);transform-origin:100% 50%}to{transform:scale(.8);transform-origin:100% 50%;opacity:0}}@-webkit-keyframes antZoomDownIn{0%{transform:scale(.8);transform-origin:50% 100%;opacity:0}to{transform:scale(1);transform-origin:50% 100%}}@-webkit-keyframes antZoomDownOut{0%{transform:scale(1);transform-origin:50% 100%}to{transform:scale(.8);transform-origin:50% 100%;opacity:0}}.ant-spin{font-size:14px}.ant-spin{box-sizing:border-box;margin:0;padding:0;font-variant:tabular-nums;line-height:1.5715;list-style:none;font-feature-settings:"tnum";position:absolute;display:none;color:#1890ff;text-align:center;vertical-align:middle;opacity:0;transition:transform .3s cubic-bezier(.78,.14,.15,.86)}.ant-spin-spinning{position:static;display:inline-block;opacity:1}.ant-spin-dot{position:relative;display:inline-block;font-size:20px;width:1em;height:1em}.ant-spin-dot-item{position:absolute;display:block;width:9px;height:9px;background-color:#1890ff;border-radius:100%;transform:scale(.75);transform-origin:50% 50%;opacity:.3;-webkit-animation:antSpinMove 1s infinite linear alternate;animation:antSpinMove 1s infinite linear alternate}.ant-spin-dot-item:nth-child(1){top:0;left:0}.ant-spin-dot-item:nth-child(2){top:0;right:0;-webkit-animation-delay:.4s;animation-delay:.4s}.ant-spin-dot-item:nth-child(3){right:0;bottom:0;-webkit-animation-delay:.8s;animation-delay:.8s}.ant-spin-dot-item:nth-child(4){bottom:0;left:0;-webkit-animation-delay:1.2s;animation-delay:1.2s}.ant-spin-dot-spin{transform:rotate(45deg);-webkit-animation:antRotate 1.2s infinite linear;animation:antRotate 1.2s infinite linear}.ant-spin-lg .ant-spin-dot{font-size:32px}.ant-spin-lg .ant-spin-dot i{width:14px;height:14px}@-webkit-keyframes antSpinMove{to{opacity:1}}@keyframes antSpinMove{to{opacity:1}}@-webkit-keyframes antRotate{to{transform:rotate(405deg)}}@keyframes antRotate{to{transform:rotate(405deg)}}@-webkit-keyframes antRotateRtl{to{transform:rotate(-405deg)}}@-webkit-keyframes antdDrawerFadeIn{0%{opacity:0}to{opacity:1}}@-webkit-keyframes NotificationFadeIn{0%{left:384px;opacity:0}to{left:0;opacity:1}}@-webkit-keyframes NotificationLeftFadeIn{0%{right:384px;opacity:0}to{right:0;opacity:1}}@-webkit-keyframes NotificationFadeOut{0%{max-height:150px;margin-bottom:16px;opacity:1}to{max-height:0;margin-bottom:0;padding-top:0;padding-bottom:0;opacity:0}}*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid;border-color:"currentColor"}:before,:after{--tw-content:""}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:Inter UI,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"}body{margin:0;line-height:inherit}*,:before,:after{--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(66 153 225 / .5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }.pre-bootstrapping-container{position:relative;height:100%;width:100%}.pre-bootstrapping-container .pre-bootstrapping-spinner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}</style><link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.css"></noscript></head>
+    /* ----- Main Controls Container ----- */
+    .editor-controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    /* ----- Control Group Card ----- */
+    .control-group {
+      background: #ffffff;
+      padding: 16px 20px;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      text-align: left;
+      min-width: 240px;
+    }
+    .control-group h4 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f0f0f0;
+      font-weight: 500;
+      color: #007bff;
+    }
+
+    /* ----- Buttons & Inputs Styling ----- */
+    .btn {
+      padding: 8px 12px;
+      margin: 4px 2px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    .btn:hover {
+      background-color: #f0f0f0;
+      border-color: #bbb;
+    }
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    input[type="text"], input[type="number"], input[type="file"], input[type="color"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box; /* Important for 100% width */
+      margin-bottom: 12px;
+    }
+    input[type="color"] {
+        padding: 4px;
+        min-height: 36px;
+    }
+
+    .thumb {
+      width: 100px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    .thumb.active {
+      border-color: #dc3545;
+    }
+    
+    /* ----- Specific Control Layouts ----- */
+    .slider-control {
+      margin-bottom: 8px;
+    }
+    .slider-control label {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 4px;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    
+    .grid-controls {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        align-items: center;
+        justify-items: center;
+    }
+    #moveUp { grid-area: 1 / 2 / 2 / 3; }
+    #moveLeft { grid-area: 2 / 1 / 3 / 2; }
+    #moveRight { grid-area: 2 / 3 / 3 / 4; }
+    #moveDown { grid-area: 3 / 2 / 4 / 3; }
+    
+    .row-controls {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+  </style>
+</head>
 <body>
-  <app-root>
-    <div class="pre-bootstrapping-container">
-      <div class="ant-spin ant-spin-spinning ant-spin-lg pre-bootstrapping-spinner">
-        <span class="ant-spin-dot ant-spin-dot-spin">
-          <i class="ant-spin-dot-item"></i>
-          <i class="ant-spin-dot-item"></i>
-          <i class="ant-spin-dot-item"></i>
-          <i class="ant-spin-dot-item"></i>
-        </span>
-      </div>
-    </div>    
-  </app-root>
-  <script>
-    var gtag;
-  </script>
-<script src="runtime.js" type="module"></script><script src="polyfills.js" type="module"></script><script src="scripts.js" defer></script><script src="main.js" type="module"></script>
+  <h3>Bài test Canvas - Trình chỉnh sửa</h3>
 
-</body></html>
+  <div class="editor-controls">
+    
+    <!-- Group 1: Image & Text Management -->
+    <div class="control-group">
+      <h4>Quản lý Ảnh & Chữ</h4>
+      <img src="design-test.jpg" id="thumb" class="thumb" title="Thêm/Xóa ảnh mẫu">
+      <label for="uploadImg" class="btn" style="text-align:center; display:block; margin-bottom:12px;">Tải ảnh lên</label>
+      <input type="file" id="uploadImg" accept="image/*" style="display:none;">
+      
+      <input type="text" id="textInput" value="Happy Birthday" placeholder="Nhập nội dung chữ...">
+      <input type="color" id="colorInput" value="#ff6699" title="Chọn màu chữ">
+    </div>
+
+    <!-- Group 2: Curved Text Properties -->
+    <div class="control-group">
+      <h4>Chỉnh sửa Chữ cong</h4>
+      <div class="slider-control">
+          <label for="fontSize">Cỡ chữ</label>
+          <input type="number" id="fontSize" value="60" min="20" max="150">
+      </div>
+      <div class="slider-control">
+          <label for="radiusInput">Bán kính (Radius)</label>
+          <input type="range" id="radiusInput" min="-800" max="800" value="300">
+      </div>
+      <div class="slider-control">
+          <label for="spanInput">Độ rộng (Span)</label>
+          <input type="range" id="spanInput" min="10" max="360" value="180">
+      </div>
+      <div class="slider-control">
+          <label for="offsetInput">Độ lệch (Offset)</label>
+          <input type="range" id="offsetInput" min="-180" max="180" value="0">
+      </div>
+    </div>
+    
+    <!-- Group 3: Crop Tools -->
+    <div class="control-group">
+        <h4>Công cụ Crop</h4>
+        <button class="btn" id="cropModeBtn" style="width:100%; margin-bottom:8px;">✂️ Bật chế độ Crop</button>
+        <button class="btn" id="applyCropBtn" style="width:100%; margin-bottom:8px; background-color: #28a745; color:white;">✔️ Áp dụng Crop</button>
+        <button class="btn" id="cancelCropBtn" style="width:100%;">❌ Hủy bỏ</button>
+    </div>
+
+    <!-- Group 4: Object Controls -->
+    <div class="control-group">
+        <h4>Điều khiển Đối tượng</h4>
+        <div class="grid-controls">
+            <button class="btn" id="moveUp">↑</button>
+            <button class="btn" id="moveLeft">←</button>
+            <button class="btn" id="moveRight">→</button>
+            <button class="btn" id="moveDown">↓</button>
+        </div>
+        <div class="row-controls">
+            <button class="btn" id="rotateLeft">⟲</button>
+            <button class="btn" id="rotateRight">⟳</button>
+        </div>
+        <div class="row-controls">
+            <button class="btn" id="zoomIn">Zoom +</button>
+            <button class="btn" id="zoomOut">Zoom -</button>
+        </div>
+    </div>
+
+  </div>
+
+  <div id="canvas-container">
+    <canvas id="mockupCanvas" width="1480" height="1510"></canvas>
+  </div>
+
+  <script>
+    // Toàn bộ phần Javascript giữ nguyên như file trước đó
+    const canvas = new fabric.Canvas("mockupCanvas", { preserveObjectStacking: true });
+    let designImage = null;
+    let curvedText = null;
+    let uploadedImg = null;       // the fabric.Image object (before grouping)
+    let imgGroup = null;          // group that contains the uploaded image after Apply (if created)
+    let cropMode = false;
+    let cropCircle = null;        // the visual/editable crop circle (canvas object)
+
+    // load mockup nền
+    fabric.Image.fromURL("canvas-mockup.webp", function(img) {
+      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+        scaleX: canvas.width / img.width,
+        scaleY: canvas.height / img.height
+      });
+    });
+
+    // khung canvas2 (dùng để căn giữa)
+    const clipRect = new fabric.Rect({ 
+      left: 320, 
+      top: 120, 
+      width: 830, 
+      height: 1270, 
+      fill:'transparent',
+      selectable:false,
+      evented:false
+    });
+
+    // toggle thumbnail
+    const thumb = document.getElementById("thumb");
+    let thumbActive = false;
+    thumb.onclick = function() {
+      if (!thumbActive) {
+        fabric.Image.fromURL("design-test.jpg", function(img) {
+          const groupClipRect = new fabric.Rect({ left:clipRect.left, top:clipRect.top, width:clipRect.width, height:clipRect.height, absolutePositioned:true });
+          img.scaleToWidth(clipRect.width);
+          img.scaleToHeight(clipRect.height);
+          img.set({ left: clipRect.left, top: clipRect.top, selectable: false, evented: false });
+          designImage = new fabric.Group([img], { selectable: false, evented: false });
+          designImage.clipPath = groupClipRect;
+          canvas.add(designImage); canvas.sendToBack(designImage);
+          canvas.renderAll();
+          thumb.classList.add("active"); thumbActive = true;
+        });
+      } else {
+        if (designImage) canvas.remove(designImage);
+        designImage = null;
+        thumb.classList.remove("active"); thumbActive = false;
+      }
+    };
+
+    // upload ảnh
+    document.getElementById("uploadImg").onchange = function(e) {
+      const reader = new FileReader();
+      reader.onload = function(f) {
+        fabric.Image.fromURL(f.target.result, function(img) {
+          const centerX = clipRect.left + clipRect.width/2;
+          const centerY = clipRect.top + clipRect.height/2;
+          const maxW = Math.min(clipRect.width * 0.7, 700);
+          if(img.width > maxW) img.scaleToWidth(maxW);
+          img.set({ left:centerX, top:centerY, originX:'center', originY:'center', selectable:true, hasControls:true });
+
+          if (uploadedImg && !imgGroup) canvas.remove(uploadedImg);
+          if(imgGroup){ canvas.remove(imgGroup); imgGroup = null; }
+
+          uploadedImg = img;
+          canvas.add(uploadedImg);
+          canvas.setActiveObject(uploadedImg);
+          canvas.requestRenderAll();
+        });
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    };
+
+    /* ---------- CROP LOGIC ---------- */
+
+    // bật crop mode
+    document.getElementById("cropModeBtn").onclick = () => {
+        if(!uploadedImg && !imgGroup){ alert('Hãy upload ảnh trước!'); return; }
+        let baseLeft, baseTop, baseRadius;
+
+        if(imgGroup){
+            const clip = imgGroup.clipPath;
+            const groupCenter = imgGroup.getCenterPoint();
+            baseLeft = groupCenter.x + (clip.left * imgGroup.scaleX);
+            baseTop = groupCenter.y + (clip.top * imgGroup.scaleY);
+            baseRadius = clip.radius * imgGroup.scaleX;
+        } else {
+            baseLeft = uploadedImg.left;
+            baseTop = uploadedImg.top;
+            baseRadius = Math.min(uploadedImg.getScaledWidth(), uploadedImg.getScaledHeight())/4;
+        }
+
+        if(cropCircle) canvas.remove(cropCircle);
+
+        cropCircle = new fabric.Circle({
+            left: baseLeft,
+            top: baseTop,
+            radius: baseRadius,
+            originX:'center', originY:'center',
+            stroke:'dodgerblue',
+            strokeWidth:2,
+            fill:'rgba(0,0,0,0.0)',
+            hasBorders:true,
+            hasControls:true,
+            selectable:true
+        });
+
+        canvas.add(cropCircle);
+        canvas.setActiveObject(cropCircle);
+        cropMode = true;
+        canvas.requestRenderAll();
+    };
+
+    // apply crop
+    document.getElementById("applyCropBtn").onclick = () => {
+        if(!cropCircle){ alert('Chưa có vùng crop. Bấm Crop Mode để tạo.'); return; }
+
+        const cropRadius = cropCircle.radius * (cropCircle.scaleX || 1);
+        const cropLeft = cropCircle.left;
+        const cropTop = cropCircle.top;
+
+        const sourceImage = imgGroup ? imgGroup.item(0) : uploadedImg;
+        if(!sourceImage) { alert('Không tìm thấy ảnh để crop.'); return; }
+        
+        const newImgLeft = sourceImage.left - cropLeft;
+        const newImgTop = sourceImage.top - cropTop;
+        sourceImage.set({ left: newImgLeft, top: newImgTop });
+
+        const newGroup = new fabric.Group([sourceImage], {
+            left: cropLeft,
+            top: cropTop,
+            originX: 'center',
+            originY: 'center',
+            selectable: true,
+            width: cropRadius * 2,
+            height: cropRadius * 2
+        });
+
+        const clip = new fabric.Circle({
+            radius: cropRadius,
+            left: 0,
+            top: 0,
+            originX: 'center',
+            originY: 'center',
+            absolutePositioned: false
+        });
+        newGroup.clipPath = clip;
+
+        if(imgGroup) canvas.remove(imgGroup);
+        if(uploadedImg && !imgGroup) canvas.remove(uploadedImg);
+        canvas.remove(cropCircle);
+        
+        imgGroup = newGroup;
+        uploadedImg = sourceImage;
+        cropCircle = null;
+        cropMode = false;
+
+        canvas.add(imgGroup);
+        canvas.setActiveObject(imgGroup);
+        canvas.requestRenderAll();
+    };
+
+    // cancel crop
+    document.getElementById("cancelCropBtn").onclick = () => {
+        if(cropCircle) { canvas.remove(cropCircle); cropCircle = null; cropMode = false; canvas.requestRenderAll(); }
+    };
+
+    // text cong
+    function buildCurvedText(txt, options) {
+      const { radius, span, offset, fontSize, color } = options;
+      const chars = txt.split("");
+      let angleStep = span / Math.max(chars.length - 1, 1);
+      let startAngle = offset - span / 2;
+      const groupItems = [];
+
+      chars.forEach((char, i) => {
+        const angleDeg = startAngle + i * angleStep;
+        const angleRad = angleDeg * Math.PI / 180;
+        const x = canvas.width/2 + radius * Math.cos(angleRad);
+        const y = 200 + radius * Math.sin(angleRad);
+        const charObj = new fabric.Text(char, {
+          left: x, top: y,
+          fontSize: fontSize,
+          fill: color,
+          originX: "center", originY: "center",
+          angle: angleDeg + 90
+        });
+        groupItems.push(charObj);
+      });
+
+      return new fabric.Group(groupItems, { originX:"center", originY:"center" });
+    }
+
+    function updateCurvedText() {
+      const txt = document.getElementById("textInput").value || "Demo Text";
+      const color = document.getElementById("colorInput").value;
+      const size = parseInt(document.getElementById("fontSize").value, 10);
+      const radius = parseInt(document.getElementById("radiusInput").value, 10);
+      const span = parseInt(document.getElementById("spanInput").value, 10);
+      const offset = parseInt(document.getElementById("offsetInput").value, 10);
+
+      let prevState = null;
+      if (curvedText) {
+        prevState = {
+          left: curvedText.left,
+          top: curvedText.top,
+          scaleX: curvedText.scaleX,
+          scaleY: curvedText.scaleY,
+          angle: curvedText.angle
+        };
+        canvas.remove(curvedText);
+      }
+
+      curvedText = buildCurvedText(txt, { radius, span, offset, fontSize:size, color });
+      if (prevState) curvedText.set(prevState);
+
+      canvas.add(curvedText);
+      canvas.setActiveObject(curvedText);
+      canvas.renderAll();
+    }
+
+    document.getElementById("textInput").oninput = updateCurvedText;
+    document.getElementById("colorInput").oninput = updateCurvedText;
+    document.getElementById("fontSize").oninput = updateCurvedText;
+    document.getElementById("radiusInput").oninput = updateCurvedText;
+    document.getElementById("spanInput").oninput = updateCurvedText;
+    document.getElementById("offsetInput").oninput = updateCurvedText;
+    updateCurvedText();
+
+    // control buttons
+    function transformObject(action) {
+      const obj = canvas.getActiveObject();
+      if (!obj) return;
+      switch(action) {
+        case 'zoomIn': 
+            obj.scaleX += 0.1;
+            obj.scaleY += 0.1;
+            break;
+        case 'zoomOut': 
+            obj.scaleX = Math.max(0.1, obj.scaleX - 0.1);
+            obj.scaleY = Math.max(0.1, obj.scaleY - 0.1);
+            break;
+        case 'rotateLeft': obj.rotate((obj.angle||0) - 10); break;
+        case 'rotateRight': obj.rotate((obj.angle||0) + 10); break;
+        case 'moveUp': obj.top -= 10; break;
+        case 'moveDown': obj.top += 10; break;
+        case 'moveLeft': obj.left -= 10; break;
+        case 'moveRight': obj.left += 10; break;
+      }
+      obj.setCoords();
+      canvas.renderAll();
+    }
+
+    document.getElementById("zoomIn").onclick = () => transformObject("zoomIn");
+    document.getElementById("zoomOut").onclick = () => transformObject("zoomOut");
+    document.getElementById("rotateLeft").onclick = () => transformObject("rotateLeft");
+    document.getElementById("rotateRight").onclick = () => transformObject("rotateRight");
+    document.getElementById("moveUp").onclick = () => transformObject("moveUp");
+    document.getElementById("moveDown").onclick = () => transformObject("moveDown");
+    document.getElementById("moveLeft").onclick = () => transformObject("moveLeft");
+    document.getElementById("moveRight").onclick = () => transformObject("moveRight");
+
+    // Giữ vòng tròn crop ở trên cùng
+    canvas.on('object:moving', function(e){
+      if(cropCircle) canvas.bringToFront(cropCircle);
+    });
+
+  </script>
+</body>
+</html>
