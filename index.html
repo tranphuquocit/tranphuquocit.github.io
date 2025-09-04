@@ -1,481 +1,251 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
-  <title>Bài test Canvas - Giao diện mới</title>
+  <title>Bài test Canvas</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
-  <style>
-    /* ----- General Page Styling ----- */
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f7f9;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    h3 {
-      color: #1a2533;
-      font-weight: 600;
-    }
-
-    /* ----- Canvas Container ----- */
-    #canvas-container {
-      margin: 20px auto;
-      width: 1480px;
-      height: 1510px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-    canvas {
-      border: 1px solid #ddd;
-      display: block; /* Removes bottom space */
-    }
-
-    /* ----- Main Controls Container ----- */
-    .editor-controls {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    /* ----- Control Group Card ----- */
-    .control-group {
-      background: #ffffff;
-      padding: 16px 20px;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      text-align: left;
-      min-width: 240px;
-    }
-    .control-group h4 {
-      margin-top: 0;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #f0f0f0;
-      font-weight: 500;
-      color: #007bff;
-    }
-
-    /* ----- Buttons & Inputs Styling ----- */
-    .btn {
-      padding: 8px 12px;
-      margin: 4px 2px;
-      border: 1px solid #ccc;
-      background: #fff;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 14px;
-      transition: all 0.2s ease;
-    }
-    .btn:hover {
-      background-color: #f0f0f0;
-      border-color: #bbb;
-    }
-    .btn:active {
-      transform: translateY(1px);
-    }
-
-    input[type="text"], input[type="number"], input[type="file"], input[type="color"] {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box; /* Important for 100% width */
-      margin-bottom: 12px;
-    }
-    input[type="color"] {
-        padding: 4px;
-        min-height: 36px;
-    }
-
-    .thumb {
-      width: 100px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      border-radius: 4px;
-      display: block;
-      margin-bottom: 12px;
-    }
-    .thumb.active {
-      border-color: #dc3545;
-    }
-    
-    /* ----- Specific Control Layouts ----- */
-    .slider-control {
-      margin-bottom: 8px;
-    }
-    .slider-control label {
-      display: block;
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 4px;
-    }
-    input[type="range"] {
-      width: 100%;
-    }
-    
-    .grid-controls {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 5px;
-        align-items: center;
-        justify-items: center;
-    }
-    #moveUp { grid-area: 1 / 2 / 2 / 3; }
-    #moveLeft { grid-area: 2 / 1 / 3 / 2; }
-    #moveRight { grid-area: 2 / 3 / 3 / 4; }
-    #moveDown { grid-area: 3 / 2 / 4 / 3; }
-    
-    .row-controls {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-    }
-
-  </style>
 </head>
+
 <body>
-  <h3>Bài test Canvas - Trình chỉnh sửa</h3>
-
-  <div class="editor-controls">
-    
-    <!-- Group 1: Image & Text Management -->
-    <div class="control-group">
-      <h4>Quản lý Ảnh & Chữ</h4>
-      <img src="design-test.jpg" id="thumb" class="thumb" title="Thêm/Xóa ảnh mẫu">
-      <label for="uploadImg" class="btn" style="text-align:center; display:block; margin-bottom:12px;">Tải ảnh lên</label>
-      <input type="file" id="uploadImg" accept="image/*" style="display:none;">
-      
-      <input type="text" id="textInput" value="Happy Birthday" placeholder="Nhập nội dung chữ...">
-      <input type="color" id="colorInput" value="#ff6699" title="Chọn màu chữ">
+  <h3>Bài test Canvas</h3>
+  <div class="main-layout-container">
+    <div id="canvas-container">
+      <canvas id="mockupCanvas" width="1480" height="1480"></canvas>
     </div>
-
-    <!-- Group 2: Curved Text Properties -->
-    <div class="control-group">
-      <h4>Chỉnh sửa Chữ cong</h4>
-      <div class="slider-control">
-          <label for="fontSize">Cỡ chữ</label>
-          <input type="number" id="fontSize" value="60" min="20" max="150">
+    <div class="editor-controls">
+      <div class="control-group">
+        <h4>Quản lý Ảnh & Chữ</h4>
+        <img src="design-test.jpg" id="thumb" class="thumb" title="Thêm/Xóa ảnh mẫu">
+        <label for="uploadImg" class="btn" style="text-align:center; display:block; margin-bottom:12px;">Tải ảnh
+          lên</label>
+        <input type="file" id="uploadImg" accept="image/*" style="display:none;">
+        <input type="text" id="textInput" value="" placeholder="Nhập nội dung chữ...">
+        <input type="color" id="colorInput" value="#ff6699" title="Chọn màu chữ">
       </div>
-      <div class="slider-control">
-          <label for="radiusInput">Bán kính (Radius)</label>
-          <input type="range" id="radiusInput" min="-800" max="800" value="300">
+      <div class="control-group">
+        <h4>Chỉnh sửa Chữ cong</h4>
+        <div class="slider-control"> <label for="fontSize">Cỡ chữ</label> <input type="number" id="fontSize" value="60"
+            min="20" max="150"> </div>
+        <div class="slider-control"> <label for="radiusInput">Bán kính</label>
+          <div class="slider-input-group"> <input type="range" id="radiusInput" min="-800" max="800" value="300"> <input
+              type="number" id="radiusValue" min="-800" max="800" value="300"> </div>
+        </div>
+        <div class="slider-control"> <label for="spanInput">Độ rộng</label>
+          <div class="slider-input-group"> <input type="range" id="spanInput" min="10" max="360" value="180"> <input
+              type="number" id="spanValue" min="10" max="360" value="180"> </div>
+        </div>
+        <div class="slider-control"> <label for="offsetInput">Độ lệch</label>
+          <div class="slider-input-group"> <input type="range" id="offsetInput" min="-180" max="180" value="0"> <input
+              type="number" id="offsetValue" min="-180" max="180" value="0"> </div>
+        </div>
       </div>
-      <div class="slider-control">
-          <label for="spanInput">Độ rộng (Span)</label>
-          <input type="range" id="spanInput" min="10" max="360" value="180">
-      </div>
-      <div class="slider-control">
-          <label for="offsetInput">Độ lệch (Offset)</label>
-          <input type="range" id="offsetInput" min="-180" max="180" value="0">
-      </div>
-    </div>
-    
-    <!-- Group 3: Crop Tools -->
-    <div class="control-group">
+      <div class="control-group">
         <h4>Công cụ Crop</h4>
-        <button class="btn" id="cropModeBtn" style="width:100%; margin-bottom:8px;">✂️ Bật chế độ Crop</button>
-        <button class="btn" id="applyCropBtn" style="width:100%; margin-bottom:8px; background-color: #28a745; color:white;">✔️ Áp dụng Crop</button>
-        <button class="btn" id="cancelCropBtn" style="width:100%;">❌ Hủy bỏ</button>
-    </div>
-
-    <!-- Group 4: Object Controls -->
-    <div class="control-group">
+        <button class="btn" id="cropModeBtn">✂️ Bật chế độ Crop</button>
+        <button class="btn" id="applyCropBtn" style="background-color: #28a745; color:white;">✔️ Áp dụng Crop</button>
+        <button class="btn" id="editCropBtn" style="display: none;">✍️ Chỉnh sửa Crop</button>
+        <button class="btn" id="uncropBtn" style="display: none; background-color: #ffc107; color:black;">♻️ Hủy
+          Crop</button>
+        <button class="btn" id="cancelCropBtn">❌ Hủy bỏ</button>
+      </div>
+      <div class="control-group">
         <h4>Điều khiển Đối tượng</h4>
-        <div class="grid-controls">
-            <button class="btn" id="moveUp">↑</button>
-            <button class="btn" id="moveLeft">←</button>
-            <button class="btn" id="moveRight">→</button>
-            <button class="btn" id="moveDown">↓</button>
-        </div>
-        <div class="row-controls">
-            <button class="btn" id="rotateLeft">⟲</button>
-            <button class="btn" id="rotateRight">⟳</button>
-        </div>
-        <div class="row-controls">
-            <button class="btn" id="zoomIn">Zoom +</button>
-            <button class="btn" id="zoomOut">Zoom -</button>
-        </div>
+        <div class="grid-controls"> <button class="btn" id="moveUp">↑</button> <button class="btn"
+            id="moveLeft">←</button> <button class="btn" id="moveRight">→</button> <button class="btn"
+            id="moveDown">↓</button> </div>
+        <div class="row-controls"> <button class="btn" id="rotateLeft">⟲</button> <button class="btn"
+            id="rotateRight">⟳</button> </div>
+        <div class="row-controls"> <button class="btn" id="zoomIn">Zoom +</button> <button class="btn" id="zoomOut">Zoom
+            -</button> </div>
+      </div>
     </div>
-
-  </div>
-
-  <div id="canvas-container">
-    <canvas id="mockupCanvas" width="1480" height="1510"></canvas>
   </div>
 
   <script>
-    // Toàn bộ phần Javascript giữ nguyên như file trước đó
     const canvas = new fabric.Canvas("mockupCanvas", { preserveObjectStacking: true });
-    let designImage = null;
-    let curvedText = null;
-    let uploadedImg = null;       // the fabric.Image object (before grouping)
-    let imgGroup = null;          // group that contains the uploaded image after Apply (if created)
-    let cropMode = false;
-    let cropCircle = null;        // the visual/editable crop circle (canvas object)
-
-    // load mockup nền
-    fabric.Image.fromURL("canvas-mockup.webp", function(img) {
-      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-        scaleX: canvas.width / img.width,
-        scaleY: canvas.height / img.height
-      });
-    });
-
-    // khung canvas2 (dùng để căn giữa)
-    const clipRect = new fabric.Rect({ 
-      left: 320, 
-      top: 120, 
-      width: 830, 
-      height: 1270, 
-      fill:'transparent',
-      selectable:false,
-      evented:false
-    });
-
-    // toggle thumbnail
-    const thumb = document.getElementById("thumb");
+    let designImage = null, curvedText = null, uploadedImg = null, imgGroup = null;
+    let cropMode = false, cropCircle = null, isEditingCrop = false;
     let thumbActive = false;
-    thumb.onclick = function() {
-      if (!thumbActive) {
-        fabric.Image.fromURL("design-test.jpg", function(img) {
-          const groupClipRect = new fabric.Rect({ left:clipRect.left, top:clipRect.top, width:clipRect.width, height:clipRect.height, absolutePositioned:true });
-          img.scaleToWidth(clipRect.width);
-          img.scaleToHeight(clipRect.height);
-          img.set({ left: clipRect.left, top: clipRect.top, selectable: false, evented: false });
-          designImage = new fabric.Group([img], { selectable: false, evented: false });
-          designImage.clipPath = groupClipRect;
-          canvas.add(designImage); canvas.sendToBack(designImage);
-          canvas.renderAll();
-          thumb.classList.add("active"); thumbActive = true;
-        });
-      } else {
-        if (designImage) canvas.remove(designImage);
-        designImage = null;
-        thumb.classList.remove("active"); thumbActive = false;
-      }
+
+    const thumb = document.getElementById('thumb');
+    const cropModeBtn = document.getElementById('cropModeBtn');
+    const applyCropBtn = document.getElementById('applyCropBtn');
+    const editCropBtn = document.getElementById('editCropBtn');
+    const uncropBtn = document.getElementById('uncropBtn');
+    const cancelCropBtn = document.getElementById('cancelCropBtn');
+
+    fabric.Image.fromURL("canvas-mockup.webp", img => canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+      scaleX: canvas.width / img.width, scaleY: canvas.height / img.height
+    }));
+    const clipRect = new fabric.Rect({ left: 320, top: 120, width: 830, height: 1270, fill: 'transparent', selectable: false, evented: false });
+
+    /* ---------- CROP LOGIC (Final Stable Version) ---------- */
+
+    cropModeBtn.onclick = () => {
+      if (!uploadedImg && !imgGroup) { alert('Hãy upload ảnh trước!'); return; }
+      const target = imgGroup || uploadedImg;
+      const center = target.getCenterPoint();
+      const radius = Math.min(target.getScaledWidth(), target.getScaledHeight()) / 4;
+
+      if (cropCircle) canvas.remove(cropCircle);
+
+      cropCircle = new fabric.Circle({
+        left: center.x, top: center.y, radius: radius, originX: 'center', originY: 'center',
+        stroke: 'dodgerblue', strokeWidth: 2, fill: 'rgba(0,0,0,0.0)',
+        selectable: true, hasControls: true
+      });
+      canvas.add(cropCircle);
+      canvas.setActiveObject(cropCircle);
+
+      cropMode = true;
+      updateCropButtonsVisibility();
     };
 
-    // upload ảnh
-    document.getElementById("uploadImg").onchange = function(e) {
-      const reader = new FileReader();
-      reader.onload = function(f) {
-        fabric.Image.fromURL(f.target.result, function(img) {
-          const centerX = clipRect.left + clipRect.width/2;
-          const centerY = clipRect.top + clipRect.height/2;
-          const maxW = Math.min(clipRect.width * 0.7, 700);
-          if(img.width > maxW) img.scaleToWidth(maxW);
-          img.set({ left:centerX, top:centerY, originX:'center', originY:'center', selectable:true, hasControls:true });
+    applyCropBtn.onclick = () => {
+      if (!cropCircle) { alert('Chưa có vùng crop.'); return; }
+      const sourceImage = imgGroup ? imgGroup.item(0) : uploadedImg;
+      if (!sourceImage) { alert('Không tìm thấy ảnh để crop.'); return; }
 
-          if (uploadedImg && !imgGroup) canvas.remove(uploadedImg);
-          if(imgGroup){ canvas.remove(imgGroup); imgGroup = null; }
+      sourceImage.clone((clonedImg) => {
+        const cropCenter = cropCircle.getCenterPoint();
+        const cropRadius = cropCircle.radius * cropCircle.scaleX;
 
-          uploadedImg = img;
-          canvas.add(uploadedImg);
-          canvas.setActiveObject(uploadedImg);
-          canvas.requestRenderAll();
-        });
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    };
-
-    /* ---------- CROP LOGIC ---------- */
-
-    // bật crop mode
-    document.getElementById("cropModeBtn").onclick = () => {
-        if(!uploadedImg && !imgGroup){ alert('Hãy upload ảnh trước!'); return; }
-        let baseLeft, baseTop, baseRadius;
-
-        if(imgGroup){
-            const clip = imgGroup.clipPath;
-            const groupCenter = imgGroup.getCenterPoint();
-            baseLeft = groupCenter.x + (clip.left * imgGroup.scaleX);
-            baseTop = groupCenter.y + (clip.top * imgGroup.scaleY);
-            baseRadius = clip.radius * imgGroup.scaleX;
-        } else {
-            baseLeft = uploadedImg.left;
-            baseTop = uploadedImg.top;
-            baseRadius = Math.min(uploadedImg.getScaledWidth(), uploadedImg.getScaledHeight())/4;
-        }
-
-        if(cropCircle) canvas.remove(cropCircle);
-
-        cropCircle = new fabric.Circle({
-            left: baseLeft,
-            top: baseTop,
-            radius: baseRadius,
-            originX:'center', originY:'center',
-            stroke:'dodgerblue',
-            strokeWidth:2,
-            fill:'rgba(0,0,0,0.0)',
-            hasBorders:true,
-            hasControls:true,
-            selectable:true
+        const newGroup = new fabric.Group([clonedImg], {
+          left: cropCenter.x,
+          top: cropCenter.y,
+          originX: 'center',
+          originY: 'center',
         });
 
-        canvas.add(cropCircle);
-        canvas.setActiveObject(cropCircle);
-        cropMode = true;
-        canvas.requestRenderAll();
-    };
-
-    // apply crop
-    document.getElementById("applyCropBtn").onclick = () => {
-        if(!cropCircle){ alert('Chưa có vùng crop. Bấm Crop Mode để tạo.'); return; }
-
-        const cropRadius = cropCircle.radius * (cropCircle.scaleX || 1);
-        const cropLeft = cropCircle.left;
-        const cropTop = cropCircle.top;
-
-        const sourceImage = imgGroup ? imgGroup.item(0) : uploadedImg;
-        if(!sourceImage) { alert('Không tìm thấy ảnh để crop.'); return; }
-        
-        const newImgLeft = sourceImage.left - cropLeft;
-        const newImgTop = sourceImage.top - cropTop;
-        sourceImage.set({ left: newImgLeft, top: newImgTop });
-
-        const newGroup = new fabric.Group([sourceImage], {
-            left: cropLeft,
-            top: cropTop,
-            originX: 'center',
-            originY: 'center',
-            selectable: true,
-            width: cropRadius * 2,
-            height: cropRadius * 2
+        newGroup.clipPath = new fabric.Circle({
+          radius: cropRadius,
+          originX: 'center',
+          originY: 'center',
+          left: 0,
+          top: 0
         });
 
-        const clip = new fabric.Circle({
-            radius: cropRadius,
-            left: 0,
-            top: 0,
-            originX: 'center',
-            originY: 'center',
-            absolutePositioned: false
-        });
-        newGroup.clipPath = clip;
-
-        if(imgGroup) canvas.remove(imgGroup);
-        if(uploadedImg && !imgGroup) canvas.remove(uploadedImg);
+        canvas.remove(sourceImage);
+        if (imgGroup) canvas.remove(imgGroup);
         canvas.remove(cropCircle);
-        
+
         imgGroup = newGroup;
-        uploadedImg = sourceImage;
+        uploadedImg = clonedImg;
         cropCircle = null;
         cropMode = false;
 
         canvas.add(imgGroup);
         canvas.setActiveObject(imgGroup);
+        updateCropButtonsVisibility();
         canvas.requestRenderAll();
-    };
-
-    // cancel crop
-    document.getElementById("cancelCropBtn").onclick = () => {
-        if(cropCircle) { canvas.remove(cropCircle); cropCircle = null; cropMode = false; canvas.requestRenderAll(); }
-    };
-
-    // text cong
-    function buildCurvedText(txt, options) {
-      const { radius, span, offset, fontSize, color } = options;
-      const chars = txt.split("");
-      let angleStep = span / Math.max(chars.length - 1, 1);
-      let startAngle = offset - span / 2;
-      const groupItems = [];
-
-      chars.forEach((char, i) => {
-        const angleDeg = startAngle + i * angleStep;
-        const angleRad = angleDeg * Math.PI / 180;
-        const x = canvas.width/2 + radius * Math.cos(angleRad);
-        const y = 200 + radius * Math.sin(angleRad);
-        const charObj = new fabric.Text(char, {
-          left: x, top: y,
-          fontSize: fontSize,
-          fill: color,
-          originX: "center", originY: "center",
-          angle: angleDeg + 90
-        });
-        groupItems.push(charObj);
       });
+    };
 
-      return new fabric.Group(groupItems, { originX:"center", originY:"center" });
-    }
+    const unchangedFunctions = {
+      updateCropButtons: function () { const hasImage = uploadedImg || imgGroup; const isCropped = imgGroup && imgGroup.clipPath; cropModeBtn.style.display = hasImage && !isCropped && !cropMode ? 'flex' : 'none'; applyCropBtn.style.display = cropMode || isEditingCrop ? 'flex' : 'none'; editCropBtn.style.display = isCropped && !isEditingCrop ? 'flex' : 'none'; uncropBtn.style.display = isCropped && !isEditingCrop ? 'flex' : 'none'; cancelCropBtn.style.display = cropMode ? 'flex' : 'none'; applyCropBtn.innerHTML = isEditingCrop ? '✅ Hoàn tất chỉnh sửa' : '✔️ Áp dụng Crop'; },
+      thumbClick: function () { if (!thumbActive) { fabric.Image.fromURL("design-test.jpg", function (img) { const designClipRect = new fabric.Rect({ left: clipRect.left, top: clipRect.top, width: clipRect.width, height: clipRect.height, absolutePositioned: true }); img.scaleToWidth(clipRect.width); img.set({ left: clipRect.left, top: clipRect.top }); designImage = new fabric.Group([img], { selectable: false, evented: false, clipPath: designClipRect }); canvas.add(designImage); canvas.sendToBack(designImage); canvas.renderAll(); thumb.classList.add("active"); thumbActive = true; }); } else { if (designImage) canvas.remove(designImage); designImage = null; thumb.classList.remove("active"); thumbActive = false; } },
+      uploadChange: function (e) { const reader = new FileReader(); reader.onload = function (f) { fabric.Image.fromURL(f.target.result, function (img) { const centerX = clipRect.left + clipRect.width / 2; const centerY = clipRect.top + clipRect.height / 2; const maxW = Math.min(clipRect.width * 0.7, 700); if (img.width > maxW) img.scaleToWidth(maxW); img.set({ left: centerX, top: centerY, originX: 'center', originY: 'center' }); if (uploadedImg && !imgGroup) canvas.remove(uploadedImg); if (imgGroup) canvas.remove(imgGroup); imgGroup = null; isEditingCrop = false; uploadedImg = img; canvas.add(uploadedImg); canvas.setActiveObject(uploadedImg); unchangedFunctions.updateCropButtons(); canvas.requestRenderAll(); }); }; reader.readAsDataURL(e.target.files[0]); },
+      editCropClick: function () { if (!imgGroup || !imgGroup.clipPath) return; isEditingCrop = true; const groupCenter = imgGroup.getCenterPoint(); const radius = imgGroup.clipPath.radius * imgGroup.scaleX; cropCircle = new fabric.Circle({ left: groupCenter.x, top: groupCenter.y, radius: radius, originX: 'center', originY: 'center', stroke: 'rgba(0, 191, 255, 0.8)', strokeWidth: 3, fill: 'transparent', selectable: false, evented: false }); canvas.add(cropCircle); imgGroup.set({ selectable: false, evented: false }); unchangedFunctions.updateCropButtons(); alert("Chế độ chỉnh sửa đã bật. Dùng các nút điều khiển để di chuyển/phóng to ảnh bên trong khung crop."); },
+      uncropClick: function () { if (!imgGroup || !imgGroup.clipPath) { alert("Không có ảnh nào đang được crop."); return; } const image = imgGroup.item(0); const matrix = imgGroup.calcTransformMatrix(); const newPoint = fabric.util.transformPoint({ y: image.top, x: image.left }, matrix); canvas.remove(imgGroup); image.set({ left: newPoint.x, top: newPoint.y, scaleX: image.scaleX * imgGroup.scaleX, scaleY: image.scaleY * imgGroup.scaleY, angle: image.angle + imgGroup.angle, originX: 'center', originY: 'center', clipPath: null }); imgGroup = null; uploadedImg = image; canvas.add(uploadedImg); canvas.setActiveObject(uploadedImg); unchangedFunctions.updateCropButtons(); canvas.requestRenderAll(); },
+      cancelCropClick: function () { if (cropCircle) canvas.remove(cropCircle); cropCircle = null; cropMode = false; unchangedFunctions.updateCropButtons(); canvas.requestRenderAll(); },
+      transformObject: function (action) { let targetObj = isEditingCrop && imgGroup ? imgGroup.item(0) : canvas.getActiveObject(); if (!targetObj) return; switch (action) { case 'zoomIn': targetObj.scaleX *= 1.1; targetObj.scaleY *= 1.1; break; case 'zoomOut': targetObj.scaleX /= 1.1; targetObj.scaleY /= 1.1; break; case 'rotateLeft': targetObj.angle -= 10; break; case 'rotateRight': targetObj.angle += 10; break; case 'moveUp': targetObj.top -= 10; break; case 'moveDown': targetObj.top += 10; break; case 'moveLeft': targetObj.left -= 10; break; case 'moveRight': targetObj.left += 10; break; } targetObj.setCoords(); canvas.renderAll(); },
+      setupSliderSync: function (rangeId, numberId) { const rangeInput = document.getElementById(rangeId); const numberInput = document.getElementById(numberId); rangeInput.addEventListener('input', () => { numberInput.value = rangeInput.value; this.updateCurvedText(); }); numberInput.addEventListener('input', () => { rangeInput.value = numberInput.value; this.updateCurvedText(); }); },
+      
+      // ----- MODIFIED FUNCTION START -----
+      buildCurvedText: function (txt, options) {
+        const chars = txt.split('');
+        const items = [];
+        const angleStep = options.span / Math.max(chars.length - 1, 1);
+        const startAngle = options.offset - options.span / 2;
+        
+        for (let i = 0; i < chars.length; i++) {
+          const angDeg = startAngle + i * angleStep;
+          
+          // Rotate the coordinate system by -90 degrees so 0 is at the top
+          const angRad = (angDeg - 90) * Math.PI / 180;
+          
+          const x = options.radius * Math.cos(angRad);
+          const y = options.radius * Math.sin(angRad);
+          
+          items.push(new fabric.Text(chars[i], {
+            left: x,
+            top: y,
+            fontSize: options.fontSize,
+            fill: options.color,
+            // The character's angle is tangent to the curve
+            angle: angDeg,
+            originX: 'center',
+            originY: 'center'
+          }));
+        }
+        return new fabric.Group(items, { originX: 'center', originY: 'center' });
+      },
+      // ----- MODIFIED FUNCTION END -----
 
-    function updateCurvedText() {
-      const txt = document.getElementById("textInput").value || "Demo Text";
-      const color = document.getElementById("colorInput").value;
-      const size = parseInt(document.getElementById("fontSize").value, 10);
-      const radius = parseInt(document.getElementById("radiusInput").value, 10);
-      const span = parseInt(document.getElementById("spanInput").value, 10);
-      const offset = parseInt(document.getElementById("offsetInput").value, 10);
+      updateCurvedText: function () {
+        let prevState = null;
+        if (curvedText) {
+          prevState = {
+            left: curvedText.left, top: curvedText.top,
+            scaleX: curvedText.scaleX, scaleY: curvedText.scaleY,
+            angle: curvedText.angle
+          };
+          canvas.remove(curvedText);
+        }
 
-      let prevState = null;
-      if (curvedText) {
-        prevState = {
-          left: curvedText.left,
-          top: curvedText.top,
-          scaleX: curvedText.scaleX,
-          scaleY: curvedText.scaleY,
-          angle: curvedText.angle
+        const options = {
+          radius: parseInt(document.getElementById("radiusInput").value, 10) || 0,
+          span: parseInt(document.getElementById("spanInput").value, 10) || 0,
+          offset: parseInt(document.getElementById("offsetInput").value, 10) || 0,
+          fontSize: parseInt(document.getElementById("fontSize").value, 10) || 60,
+          color: document.getElementById("colorInput").value
         };
-        canvas.remove(curvedText);
+
+        const textValue = document.getElementById("textInput").value || "";
+        if (textValue === "") {
+            curvedText = null;
+            canvas.renderAll();
+            return;
+        }
+        
+        curvedText = this.buildCurvedText(textValue, options);
+
+        if (prevState) {
+          curvedText.set(prevState);
+        } else {
+          curvedText.set({
+            left: canvas.width / 2,
+            top: canvas.height / 2
+          });
+        }
+
+        canvas.add(curvedText);
+        canvas.setActiveObject(curvedText);
+        canvas.renderAll();
       }
+    };
 
-      curvedText = buildCurvedText(txt, { radius, span, offset, fontSize:size, color });
-      if (prevState) curvedText.set(prevState);
+    updateCropButtonsVisibility = unchangedFunctions.updateCropButtons;
+    thumb.onclick = unchangedFunctions.thumbClick;
+    document.getElementById("uploadImg").onchange = unchangedFunctions.uploadChange;
+    editCropBtn.onclick = unchangedFunctions.editCropClick;
+    uncropBtn.onclick = unchangedFunctions.uncropClick;
+    cancelCropBtn.onclick = unchangedFunctions.cancelCropClick;
+    unchangedFunctions.setupSliderSync('radiusInput', 'radiusValue');
+    unchangedFunctions.setupSliderSync('spanInput', 'spanValue');
+    unchangedFunctions.setupSliderSync('offsetInput', 'offsetValue');
+    document.getElementById('fontSize').addEventListener('input', () => unchangedFunctions.updateCurvedText());
+    document.getElementById('textInput').addEventListener('input', () => unchangedFunctions.updateCurvedText());
+    document.getElementById('colorInput').addEventListener('input', () => unchangedFunctions.updateCurvedText());
+    const transformControlMap = { zoomIn: 'zoomIn', zoomOut: 'zoomOut', rotateLeft: 'rotateLeft', rotateRight: 'rotateRight', moveUp: 'moveUp', moveDown: 'moveDown', moveLeft: 'moveLeft', moveRight: 'moveRight' };
+    for (const id in transformControlMap) { document.getElementById(id).onclick = () => unchangedFunctions.transformObject(transformControlMap[id]); }
 
-      canvas.add(curvedText);
-      canvas.setActiveObject(curvedText);
-      canvas.renderAll();
-    }
-
-    document.getElementById("textInput").oninput = updateCurvedText;
-    document.getElementById("colorInput").oninput = updateCurvedText;
-    document.getElementById("fontSize").oninput = updateCurvedText;
-    document.getElementById("radiusInput").oninput = updateCurvedText;
-    document.getElementById("spanInput").oninput = updateCurvedText;
-    document.getElementById("offsetInput").oninput = updateCurvedText;
-    updateCurvedText();
-
-    // control buttons
-    function transformObject(action) {
-      const obj = canvas.getActiveObject();
-      if (!obj) return;
-      switch(action) {
-        case 'zoomIn': 
-            obj.scaleX += 0.1;
-            obj.scaleY += 0.1;
-            break;
-        case 'zoomOut': 
-            obj.scaleX = Math.max(0.1, obj.scaleX - 0.1);
-            obj.scaleY = Math.max(0.1, obj.scaleY - 0.1);
-            break;
-        case 'rotateLeft': obj.rotate((obj.angle||0) - 10); break;
-        case 'rotateRight': obj.rotate((obj.angle||0) + 10); break;
-        case 'moveUp': obj.top -= 10; break;
-        case 'moveDown': obj.top += 10; break;
-        case 'moveLeft': obj.left -= 10; break;
-        case 'moveRight': obj.left += 10; break;
-      }
-      obj.setCoords();
-      canvas.renderAll();
-    }
-
-    document.getElementById("zoomIn").onclick = () => transformObject("zoomIn");
-    document.getElementById("zoomOut").onclick = () => transformObject("zoomOut");
-    document.getElementById("rotateLeft").onclick = () => transformObject("rotateLeft");
-    document.getElementById("rotateRight").onclick = () => transformObject("rotateRight");
-    document.getElementById("moveUp").onclick = () => transformObject("moveUp");
-    document.getElementById("moveDown").onclick = () => transformObject("moveDown");
-    document.getElementById("moveLeft").onclick = () => transformObject("moveLeft");
-    document.getElementById("moveRight").onclick = () => transformObject("moveRight");
-
-    // Giữ vòng tròn crop ở trên cùng
-    canvas.on('object:moving', function(e){
-      if(cropCircle) canvas.bringToFront(cropCircle);
-    });
-
+    // Initial call to set up empty state
+    unchangedFunctions.updateCurvedText();
+    updateCropButtonsVisibility();
   </script>
 </body>
+
 </html>
