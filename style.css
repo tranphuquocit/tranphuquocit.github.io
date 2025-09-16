@@ -1,179 +1,305 @@
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f7f9;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
+/* --- Cài đặt tổng thể & Font --- */
+:root {
+  --primary-bg: #2c3e50;
+  --secondary-bg: #233140;
+  --text-light: #ecf0f1;
+  --text-muted: #bdc3c7;
+  --accent-color: #1abc9c;
+  --hover-bg: #34495e;
+  --nav-width: 280px;
+  scroll-padding-top: 20px;
+  /* Thêm khoảng đệm khi nhảy section */
+}
 
-    h3 {
-      color: #1a2533;
-      font-weight: 600;
-      margin-bottom: 24px;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    .main-layout-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 24px;
-      max-width: 1920px;
-      margin: 0 auto;
-    }
+html {
+  scroll-behavior: smooth;
+  /* Cuộn mượt mà */
+}
 
-    #canvas-container {
-      width: 1480px;
-      height: 1480px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      flex-shrink: 0;
-    }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f7f9;
+  color: #333;
+  margin: 0;
+  display: flex;
+}
 
-    canvas {
-      border: 1px solid #ddd;
-      display: block;
-    }
+/* --- Menu điều hướng bên trái --- */
+nav {
+  width: var(--nav-width);
+  background-color: var(--primary-bg);
+  color: var(--text-light);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-top: 20px;
+  overflow-y: auto;
+  transition: width 0.3s ease;
+}
 
-    .editor-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      width: 320px;
-      flex-shrink: 0;
-    }
+nav h2 {
+  padding: 0 20px;
+  margin-top: 0;
+  font-size: 1.5em;
+}
 
-    .control-group {
-      background: #ffffff;
-      padding: 16px 20px;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      text-align: left;
-    }
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
 
-    .control-group h4 {
-      margin-top: 0;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #f0f0f0;
-      font-weight: 500;
-      color: #007bff;
-    }
+nav ul li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--text-light);
+  transition: background-color 0.3s, color 0.3s;
+  border-left: 4px solid transparent;
+}
 
-    .btn {
-      padding: 8px 12px;
-      margin: 4px 0;
-      border: 1px solid #ccc;
-      background: #fff;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 14px;
-      transition: all 0.2s ease;
-      width: 100%;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
+nav ul li a:hover {
+  background-color: var(--hover-bg);
+}
 
-    .btn:hover {
-      background-color: #f0f0f0;
-      border-color: #bbb;
-    }
+/* --- Trạng thái Active cho Menu --- */
+nav ul li a.active {
+  background-color: var(--accent-color);
+  color: white;
+  font-weight: bold;
+  border-left-color: #f1c40f;
+}
 
-    .btn:active {
-      transform: translateY(1px);
-    }
+/* --- Menu con (Collapsible) --- */
+.sub-menu {
+  background-color: var(--secondary-bg);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+}
 
-    input[type="text"],
-    input[type="number"],
-    input[type="file"],
-    input[type="color"] {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      margin-bottom: 12px;
-    }
+.has-submenu.submenu-open>.sub-menu {
+  max-height: 1000px;
+  /* Giá trị đủ lớn để chứa tất cả các mục con */
+  transition: max-height 0.4s ease-in;
+}
 
-    input[type="color"] {
-      padding: 4px;
-      min-height: 36px;
-    }
+.sub-menu a {
+  font-size: 0.9em;
+  color: var(--text-muted);
+  padding-left: 40px;
+  /* Thụt lề sâu hơn */
+}
 
-    .thumb {
-      width: 100px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      border-radius: 4px;
-      display: block;
-      margin-bottom: 12px;
-    }
+.sub-menu a:hover,
+.sub-menu a.active {
+  color: white;
+  background-color: #3a536b;
+}
 
-    .thumb.active {
-      border-color: #dc3545;
-    }
+/* Icon caret cho menu cha */
+.menu-toggle::after {
+  content: '›';
+  font-size: 1.5em;
+  line-height: 1;
+  transition: transform 0.3s ease-out;
+  margin-left: 10px;
+}
 
-    .slider-control {
-      margin-bottom: 12px;
-    }
+.has-submenu.submenu-open>.menu-toggle::after {
+  transform: rotate(90deg);
+}
 
-    .slider-control label {
-      display: block;
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 4px;
-    }
+/* --- Nội dung chính --- */
+main {
+  margin-left: var(--nav-width);
+  padding: 30px 40px;
+  width: calc(100% - var(--nav-width));
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
 
-    .slider-input-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
 
-    .slider-input-group input[type="range"] {
-      flex-grow: 1;
-    }
+/* --- TÔ MÀU CHO KHỐI MÃ (SYNTAX HIGHLIGHTING) --- */
+h1,
+h2,
+h3,
+h4 {
+  color: #2c3e50;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
 
-    .slider-input-group input[type="number"] {
-      width: 70px;
-      margin-bottom: 0;
-      text-align: center;
-    }
+h1 {
+  font-size: 2.2em;
+  margin-top: 0;
+}
 
-    .grid-controls {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
-      align-items: center;
-      justify-items: center;
-    }
+h2 {
+  font-size: 1.8em;
+}
 
-    .grid-controls .btn {
-      width: auto;
-    }
+h3 {
+  font-size: 1.4em;
+  border-bottom: 1px solid #eee;
+  margin-top: 30px;
+}
 
-    #moveUp {
-      grid-area: 1 / 2 / 2 / 3;
-    }
+code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "Fira Code", monospace;
+}
 
-    #moveLeft {
-      grid-area: 2 / 1 / 3 / 2;
-    }
+.code-block {
+  background-color: #282c34;
+  color: #abb2bf;
+  padding: 20px;
+  border-radius: 8px;
+  font-family: "Fira Code", monospace;
+  font-size: 0.95em;
+  overflow-x: auto;
+  white-space: pre;
+  margin-top: 15px;
+}
 
-    #moveRight {
-      grid-area: 2 / 3 / 3 / 4;
-    }
+.code-block .keyword {
+  color: #c67ddb;
+}
 
-    #moveDown {
-      grid-area: 3 / 2 / 4 / 3;
-    }
+.code-block .function-name {
+  color: #61afef;
+}
 
-    .row-controls {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 10px;
-    }
+.code-block .variable {
+  color: #e06c75;
+}
+
+.code-block .string {
+  color: #98c379;
+}
+
+.code-block .comment {
+  color: #5c6370;
+}
+
+.code-block .number {
+  color: #d19a66;
+}
+
+.code-block .object-key {
+  color: #e5c07b;
+}
+
+.code-block .punctuation {
+  color: #abb2bf;
+}
+
+.code-block .boolean {
+  color: #d19a66;
+}
+
+.code-block .tag {
+  color: #e06c75;
+}
+
+/* --- Màu sắc cho cấu trúc thư mục & sơ đồ --- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #ecf0f1;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.structure .folder {
+  color: #e5c07b;
+}
+
+.structure .file {
+  color: #abb2bf;
+}
+
+.structure .comment-block {
+  color: #5c6370;
+  font-style: italic;
+}
+
+.flow .flow-box {
+  color: #61afef;
+  font-weight: bold;
+}
+
+.flow .flow-arrow {
+  color: #c67ddb;
+}
+
+.flow .flow-label {
+  color: #98c379;
+}
+
+.flow .flow-path {
+  color: #e06c75;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  :root {
+    --nav-width: 240px;
+  }
+
+  main {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  :root {
+    --nav-width: 100%;
+  }
+
+  nav {
+    position: static;
+    height: auto;
+    width: 100%;
+    max-height: 50vh;
+  }
+
+  main {
+    margin-left: 0;
+    width: 100%;
+    padding: 20px 15px;
+  }
+}
