@@ -25,7 +25,6 @@ body {
   color: #333;
   margin: 0;
   display: flex;
-  /* Mặc định cho desktop */
   transition: background-color 0.3s;
 }
 
@@ -33,7 +32,7 @@ body.menu-active {
   overflow: hidden;
 }
 
-/* --- Menu điều hướng bên trái (Desktop) --- */
+/* --- Menu điều hướng bên trái --- */
 nav {
   width: var(--nav-width);
   background-color: var(--primary-bg);
@@ -75,7 +74,6 @@ nav ul li a:hover {
   background-color: var(--hover-bg);
 }
 
-/* --- Trạng thái Active cho Menu --- */
 nav ul li a.active {
   background-color: var(--accent-color);
   color: white;
@@ -271,9 +269,78 @@ tr:nth-child(even) {
   color: #e06c75;
 }
 
-/*
---- RESPONSIVE CHO DI ĐỘNG (ví dụ: iPhone 13 Pro width 390px) ---
-*/
+/* --- PHONG CÁCH MỚI CHO CÁC LỆNH GIT --- */
+.git-command-block {
+  display: grid;
+  grid-template-columns: minmax(250px, max-content) 1fr;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 16px;
+}
+
+.git-command {
+  margin: 0;
+}
+
+.git-command code {
+  background-color: #282c34;
+  color: #98c379;
+  /* Màu xanh lá cho command */
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.git-explanation {
+  margin: 0;
+  color: #555;
+  padding-left: 1em;
+  position: relative;
+}
+
+.git-explanation::before {
+  content: '→';
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent-color);
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* --- RESPONSIVE CHO GIT COMMANDS --- */
+@media (max-width: 768px) {
+  .git-command-block {
+    grid-template-columns: 1fr;
+    /* Xếp chồng lên nhau */
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .git-command code {
+    display: inline-block;
+    width: 100%;
+    white-space: normal;
+    /* Cho phép xuống dòng */
+    text-align: left;
+  }
+
+  .git-explanation {
+    padding-left: 1.5em;
+    /* Tăng padding để mũi tên không bị dính */
+  }
+
+  .git-explanation::before {
+    left: 0;
+  }
+}
+
+/* --- RESPONSIVE CHO LAYOUT CHÍNH --- */
 .hamburger-button {
   display: none;
 }
@@ -283,13 +350,10 @@ tr:nth-child(even) {
 }
 
 @media (max-width: 768px) {
-
-  /* SỬA LỖI QUAN TRỌNG: Chuyển body về block để main chiếm full width */
   body {
     display: block;
   }
 
-  /* --- Nút Hamburger --- */
   .hamburger-button {
     display: block;
     position: fixed;
@@ -325,7 +389,6 @@ tr:nth-child(even) {
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  /* --- Lớp phủ --- */
   .menu-overlay {
     display: block;
     position: fixed;
@@ -345,7 +408,6 @@ tr:nth-child(even) {
     visibility: visible;
   }
 
-  /* --- Menu trượt từ bên trái --- */
   nav {
     transform: translateX(-100%);
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
@@ -355,7 +417,6 @@ tr:nth-child(even) {
     transform: translateX(0);
   }
 
-  /* --- Nội dung chính --- */
   main {
     margin-left: 0;
     width: 100%;

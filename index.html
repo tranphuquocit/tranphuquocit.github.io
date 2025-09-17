@@ -10,11 +10,11 @@
 
 <body>
   <!-- NÚT HAMBURGER DÀNH CHO DI ĐỘNG -->
-   <button id="menu-hamburger-button" class="hamburger-button" aria-label="Open menu">
+  <button id="menu-hamburger-button" class="hamburger-button" aria-label="Open menu">
     <span></span>
     <span></span>
     <span></span>
-   </button>
+  </button>
 
   <!-- LỚP PHỦ KHI MỞ MENU -->
   <div id="menu-overlay" class="menu-overlay"></div>
@@ -115,6 +115,21 @@
           <li><a href="#storage-best-practices">f. Best Practices & Security</a></li>
         </ul>
       </li>
+      <li class="has-submenu">
+        <a href="#git" class="menu-toggle">12. Git Cheatsheet</a>
+        <ul class="sub-menu">
+          <li><a href="#git-install">a. Cài đặt</a></li>
+          <li><a href="#git-setup">b. Cài đặt & khởi tạo</a></li>
+          <li><a href="#git-stage-snapshot">c. Chuẩn bị & chụp ảnh</a></li>
+          <li><a href="#git-branch-merge">d. Nhánh & hợp nhất</a></li>
+          <li><a href="#git-inspect">e. Kiểm tra & so sánh</a></li>
+          <li><a href="#git-path-tracking">f. Theo dõi thay đổi đường dẫn</a></li>
+          <li><a href="#git-stash">g. Commit tạm thời</a></li>
+          <li><a href="#git-ignore">h. Bỏ qua mẫu</a></li>
+          <li><a href="#git-share-update">i. Chia sẻ & cập nhật</a></li>
+          <li><a href="#git-rewrite-history">j. Viết lại lịch sử</a></li>
+        </ul>
+      </li>
     </ul>
   </nav>
 
@@ -127,7 +142,8 @@
     </header>
 
     <!-- Phần 1: Promise -->
-    <section id="promise"> <h2>1. Promise</h2>
+    <section id="promise">
+      <h2>1. Promise</h2>
       <h3>Định nghĩa Promise</h3>
       <p>Promise là một đối tượng đại diện cho giá trị kết quả của một tác vụ bất đồng bộ, mà tác vụ đó có thể hoàn
         thành (thành công) hoặc thất bại vào một thời điểm nào đó trong tương lai.</p>
@@ -218,7 +234,8 @@
     </section>
 
     <!-- Phần 3: Toán tử RxJS -->
-    <section id="rxjs-operators"> <h2>3. Toán tử RxJS</h2>
+    <section id="rxjs-operators">
+      <h2>3. Toán tử RxJS</h2>
       <p>Toán tử là các pure function cho phép xử lý các collection một cách "declarative". Trong RxJS, toán tử là những
         viên gạch xây dựng nên logic xử lý luồng dữ liệu của bạn.</p>
 
@@ -351,7 +368,8 @@
     </section>
 
     <!-- NỘI DUNG MỚI: ANGULAR NGRX -->
-    <section id="ngrx"> <h2>4. Angular NgRx</h2>
+    <section id="ngrx">
+      <h2>4. Angular NgRx</h2>
       <p>NgRx là một framework để xây dựng các ứng dụng reactive trong Angular bằng cách sử dụng kiến trúc Redux. Nó
         quản lý trạng thái toàn cục (global state) của ứng dụng một cách nhất quán và có thể dự đoán.</p>
 
@@ -488,7 +506,8 @@
 <span class="tag">&lt;/ul></span></code></div>
     </section>
 
-    <section id="forms"> <h2>5. Angular Reactive Forms</h2>
+    <section id="forms">
+      <h2>5. Angular Reactive Forms</h2>
       <p>Reactive Forms là một mô hình mạnh mẽ để quản lý trạng thái của form trong các ứng dụng Angular, cung cấp khả
         năng kiểm soát, kiểm thử và mở rộng vượt trội.</p>
 
@@ -618,7 +637,8 @@
 <span class="tag">&lt;/form></span></code></div>
     </section>
 
-    <section id="angular-core"> <h2>6. Angular Lifecycle, DI & Structure</h2>
+    <section id="angular-core">
+      <h2>6. Angular Lifecycle, DI & Structure</h2>
       <p>Đây là những khái niệm nền tảng giúp bạn xây dựng các ứng dụng Angular một cách hiệu quả, dễ bảo trì và mở
         rộng.</p>
 
@@ -771,7 +791,8 @@
         rộng.</p>
     </section>
 
-    <section id="directives"> <h2>7. Các loại Directive trong Angular</h2>
+    <section id="directives">
+      <h2>7. Các loại Directive trong Angular</h2>
       <p>Directive là một trong những khối xây dựng cơ bản nhất trong Angular, cho phép bạn thêm hành vi hoặc thay đổi
         cấu trúc của các phần tử DOM một cách linh hoạt.</p>
 
@@ -925,7 +946,8 @@
       </p>
     </section>
 
-    <section id="testing-frameworks"> <h2>8. So sánh Jest, Mocha, Jasmine, Vitest cho Angular</h2>
+    <section id="testing-frameworks">
+      <h2>8. So sánh Jest, Mocha, Jasmine, Vitest cho Angular</h2>
       <p>Lựa chọn đúng testing framework là một quyết định quan trọng, ảnh hưởng trực tiếp đến tốc độ phát triển và chất
         lượng của dự án Angular.</p>
 
@@ -1076,7 +1098,8 @@ ng test --watch</code></div>
         test nào đã viết.</p>
     </section>
 
-    <section id="build-angular"> <h2>9. Build Angular</h2>
+    <section id="build-angular">
+      <h2>9. Build Angular</h2>
       <p>Hiểu rõ quy trình build trong Angular là chìa khóa để tối ưu hóa hiệu năng, kích thước bundle và tốc độ tải
         trang của ứng dụng.</p>
 
@@ -1164,7 +1187,8 @@ ng test --watch</code></div>
       </ul>
     </section>
 
-    <section id="performance-optimization"> <h2>10. Tối ưu hiệu suất Angular - HTML - SCSS</h2>
+    <section id="performance-optimization">
+      <h2>10. Tối ưu hiệu suất Angular - HTML - SCSS</h2>
       <p>Tối ưu hóa hiệu suất là một quá trình liên tục nhằm đảm bảo ứng dụng chạy nhanh, mượt mà và mang lại trải
         nghiệm tốt nhất cho người dùng, đặc biệt khi ứng dụng phát triển lớn mạnh.</p>
 
@@ -1280,7 +1304,8 @@ ng test --watch</code></div>
       <span class="punctuation">}</span></code></div>
     </section>
 
-    <section id="storage"> <h2>11. Kiến thức về LocalStorage, SessionStorage và Cookies</h2>
+    <section id="storage">
+      <h2>11. Kiến thức về LocalStorage, SessionStorage và Cookies</h2>
       <p>Hiểu rõ các cơ chế lưu trữ trên trình duyệt là nền tảng để xây dựng các ứng dụng web có trạng thái, cá nhân hóa
         và bảo mật.</p>
 
@@ -1437,6 +1462,177 @@ ng test --watch</code></div>
         <li><strong>Quản lý:</strong> Luôn sử dụng <code>JSON.stringify</code>/<code>JSON.parse</code> cho dữ liệu
           object. Xử lý các trường hợp lỗi khi storage đầy hoặc không được trình duyệt hỗ trợ.</li>
       </ul>
+    </section>
+
+    <section id="git">
+      <h2>12. Git Cheatsheet</h2>
+      <p>Tổng hợp các câu lệnh Git thường dùng trong quá trình phát triển phần mềm, giúp bạn quản lý mã nguồn một cách
+        hiệu quả.</p>
+
+      <h3 id="git-install">a. Cài đặt</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git config --global user.name "[firstname Lastname]"</code></p>
+        <p class="git-explanation">Đặt tên có thể nhận diện để ghi công xem lại lịch sử phiên bản</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git config --global user.email "[email@example.com]"</code></p>
+        <p class="git-explanation">Đặt địa chỉ email sẽ được liên kết với mỗi dấu hiệu lịch sử</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git config --global color.ui auto</code></p>
+        <p class="git-explanation">Đặt màu tự động cho dòng lệnh cho Git để xem lại dễ dàng</p>
+      </div>
+
+      <h3 id="git-setup">b. Cài đặt & khởi tạo</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git init</code></p>
+        <p class="git-explanation">Khởi tạo một thư mục hiện có làm kho lưu trữ Git</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git clone [url]</code></p>
+        <p class="git-explanation">Lấy toàn bộ kho lưu trữ từ một vị trí lưu trữ qua URL</p>
+      </div>
+
+      <h3 id="git-stage-snapshot">c. Chuẩn bị & chụp ảnh (Stage & Snapshot)</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git status</code></p>
+        <p class="git-explanation">Hiển thị các file đã sửa đổi trong thư mục, chuẩn bị cho commit tiếp</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git add [file]</code></p>
+        <p class="git-explanation">Thêm file như nó hiện tại vào commit tiếp theo (staging)</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git reset [file]</code></p>
+        <p class="git-explanation">Hủy chuẩn bị file (unstage) trong khi giữ lại các thay đổi trong thư mục làm việc</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git diff</code></p>
+        <p class="git-explanation">Sự khác biệt của những gì đã thay đổi nhưng chưa được chuẩn bị (unstaged)</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git diff --staged</code></p>
+        <p class="git-explanation">Sự khác biệt của những gì đã chuẩn bị (staged) nhưng chưa được commit</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git commit -m "[descriptive message]"</code></p>
+        <p class="git-explanation">Commit nội dung đã chuẩn bị dưới dạng ảnh chụp nhanh (snapshot) mới</p>
+      </div>
+
+      <h3 id="git-branch-merge">d. Nhánh & hợp nhất (Branch & Merge)</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git branch</code></p>
+        <p class="git-explanation">Liệt kê các nhánh; dấu `*` sẽ xuất hiện bên cạnh nhánh đang hoạt động</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git branch [branch-name]</code></p>
+        <p class="git-explanation">Tạo nhánh mới tại commit hiện tại</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git checkout [branch-name]</code></p>
+        <p class="git-explanation">Chuyển sang nhánh khác và cập nhật thư mục làm việc</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git merge [branch]</code></p>
+        <p class="git-explanation">Hợp nhất lịch sử của nhánh được chỉ định vào nhánh hiện tại</p>
+      </div>
+
+      <h3 id="git-inspect">e. Kiểm tra & so sánh</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git log</code></p>
+        <p class="git-explanation">Hiển thị lịch sử commit cho nhánh đang hoạt động</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git log branchB..branchA</code></p>
+        <p class="git-explanation">Hiển thị các commit trên `branchA` nhưng không có trên `branchB`</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git log --follow [file]</code></p>
+        <p class="git-explanation">Hiển thị các commit đã thay đổi file, ngay cả khi file được đổi tên</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git diff branchB..branchA</code></p>
+        <p class="git-explanation">Hiển thị sự khác biệt của những gì trong `branchA` nhưng không có trong `branchB`</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git show [SHA]</code></p>
+        <p class="git-explanation">Hiển thị bất kỳ đối tượng nào trong Git dưới dạng dễ đọc cho con người</p>
+      </div>
+
+      <h3 id="git-path-tracking">f. Theo dõi thay đổi đường dẫn</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git rm [file]</code></p>
+        <p class="git-explanation">Xóa file khỏi dự án và chuẩn bị (stage) việc xóa để commit</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git mv [existing-path] [new-path]</code></p>
+        <p class="git-explanation">Thay đổi đường dẫn file hiện có và chuẩn bị (stage) việc di chuyển</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git log --stat -M</code></p>
+        <p class="git-explanation">Hiển thị tất cả nhật ký commit với chỉ báo về bất kỳ đường dẫn nào đã di chuyển</p>
+      </div>
+
+      <h3 id="git-stash">g. Commit tạm thời</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git stash</code></p>
+        <p class="git-explanation">Lưu các thay đổi đã sửa đổi và đã chuẩn bị (staged) vào một nơi tạm</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git stash list</code></p>
+        <p class="git-explanation">Liệt kê danh sách các thay đổi đã được `stash`</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git stash pop</code></p>
+        <p class="git-explanation">Áp dụng thay đổi từ `stash` gần nhất và xóa nó khỏi danh sách</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git stash drop</code></p>
+        <p class="git-explanation">Loại bỏ thay đổi từ `stash` gần nhất mà không áp dụng</p>
+      </div>
+
+      <h3 id="git-ignore">h. Bỏ qua mẫu</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>logs/</code></p>
+        <p class="git-explanation">Lưu các mẫu file/thư mục cần bỏ qua vào file `.gitignore`</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git config --global core.excludesfile [file]</code></p>
+        <p class="git-explanation">Thiết lập một file bỏ qua mẫu trên toàn hệ thống cho tất cả các kho lưu trữ</p>
+      </div>
+
+      <h3 id="git-share-update">i. Chia sẻ & cập nhật</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git remote add [alias] [url]</code></p>
+        <p class="git-explanation">Thêm một kho lưu trữ từ xa (remote) với một tên đại diện (alias)</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git fetch [alias]</code></p>
+        <p class="git-explanation">Tải xuống tất cả các nhánh từ kho lưu trữ từ xa</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git merge [alias]/[branch]</code></p>
+        <p class="git-explanation">Hợp nhất nhánh từ xa vào nhánh hiện tại để cập nhật</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git push [alias] [branch]</code></p>
+        <p class="git-explanation">Đẩy các commit của nhánh cục bộ lên nhánh của kho lưu trữ từ xa</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git pull</code></p>
+        <p class="git-explanation">Tải và hợp nhất bất kỳ commit nào từ nhánh theo dõi từ xa (`fetch` + `merge`)</p>
+      </div>
+
+      <h3 id="git-rewrite-history">j. Viết lại lịch sử</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git rebase [branch]</code></p>
+        <p class="git-explanation">Áp dụng các commit của nhánh hiện tại lên trên đỉnh của nhánh được chỉ định</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git reset --hard [commit]</code></p>
+        <p class="git-explanation">Xóa khu vực chuẩn bị (staging), viết lại thư mục làm việc từ commit được chỉ định
+          (mất các thay đổi chưa commit)</p>
+      </div>
     </section>
 
   </main>
