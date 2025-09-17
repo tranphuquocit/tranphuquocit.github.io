@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!mainNav || !hamburgerBtn || !overlay) return;
 
-  const menuToggles = mainNav.querySelectorAll('.menu-toggle');
-  const allNavLinks = mainNav.querySelectorAll('a[href^="#"]');
-
   // --- HÀM ĐIỀU KHIỂN MENU DI ĐỘNG ---
   function toggleMobileMenu() {
     hamburgerBtn.classList.toggle('active');
@@ -22,25 +19,31 @@ document.addEventListener('DOMContentLoaded', () => {
   hamburgerBtn.addEventListener('click', toggleMobileMenu);
   overlay.addEventListener('click', toggleMobileMenu);
 
-  // Tự động đóng menu di động khi nhấn vào một link
-  allNavLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      if (mainNav.classList.contains('is-open')) {
-        toggleMobileMenu();
-      }
-    });
-  });
+  // **LOGIC MỚI ĐÃ SỬA LỖI**
+  // Thiết lập listener cho toàn bộ menu cha
+  mainNav.addEventListener('click', (event) => {
+    const link = event.target.closest('a'); // Tìm thẻ <a> gần nhất được click
+    if (!link) return; // Nếu không click vào link thì không làm gì
 
-  // --- XỬ LÝ CLICK ĐỂ MỞ/ĐÓNG MENU CON ---
-  menuToggles.forEach(toggle => {
-    toggle.addEventListener('click', (event) => {
-      event.preventDefault();
-      const parentLi = toggle.parentElement;
+    const parentLi = link.parentElement;
+
+    // **Trường hợp 1: Click vào menu cha có submenu (menu-toggle)**
+    if (parentLi.classList.contains('has-submenu')) {
+      event.preventDefault(); // Ngăn hành vi mặc định của link
+      // Chỉ mở/đóng submenu, không đóng menu chính
       if (!parentLi.classList.contains('submenu-open')) {
         closeAllSubmenus();
       }
       parentLi.classList.toggle('submenu-open');
-    });
+    }
+    // **Trường hợp 2: Click vào link con hoặc link đơn**
+    else {
+      // Chỉ đóng nếu menu đang ở trạng thái mở (trên di động)
+      if (mainNav.classList.contains('is-open')) {
+        toggleMobileMenu();
+      }
+      // Không preventDefault(), để link tự động cuộn đến section
+    }
   });
 
   function closeAllSubmenus() {
@@ -50,6 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- XỬ LÝ ACTIVE MENU KHI CUỘN TRANG (SCROLLSPY) ---
+  // Logic này vẫn giữ nguyên, nó hoạt động độc lập
+  const allNavLinks = mainNav.querySelectorAll('a[href^="#"]');
   const sectionsToObserve = Array.from(allNavLinks)
     .map(link => document.querySelector(link.getAttribute('href')))
     .filter(el => el !== null);

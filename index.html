@@ -646,69 +646,71 @@
       <p>Lifecycle Hooks là các phương thức cho phép bạn thực thi code tại các thời điểm quan trọng trong vòng đời của
         component, từ khi tạo ra cho đến khi bị hủy.</p>
       <h4>Trình tự chạy và mục đích</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Hook</th>
-            <th>Giai đoạn</th>
-            <th>Mục đích & Lý do chạy</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>constructor</strong></td>
-            <td>Khởi tạo Class</td>
-            <td>Chạy đầu tiên (JS feature). Dùng để DI, khởi tạo thuộc tính cơ bản. <strong>Không</strong> truy cập
-              <code>@Input()</code> ở đây.
-            </td>
-          </tr>
-          <tr>
-            <td><strong>ngOnChanges</strong></td>
-            <td>Input Thay đổi</td>
-            <td>Chạy khi <code>@Input()</code> thay đổi. Nhận <code>SimpleChanges</code> để theo dõi giá trị cũ/mới.
-            </td>
-          </tr>
-          <tr>
-            <td><strong>ngOnInit</strong></td>
-            <td>Khởi tạo Component</td>
-            <td>Chạy <strong>một lần</strong> sau <code>ngOnChanges</code> lần đầu. Nơi lý tưởng để gọi API, khởi tạo dữ
-              liệu phức tạp.</td>
-          </tr>
-          <tr>
-            <td><strong>ngDoCheck</strong></td>
-            <td>Phát hiện thay đổi</td>
-            <td>Chạy trong mọi chu kỳ change detection. Dùng cho các thay đổi mà Angular không tự bắt được.</td>
-          </tr>
-          <tr>
-            <td><strong>ngAfterContentInit</strong></td>
-            <td>Content Projection</td>
-            <td>Chạy <strong>một lần</strong> sau khi external content (<code>&lt;ng-content&gt;</code>) được đưa vào.
-            </td>
-          </tr>
-          <tr>
-            <td><strong>ngAfterContentChecked</strong></td>
-            <td>Kiểm tra Content</td>
-            <td>Chạy sau mỗi lần kiểm tra content được project.</td>
-          </tr>
-          <tr>
-            <td><strong>ngAfterViewInit</strong></td>
-            <td>View & Children</td>
-            <td>Chạy <strong>một lần</strong> sau khi view của component và các child components đã khởi tạo xong. Nơi
-              an toàn để thao tác DOM (<code>@ViewChild</code>).</td>
-          </tr>
-          <tr>
-            <td><strong>ngAfterViewChecked</strong></td>
-            <td>Kiểm tra View</td>
-            <td>Chạy sau mỗi lần kiểm tra view.</td>
-          </tr>
-          <tr>
-            <td><strong>ngOnDestroy</strong></td>
-            <td>Hủy Component</td>
-            <td>Chạy ngay trước khi component bị hủy. Nơi <strong>bắt buộc</strong> để dọn dẹp, hủy subscriptions, tránh
-              memory leak.</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Hook</th>
+              <th>Giai đoạn</th>
+              <th>Mục đích & Lý do chạy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>constructor</strong></td>
+              <td>Khởi tạo Class</td>
+              <td>Chạy đầu tiên (JS feature). Dùng để DI, khởi tạo thuộc tính cơ bản. <strong>Không</strong> truy cập
+                <code>@Input()</code> ở đây.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>ngOnChanges</strong></td>
+              <td>Input Thay đổi</td>
+              <td>Chạy khi <code>@Input()</code> thay đổi. Nhận <code>SimpleChanges</code> để theo dõi giá trị cũ/mới.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>ngOnInit</strong></td>
+              <td>Khởi tạo Component</td>
+              <td>Chạy <strong>một lần</strong> sau <code>ngOnChanges</code> lần đầu. Nơi lý tưởng để gọi API, khởi tạo dữ
+                liệu phức tạp.</td>
+            </tr>
+            <tr>
+              <td><strong>ngDoCheck</strong></td>
+              <td>Phát hiện thay đổi</td>
+              <td>Chạy trong mọi chu kỳ change detection. Dùng cho các thay đổi mà Angular không tự bắt được.</td>
+            </tr>
+            <tr>
+              <td><strong>ngAfterContentInit</strong></td>
+              <td>Content Projection</td>
+              <td>Chạy <strong>một lần</strong> sau khi external content (<code>&lt;ng-content&gt;</code>) được đưa vào.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>ngAfterContentChecked</strong></td>
+              <td>Kiểm tra Content</td>
+              <td>Chạy sau mỗi lần kiểm tra content được project.</td>
+            </tr>
+            <tr>
+              <td><strong>ngAfterViewInit</strong></td>
+              <td>View & Children</td>
+              <td>Chạy <strong>một lần</strong> sau khi view của component và các child components đã khởi tạo xong. Nơi
+                an toàn để thao tác DOM (<code>@ViewChild</code>).</td>
+            </tr>
+            <tr>
+              <td><strong>ngAfterViewChecked</strong></td>
+              <td>Kiểm tra View</td>
+              <td>Chạy sau mỗi lần kiểm tra view.</td>
+            </tr>
+            <tr>
+              <td><strong>ngOnDestroy</strong></td>
+              <td>Hủy Component</td>
+              <td>Chạy ngay trước khi component bị hủy. Nơi <strong>bắt buộc</strong> để dọn dẹp, hủy subscriptions, tránh
+                memory leak.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <h3 id="dependency-injection">b. Dependency Injection (DI)</h3>
       <p>DI là một design pattern trong đó một class không tự tạo ra các dependencies (sự phụ thuộc) của nó, mà các
@@ -825,48 +827,50 @@
 
       <h3 id="directive-comparison">c. So sánh chi tiết</h3>
       <h4>Bảng so sánh</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Tiêu chí</th>
-            <th>Component</th>
-            <th>Attribute Directive</th>
-            <th>Structural Directive</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Mục đích</strong></td>
-            <td>Tạo một phần UI độc lập</td>
-            <td>Thay đổi hành vi/giao diện phần tử</td>
-            <td>Thay đổi cấu trúc DOM</td>
-          </tr>
-          <tr>
-            <td><strong>Template</strong></td>
-            <td>Có</td>
-            <td>Không</td>
-            <td>Không (nhưng thao tác với template)</td>
-          </tr>
-          <tr>
-            <td><strong>Cú pháp</strong></td>
-            <td><code>&lt;app-name&gt;&lt;/app-name&gt;</code></td>
-            <td><code>&lt;div appDirective&gt;&lt;/div&gt;</code></td>
-            <td><code>&lt;div *appDirective&gt;&lt;/div&gt;</code></td>
-          </tr>
-          <tr>
-            <td><strong>API chính</strong></td>
-            <td>-</td>
-            <td><code>ElementRef</code>, <code>Renderer2</code>, <code>HostListener</code></td>
-            <td><code>ViewContainerRef</code>, <code>TemplateRef</code></td>
-          </tr>
-          <tr>
-            <td><strong>Ví dụ</strong></td>
-            <td>UserCardComponent</td>
-            <td>appHighlight, NgClass</td>
-            <td>*ngIf, *ngFor, appDelay</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tiêu chí</th>
+              <th>Component</th>
+              <th>Attribute Directive</th>
+              <th>Structural Directive</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Mục đích</strong></td>
+              <td>Tạo một phần UI độc lập</td>
+              <td>Thay đổi hành vi/giao diện phần tử</td>
+              <td>Thay đổi cấu trúc DOM</td>
+            </tr>
+            <tr>
+              <td><strong>Template</strong></td>
+              <td>Có</td>
+              <td>Không</td>
+              <td>Không (nhưng thao tác với template)</td>
+            </tr>
+            <tr>
+              <td><strong>Cú pháp</strong></td>
+              <td><code>&lt;app-name&gt;&lt;/app-name&gt;</code></td>
+              <td><code>&lt;div appDirective&gt;&lt;/div&gt;</code></td>
+              <td><code>&lt;div *appDirective&gt;&lt;/div&gt;</code></td>
+            </tr>
+            <tr>
+              <td><strong>API chính</strong></td>
+              <td>-</td>
+              <td><code>ElementRef</code>, <code>Renderer2</code>, <code>HostListener</code></td>
+              <td><code>ViewContainerRef</code>, <code>TemplateRef</code></td>
+            </tr>
+            <tr>
+              <td><strong>Ví dụ</strong></td>
+              <td>UserCardComponent</td>
+              <td>appHighlight, NgClass</td>
+              <td>*ngIf, *ngFor, appDelay</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <h4>Khi nào dùng loại nào?</h4>
       <ul>
@@ -993,61 +997,63 @@
 
       <h3 id="testing-recommendation">c. So sánh & Khuyến nghị cho Angular</h3>
       <h4>Bảng so sánh</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Tiêu chí</th>
-            <th>Jasmine (+Karma)</th>
-            <th>Mocha (+Chai)</th>
-            <th>Jest</th>
-            <th>Vitest</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Tốc độ</strong></td>
-            <td>Chậm</td>
-            <td>Chậm</td>
-            <td><strong>Rất Nhanh</strong></td>
-            <td><strong>Cực nhanh</strong></td>
-          </tr>
-          <tr>
-            <td><strong>Cấu hình</strong></td>
-            <td>Zero (Mặc định)</td>
-            <td>Phức tạp</td>
-            <td>Rất dễ</td>
-            <td>Trung bình (với Angular)</td>
-          </tr>
-          <tr>
-            <td><strong>All-in-One</strong></td>
-            <td>✅</td>
-            <td>❌</td>
-            <td>✅</td>
-            <td>✅</td>
-          </tr>
-          <tr>
-            <td><strong>Snapshot Testing</strong></td>
-            <td>❌</td>
-            <td>❌</td>
-            <td>✅</td>
-            <td>✅</td>
-          </tr>
-          <tr>
-            <td><strong>Mocking</strong></td>
-            <td>Cơ bản</td>
-            <td>Mạnh (với Sinon)</td>
-            <td><strong>Rất mạnh</strong></td>
-            <td>Mạnh</td>
-          </tr>
-          <tr>
-            <td><strong>Angular Integration</strong></td>
-            <td>Mặc định</td>
-            <td>Thủ công</td>
-            <td><strong>Dễ dàng</strong></td>
-            <td>Phức tạp</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tiêu chí</th>
+              <th>Jasmine (+Karma)</th>
+              <th>Mocha (+Chai)</th>
+              <th>Jest</th>
+              <th>Vitest</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tốc độ</strong></td>
+              <td>Chậm</td>
+              <td>Chậm</td>
+              <td><strong>Rất Nhanh</strong></td>
+              <td><strong>Cực nhanh</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Cấu hình</strong></td>
+              <td>Zero (Mặc định)</td>
+              <td>Phức tạp</td>
+              <td>Rất dễ</td>
+              <td>Trung bình (với Angular)</td>
+            </tr>
+            <tr>
+              <td><strong>All-in-One</strong></td>
+              <td>✅</td>
+              <td>❌</td>
+              <td>✅</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td><strong>Snapshot Testing</strong></td>
+              <td>❌</td>
+              <td>❌</td>
+              <td>✅</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td><strong>Mocking</strong></td>
+              <td>Cơ bản</td>
+              <td>Mạnh (với Sinon)</td>
+              <td><strong>Rất mạnh</strong></td>
+              <td>Mạnh</td>
+            </tr>
+            <tr>
+              <td><strong>Angular Integration</strong></td>
+              <td>Mặc định</td>
+              <td>Thủ công</td>
+              <td><strong>Dễ dàng</strong></td>
+              <td>Phức tạp</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <h4>Lựa chọn tốt nhất & Lý do</h4>
       <p>🎯 <strong>Jest là lựa chọn TỐT NHẤT cho dự án Angular hiện đại.</strong></p>
       <ul>
@@ -1369,54 +1375,56 @@ ng test --watch</code></div>
       </div>
 
       <h3 id="storage-comparison">d. So sánh chi tiết</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Tính năng</th>
-            <th>LocalStorage</th>
-            <th>SessionStorage</th>
-            <th>Cookies</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Dung lượng</strong></td>
-            <td>5-10MB</td>
-            <td>5-10MB</td>
-            <td>4KB</td>
-          </tr>
-          <tr>
-            <td><strong>Thời hạn</strong></td>
-            <td>Vĩnh viễn</td>
-            <td>Hết phiên làm việc</td>
-            <td>Có thể thiết lập</td>
-          </tr>
-          <tr>
-            <td><strong>Gửi đến Server</strong></td>
-            <td>Không</td>
-            <td>Không</td>
-            <td><strong>Có, tự động</strong></td>
-          </tr>
-          <tr>
-            <td><strong>Truy cập từ</strong></td>
-            <td>Client-side</td>
-            <td>Client-side</td>
-            <td>Client & Server</td>
-          </tr>
-          <tr>
-            <td><strong>API</strong></td>
-            <td>Đơn giản (key-value)</td>
-            <td>Đơn giản (key-value)</td>
-            <td>Phức tạp (string-based)</td>
-          </tr>
-          <tr>
-            <td><strong>Bảo mật</strong></td>
-            <td>Không an toàn cho data nhạy cảm</td>
-            <td>Không an toàn cho data nhạy cảm</td>
-            <td>Có tùy chọn bảo mật (<code>secure</code>, <code>httponly</code>)</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tính năng</th>
+              <th>LocalStorage</th>
+              <th>SessionStorage</th>
+              <th>Cookies</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Dung lượng</strong></td>
+              <td>5-10MB</td>
+              <td>5-10MB</td>
+              <td>4KB</td>
+            </tr>
+            <tr>
+              <td><strong>Thời hạn</strong></td>
+              <td>Vĩnh viễn</td>
+              <td>Hết phiên làm việc</td>
+              <td>Có thể thiết lập</td>
+            </tr>
+            <tr>
+              <td><strong>Gửi đến Server</strong></td>
+              <td>Không</td>
+              <td>Không</td>
+              <td><strong>Có, tự động</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Truy cập từ</strong></td>
+              <td>Client-side</td>
+              <td>Client-side</td>
+              <td>Client & Server</td>
+            </tr>
+            <tr>
+              <td><strong>API</strong></td>
+              <td>Đơn giản (key-value)</td>
+              <td>Đơn giản (key-value)</td>
+              <td>Phức tạp (string-based)</td>
+            </tr>
+            <tr>
+              <td><strong>Bảo mật</strong></td>
+              <td>Không an toàn cho data nhạy cảm</td>
+              <td>Không an toàn cho data nhạy cảm</td>
+              <td>Có tùy chọn bảo mật (<code>secure</code>, <code>httponly</code>)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <h3 id="storage-angular-app">e. Ứng dụng thực tế trong Angular</h3>
       <h4>Service quản lý Storage</h4>

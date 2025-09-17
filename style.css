@@ -20,6 +20,8 @@ html {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  /* Font size mặc định cho desktop */
   line-height: 1.6;
   background-color: #f4f7f9;
   color: #333;
@@ -134,7 +136,7 @@ section {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* ... Các style cho h1, code, table, etc. vẫn giữ nguyên ... */
+/* --- Các style cũ (Đã khôi phục) --- */
 h1,
 h2,
 h3,
@@ -157,6 +159,13 @@ h3 {
   font-size: 1.4em;
   border-bottom: 1px solid #eee;
   margin-top: 30px;
+}
+
+h4 {
+  font-size: 1.2em;
+  border-bottom: none;
+  margin-top: 25px;
+  color: #34495e;
 }
 
 code {
@@ -217,27 +226,44 @@ code {
   color: #e06c75;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+/* --- PHONG CÁCH MỚI CHO BẢNG CUỘN NGANG --- */
+.table-container {
+  overflow-x: auto;
+  /* Đây là dòng quan trọng nhất */
   margin-top: 20px;
+  border-radius: 4px;
+  -webkit-overflow-scrolling: touch;
+  /* Giúp cuộn mượt hơn trên iOS */
 }
 
-th,
-td {
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-container th,
+.table-container td {
   border: 1px solid #ddd;
   padding: 12px;
   text-align: left;
+  white-space: nowrap;
+  /* Ngăn không cho chữ trong ô bị xuống dòng */
 }
 
-th {
+.table-container th {
   background-color: #ecf0f1;
   font-weight: bold;
+  position: sticky;
+  /* Giúp header của bảng dính lại khi cuộn ngang */
+  left: 0;
+  z-index: 1;
 }
 
-tr:nth-child(even) {
+.table-container tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
+/* --- Kết thúc phong cách cho bảng --- */
 
 .structure .folder {
   color: #e5c07b;
@@ -269,7 +295,6 @@ tr:nth-child(even) {
   color: #e06c75;
 }
 
-/* --- PHONG CÁCH MỚI CHO CÁC LỆNH GIT --- */
 .git-command-block {
   display: grid;
   grid-template-columns: minmax(250px, max-content) 1fr;
@@ -280,14 +305,9 @@ tr:nth-child(even) {
   padding-bottom: 16px;
 }
 
-.git-command {
-  margin: 0;
-}
-
 .git-command code {
   background-color: #282c34;
   color: #98c379;
-  /* Màu xanh lá cho command */
   padding: 8px 12px;
   border-radius: 5px;
   font-size: 1em;
@@ -313,34 +333,9 @@ tr:nth-child(even) {
   font-size: 1.2em;
 }
 
-/* --- RESPONSIVE CHO GIT COMMANDS --- */
-@media (max-width: 768px) {
-  .git-command-block {
-    grid-template-columns: 1fr;
-    /* Xếp chồng lên nhau */
-    gap: 8px;
-    align-items: flex-start;
-  }
-
-  .git-command code {
-    display: inline-block;
-    width: 100%;
-    white-space: normal;
-    /* Cho phép xuống dòng */
-    text-align: left;
-  }
-
-  .git-explanation {
-    padding-left: 1.5em;
-    /* Tăng padding để mũi tên không bị dính */
-  }
-
-  .git-explanation::before {
-    left: 0;
-  }
-}
-
-/* --- RESPONSIVE CHO LAYOUT CHÍNH --- */
+/*
+--- RESPONSIVE CHO DI ĐỘNG ---
+*/
 .hamburger-button {
   display: none;
 }
@@ -352,6 +347,36 @@ tr:nth-child(even) {
 @media (max-width: 768px) {
   body {
     display: block;
+    font-size: 10px;
+  }
+
+  nav h2 {
+    font-size: 1.4em;
+  }
+
+  nav ul li a {
+    padding: 10px 20px;
+  }
+
+  .git-command-block {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .git-command code {
+    display: inline-block;
+    width: 100%;
+    white-space: normal;
+    text-align: left;
+  }
+
+  .git-explanation {
+    padding-left: 1.5em;
+  }
+
+  .git-explanation::before {
+    left: 0;
   }
 
   .hamburger-button {
