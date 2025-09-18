@@ -130,6 +130,16 @@
           <li><a href="#git-rewrite-history">j. Viết lại lịch sử</a></li>
         </ul>
       </li>
+      <li class="has-submenu">
+        <a href="#utility-types" class="menu-toggle">13. Utility Types (TypeScript)</a>
+        <ul class="sub-menu">
+          <li><a href="#utility-partial">a. Partial&lt;T&gt;</a></li>
+          <li><a href="#utility-required">b. Required&lt;T&gt;</a></li>
+          <li><a href="#utility-pick">c. Pick&lt;T, K&gt;</a></li>
+          <li><a href="#utility-omit">d. Omit&lt;T, K&gt;</a></li>
+          <li><a href="#utility-record">e. Record&lt;K, T&gt;</a></li>
+        </ul>
+      </li>
     </ul>
   </nav>
 
@@ -672,7 +682,8 @@
             <tr>
               <td><strong>ngOnInit</strong></td>
               <td>Khởi tạo Component</td>
-              <td>Chạy <strong>một lần</strong> sau <code>ngOnChanges</code> lần đầu. Nơi lý tưởng để gọi API, khởi tạo dữ
+              <td>Chạy <strong>một lần</strong> sau <code>ngOnChanges</code> lần đầu. Nơi lý tưởng để gọi API, khởi tạo
+                dữ
                 liệu phức tạp.</td>
             </tr>
             <tr>
@@ -705,7 +716,8 @@
             <tr>
               <td><strong>ngOnDestroy</strong></td>
               <td>Hủy Component</td>
-              <td>Chạy ngay trước khi component bị hủy. Nơi <strong>bắt buộc</strong> để dọn dẹp, hủy subscriptions, tránh
+              <td>Chạy ngay trước khi component bị hủy. Nơi <strong>bắt buộc</strong> để dọn dẹp, hủy subscriptions,
+                tránh
                 memory leak.</td>
             </tr>
           </tbody>
@@ -1643,6 +1655,102 @@ ng test --watch</code></div>
       </div>
     </section>
 
+    <section id="utility-types">
+      <h2>13. Khi Nào Nên Dùng Utility Types (TypeScript)</h2>
+      <p>Utility Types là các công cụ có sẵn của TypeScript giúp bạn biến đổi và tái sử dụng các kiểu (types) hiện có
+        một cách linh hoạt, giúp code an toàn và dễ bảo trì hơn.</p>
+
+      <h3 id="utility-partial">a. Partial&lt;T&gt;</h3>
+      <p><strong>Công dụng:</strong> Biến tất cả các thuộc tính của kiểu `T` thành tùy chọn (optional).</p>
+      <p><strong>Khi nào dùng:</strong> Cực kỳ hữu ích trong các tình huống cập nhật dữ liệu (ví dụ: form edit, update
+        API), khi bạn chỉ muốn cung cấp một vài trường thay đổi thay vì toàn bộ object.</p>
+      <div class="code-block"><code
+          class="language-typescript"><span class="keyword">interface</span> <span class="variable">User</span> <span class="punctuation">{</span>
+  <span class="object-key">id</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span>
+  <span class="object-key">name</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Tất cả thuộc tính của User đều trở thành tùy chọn (id?: number, name?: string)</span>
+<span class="keyword">type</span> <span class="variable">UserUpdate</span> <span class="punctuation">=</span> <span class="variable">Partial</span><span class="punctuation">&lt;</span><span class="variable">User</span><span class="punctuation">>;</span>
+
+<span class="keyword">function</span> <span class="function-name">updateUser</span><span class="punctuation">(</span><span class="variable">id</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">,</span> <span class="variable">data</span><span class="punctuation">:</span> <span class="variable">UserUpdate</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+  <span class="comment">// ... Gửi chỉ các trường thay đổi lên server</span>
+<span class="punctuation">}</span>
+
+<span class="function-name">updateUser</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="punctuation">{</span> <span class="object-key">name</span><span class="punctuation">:</span> <span class="string">"Jane Doe"</span> <span class="punctuation">});</span> <span class="comment">// Hợp lệ</span></code>
+      </div>
+
+      <h3 id="utility-required">b. Required&lt;T&gt;</h3>
+      <p><strong>Công dụng:</strong> Ngược lại với `Partial`, `Required` biến tất cả các thuộc tính của `T` thành bắt
+        buộc (required), kể cả những thuộc tính tùy chọn ban đầu.</p>
+      <p><strong>Khi nào dùng:</strong> Khi bạn cần đảm bảo một object phải có đầy đủ tất cả các thuộc tính trong một
+        ngữ cảnh cụ thể, ví dụ như lúc khởi tạo ứng dụng từ một file cấu hình.</p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">interface</span> <span class="variable">AppConfig</span> <span class="punctuation">{</span>
+  <span class="object-key">apiUrl</span><span class="punctuation">?:</span> <span class="variable">string</span><span class="punctuation">;</span>
+  <span class="object-key">timeout</span><span class="punctuation">?:</span> <span class="variable">number</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Yêu cầu tất cả thuộc tính phải được cung cấp (apiUrl: string, timeout: number)</span>
+<span class="keyword">type</span> <span class="variable">StrictConfig</span> <span class="punctuation">=</span> <span class="variable">Required</span><span class="punctuation">&lt;</span><span class="variable">AppConfig</span><span class="punctuation">>;</span>
+
+<span class="keyword">const</span> <span class="variable">config</span><span class="punctuation">:</span> <span class="variable">StrictConfig</span> <span class="punctuation">=</span> <span class="punctuation">{</span>
+  <span class="object-key">apiUrl</span><span class="punctuation">:</span> <span class="string">"https://api.example.com"</span><span class="punctuation">,</span>
+  <span class="object-key">timeout</span><span class="punctuation">:</span> <span class="number">5000</span>
+<span class="punctuation">};</span> <span class="comment">// Thiếu 1 trong 2 sẽ báo lỗi</span></code></div>
+
+      <h3 id="utility-pick">c. Pick&lt;T, K&gt;</h3>
+      <p><strong>Công dụng:</strong> "Chọn ra" (pick) một tập hợp các thuộc tính (`K`) từ kiểu `T` để tạo thành một kiểu
+        mới.</p>
+      <p><strong>Khi nào dùng:</strong> Khi bạn chỉ cần một phần dữ liệu từ một object lớn. Rất hay dùng để tạo các view
+        model (ví dụ: hiển thị danh sách tóm tắt) hoặc các DTO (Data Transfer Object).</p>
+      <div class="code-block"><code
+          class="language-typescript"><span class="keyword">interface</span> <span class="variable">Product</span> <span class="punctuation">{</span>
+  <span class="object-key">id</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span>
+  <span class="object-key">name</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+  <span class="object-key">price</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span>
+  <span class="object-key">description</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Chỉ chọn 'id' và 'name' từ Product</span>
+<span class="keyword">type</span> <span class="variable">ProductPreview</span> <span class="punctuation">=</span> <span class="variable">Pick</span><span class="punctuation">&lt;</span><span class="variable">Product</span><span class="punctuation">,</span> <span class="string">'id'</span> <span class="punctuation">|</span> <span class="string">'name'</span><span class="punctuation">>;</span>
+<span class="comment">// ProductPreview giờ là: { id: number; name: string; }</span>
+
+<span class="keyword">const</span> <span class="variable">productList</span><span class="punctuation">:</span> <span class="variable">ProductPreview</span><span class="punctuation">[]</span> <span class="punctuation">=</span> <span class="punctuation">[];</span></code>
+      </div>
+
+      <h3 id="utility-omit">d. Omit&lt;T, K&gt;</h3>
+      <p><strong>Công dụng:</strong> Ngược với `Pick`, `Omit` dùng để "loại bỏ" một tập hợp thuộc tính (`K`) khỏi kiểu
+        `T`.</p>
+      <p><strong>Khi nào dùng:</strong> Cực kỳ hữu ích để loại bỏ các thuộc tính nhạy cảm (như password) hoặc các thuộc
+        tính không cần thiết trước khi trả dữ liệu về cho client hoặc khi tạo form.</p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">interface</span> <span class="variable">User</span> <span class="punctuation">{</span>
+  <span class="object-key">id</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span>
+  <span class="object-key">name</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+  <span class="object-key">email</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+  <span class="object-key">password</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span> <span class="comment">// Nhạy cảm</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Loại bỏ 'password' để tạo DTO cho việc đăng ký</span>
+<span class="keyword">type</span> <span class="variable">UserRegistrationDto</span> <span class="punctuation">=</span> <span class="variable">Omit</span><span class="punctuation">&lt;</span><span class="variable">User</span><span class="punctuation">,</span> <span class="string">'id'</span> <span class="punctuation">|</span> <span class="string">'password'</span><span class="punctuation">>;</span>
+<span class="comment">// UserRegistrationDto giờ là: { name: string; email: string; }</span></code></div>
+
+      <h3 id="utility-record">e. Record&lt;K, T&gt;</h3>
+      <p><strong>Công dụng:</strong> Xây dựng một kiểu object có các khóa (keys) thuộc kiểu `K` và các giá trị (values)
+        thuộc kiểu `T`.</p>
+      <p><strong>Khi nào dùng:</strong> Khi bạn muốn khai báo một object với các key động nhưng có cấu trúc value thống
+        nhất. Nó rõ ràng và an toàn hơn so với việc dùng index signature `({ [key: string]: T })`.</p>
+      <div class="code-block"><code class="language-typescript"><span class="comment">// Định nghĩa một tập hợp các quyền có thể có</span>
+<span class="keyword">type</span> <span class="variable">Permission</span> <span class="punctuation">=</span> <span class="string">'canRead'</span> <span class="punctuation">|</span> <span class="string">'canWrite'</span> <span class="punctuation">|</span> <span class="string">'canDelete'</span><span class="punctuation">;</span>
+
+<span class="comment">// Tạo một object yêu cầu tất cả các quyền phải được định nghĩa là boolean</span>
+<span class="keyword">type</span> <span class="variable">UserPermissions</span> <span class="punctuation">=</span> <span class="variable">Record</span><span class="punctuation">&lt;</span><span class="variable">Permission</span><span class="punctuation">,</span> <span class="variable">boolean</span><span class="punctuation">>;</span>
+
+<span class="keyword">const</span> <span class="variable">adminPermissions</span><span class="punctuation">:</span> <span class="variable">UserPermissions</span> <span class="punctuation">=</span> <span class="punctuation">{</span>
+  <span class="object-key">canRead</span><span class="punctuation">:</span> <span class="boolean">true</span><span class="punctuation">,</span>
+  <span class="object-key">canWrite</span><span class="punctuation">:</span> <span class="boolean">true</span><span class="punctuation">,</span>
+  <span class="object-key">canDelete</span><span class="punctuation">:</span> <span class="boolean">true</span>
+<span class="punctuation">};</span> <span class="comment">// Thiếu một quyền sẽ báo lỗi</span></code></div>
+    </section>
   </main>
 
   <script src="script.js" defer></script>
