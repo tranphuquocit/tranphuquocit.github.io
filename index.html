@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bai test crop anh</title>
+  <title>Công cụ Cắt Ảnh</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -33,6 +33,12 @@
     <!-- Panel tùy chọn bên phải -->
     <div class="options-panel">
       <h2>Crop options</h2>
+
+      <!-- THAY ĐỔI: Thêm dòng hiển thị kích thước gốc -->
+      <div class="original-dimensions">
+        Kích thước gốc: <span id="original-width-display"></span> - <span id="original-height-display"></span> px
+      </div>
+
       <div class="option-item">
         <label for="width-input">Width (px)</label>
         <input type="number" id="width-input">
@@ -50,14 +56,11 @@
         <input type="number" id="y-input">
       </div>
 
-      <!-- THAY ĐỔI: Thêm class="action-button" -->
       <button id="crop-button" class="action-button">Crop IMAGE ➔</button>
 
       <div class="result-container">
         <h3>Ảnh đã cắt:</h3>
         <canvas id="result-canvas"></canvas>
-
-        <!-- THAY ĐỔI: Thay class="button" bằng "action-button" -->
         <a href="#" id="download-button" class="action-button disabled">Tải xuống ảnh</a>
       </div>
     </div>

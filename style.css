@@ -141,6 +141,23 @@ body {
   cursor: nesw-resize;
 }
 
+.original-dimensions {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.original-dimensions span {
+  font-weight: bold;
+}
+
+.original-dimensions:empty {
+  display: none;
+}
+
 /* Panel tùy chọn bên phải */
 .options-panel {
   flex-basis: 500px;
@@ -185,8 +202,10 @@ body {
 }
 
 #result-canvas {
-  width: 100%; /* Chiếm 100% chiều rộng của panel bên phải */
-  height: 220px; /* Chiều cao cố định */
+  width: 100%;
+  /* Chiếm 100% chiều rộng của panel bên phải */
+  height: 220px;
+  /* Chiều cao cố định */
   border: 1px solid #ddd;
   background-color: #f0f0f0;
   object-fit: contain;
