@@ -185,9 +185,11 @@ body {
 }
 
 #result-canvas {
-  max-width: 100%;
+  width: 100%; /* Chiếm 100% chiều rộng của panel bên phải */
+  height: 220px; /* Chiều cao cố định */
   border: 1px solid #ddd;
-  background-color: #f9f9f9;
+  background-color: #f0f0f0;
+  object-fit: contain;
 }
 
 .action-button {
