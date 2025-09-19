@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const borderWidth = 4;
   let scaleX = 1;
   let scaleY = 1;
+  let isFirstLoad = true; // Thêm biến để theo dõi lần tải đầu tiên
 
   function handleLargeImage(img, maxDimension = 2000) {
     return new Promise((resolve) => {
@@ -84,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
           imageContainer.style.display = 'flex'; // Sửa thành flex
           cropBox.style.display = 'block';
           uploadButtonPlaceholder.style.display = 'none';
+          isFirstLoad = true; // Reset khi tải ảnh mới
           recalculateAndSync(true);
         };
       };
@@ -92,14 +94,15 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.readAsDataURL(file);
   });
 
-  function recalculateAndSync(isFirstLoad = false) {
+  function recalculateAndSync(isFirstLoadCall = false) {
     if (!imageToCrop.src || !imageToCrop.complete) return;
 
     const imgRect = imageToCrop.getBoundingClientRect();
     scaleX = imageToCrop.naturalWidth / imgRect.width;
     scaleY = imageToCrop.naturalHeight / imgRect.height;
 
-    if (isFirstLoad) {
+    // CHỈ thiết lập crop box mặc định khi là lần đầu tải ảnh
+    if (isFirstLoadCall && isFirstLoad) {
       originalWidthDisplay.textContent = imageToCrop.naturalWidth;
       originalHeightDisplay.textContent = imageToCrop.naturalHeight;
 
@@ -120,8 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
       cropBox.style.top = `${centerY}px`;
 
       updateInputsFromCropBox();
+      isFirstLoad = false; // Đánh dấu đã qua lần đầu
+    } else {
+      // Chỉ cập nhật scale khi resize, không reset crop box
+      updateInputsFromCropBox();
     }
   }
+
   function updateInputsFromCropBox() {
     const offset = getImageOffset();
 
@@ -148,10 +156,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let x = parseInt(xInput.value) || 0;
     let y = parseInt(yInput.value) || 0;
 
+    // Giới hạn giá trị nhập vào không vượt quá kích thước ảnh
     w = Math.max(10, Math.min(w, imageToCrop.naturalWidth));
     h = Math.max(10, Math.min(h, imageToCrop.naturalHeight));
     x = Math.max(0, Math.min(x, imageToCrop.naturalWidth - w));
     y = Math.max(0, Math.min(y, imageToCrop.naturalHeight - h));
+
+    // Cập nhật giá trị input với giá trị đã được điều chỉnh
+    widthInput.value = w;
+    heightInput.value = h;
+    xInput.value = x;
+    yInput.value = y;
 
     // Chuyển đổi sang tọa độ hiển thị (cộng thêm offset)
     const displayX = (x / scaleX) + offset.x;
@@ -165,7 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
     cropBox.style.height = `${displayH - 2 * borderWidth}px`;
   }
 
-  [widthInput, heightInput, xInput, yInput].forEach(input => { input.addEventListener('change', updateCropBoxFromInputs); });
+  [widthInput, heightInput, xInput, yInput].forEach(input => {
+    input.addEventListener('change', updateCropBoxFromInputs);
+    input.addEventListener('input', debounce(updateCropBoxFromInputs, 300));
+  });
 
   function getEventCoords(e) { return e.touches ? e.touches[0] : e; }
 
@@ -194,7 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // --- PHẦN SỬA LỖI QUAN TRỌNG NHẤT ---
   function handleMove(e) {
     if (!action) return;
     e.preventDefault();
@@ -295,5 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadButton.classList.remove('disabled');
   });
 
-  window.addEventListener('resize', debounce(recalculateAndSync, 100));
+  // SỬA LỖI QUAN TRỌNG: Chỉ cập nhật scale khi resize, không reset crop box
+  window.addEventListener('resize', debounce(() => recalculateAndSync(false), 100));
 });
