@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM elements (không đổi)
+  // DOM elements
   const originalWidthDisplay = document.getElementById('original-width-display');
   const originalHeightDisplay = document.getElementById('original-height-display');
   const downloadButton = document.getElementById('download-button');
@@ -14,15 +14,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const yInput = document.getElementById('y-input');
   const cropButton = document.getElementById('crop-button');
   const resultCanvas = document.getElementById('result-canvas');
+  const loadingIndicator = document.querySelector('.loading');
+  const resetButton = document.getElementById('reset-button');
+  const removeButton = document.getElementById('remove-button');
 
-  // State variables (không đổi)
+  // State variables
   let action = null;
   let startX, startY;
   let startCropBox;
   const borderWidth = 4;
   let scaleX = 1;
   let scaleY = 1;
-  let isFirstLoad = true; // Thêm biến để theo dõi lần tải đầu tiên
+  let isFirstLoad = true;
+  let currentRotation = 0;
+
+  // Hàm cuộn lên đầu trang
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
 
   function handleLargeImage(img, maxDimension = 2000) {
     return new Promise((resolve) => {
@@ -74,6 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
     const file = e.target.files[0];
     if (!file) return;
+
+    loadingIndicator.style.display = 'block';
+    uploadButtonPlaceholder.style.display = 'none';
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const tempImg = new Image();
@@ -82,10 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const resizedDataUrl = await handleLargeImage(tempImg, 2000);
         imageToCrop.src = resizedDataUrl;
         imageToCrop.onload = () => {
-          imageContainer.style.display = 'flex'; // Sửa thành flex
+          imageContainer.style.display = 'flex';
           cropBox.style.display = 'block';
-          uploadButtonPlaceholder.style.display = 'none';
-          isFirstLoad = true; // Reset khi tải ảnh mới
+          isFirstLoad = true;
+          currentRotation = 0;
+          loadingIndicator.style.display = 'none';
           recalculateAndSync(true);
         };
       };
@@ -123,9 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
       cropBox.style.top = `${centerY}px`;
 
       updateInputsFromCropBox();
-      isFirstLoad = false; // Đánh dấu đã qua lần đầu
+      isFirstLoad = false;
     } else {
-      // Chỉ cập nhật scale khi resize, không reset crop box
       updateInputsFromCropBox();
     }
   }
@@ -312,6 +328,50 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadButton.classList.remove('disabled');
   });
 
-  // SỬA LỖI QUAN TRỌNG: Chỉ cập nhật scale khi resize, không reset crop box
+  // Reset button functionality
+  resetButton.addEventListener('click', () => {
+    if (!imageToCrop.src) return;
+
+    // Cuộn lên đầu trang
+    scrollToTop();
+
+    // Reset crop box
+    isFirstLoad = true;
+    recalculateAndSync(true);
+  });
+
+  // Remove button functionality - XÓA ẢNH
+  removeButton.addEventListener('click', () => {
+
+    // Xóa ảnh và reset mọi thứ
+    imageToCrop.src = '';
+    imageContainer.style.display = 'none';
+    cropBox.style.display = 'none';
+    uploadButtonPlaceholder.style.display = 'block';
+
+    // Reset các input
+    widthInput.value = '802';
+    heightInput.value = '802';
+    xInput.value = '0';
+    yInput.value = '0';
+
+    // Reset thông tin kích thước
+    originalWidthDisplay.textContent = '0';
+    originalHeightDisplay.textContent = '0';
+
+    // Reset canvas
+    const ctx = resultCanvas.getContext('2d');
+    ctx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+
+    // Vô hiệu hóa nút download
+    downloadButton.classList.add('disabled');
+    downloadButton.removeAttribute('href');
+
+    // Reset file input
+    imageLoader.value = '';
+    // Cuộn lên đầu trang
+    scrollToTop();
+  });
+
   window.addEventListener('resize', debounce(() => recalculateAndSync(false), 100));
 });

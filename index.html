@@ -3,16 +3,16 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Công cụ Cắt Ảnh</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
   <div class="app-container">
-    <!-- Vùng làm việc bên trái (giữ nguyên) -->
+    <!-- Vùng làm việc bên trái -->
     <div class="editor-panel">
+      <div class="loading">Đang xử lý ảnh...</div>
       <div id="image-container">
         <img id="image-to-crop" src="" alt="Hình ảnh gốc">
         <div id="crop-box">
@@ -26,42 +26,46 @@
           <div class="handle" id="handle-se"></div>
         </div>
       </div>
-      <label for="image-loader" class="upload-button-placeholder">Choose File</label>
+      <label for="image-loader" class="upload-button-placeholder">Chọn Ảnh</label>
       <input type="file" id="image-loader" accept="image/*" hidden>
     </div>
 
     <!-- Panel tùy chọn bên phải -->
     <div class="options-panel">
-      <h2>Crop options</h2>
+      <h2>Tùy chọn Cắt Ảnh</h2>
 
-      <!-- THAY ĐỔI: Thêm dòng hiển thị kích thước gốc -->
       <div class="original-dimensions">
-        Kích thước gốc: <span id="original-width-display"></span> - <span id="original-height-display"></span> px
+        Kích thước gốc: <span id="original-width-display">0</span> x <span id="original-height-display">0</span> px
       </div>
 
       <div class="option-item">
-        <label for="width-input">Width (px)</label>
-        <input type="number" id="width-input">
+        <label for="width-input">Chiều rộng (px)</label>
+        <input type="number" id="width-input" min="10" value="802">
       </div>
       <div class="option-item">
-        <label for="height-input">Height (px)</label>
-        <input type="number" id="height-input">
+        <label for="height-input">Chiều cao (px)</label>
+        <input type="number" id="height-input" min="10" value="802">
       </div>
       <div class="option-item">
-        <label for="x-input">Position X (px)</label>
-        <input type="number" id="x-input">
+        <label for="x-input">Vị trí X (px)</label>
+        <input type="number" id="x-input" min="0" value="0">
       </div>
       <div class="option-item">
-        <label for="y-input">Position Y (px)</label>
-        <input type="number" id="y-input">
+        <label for="y-input">Vị trí Y (px)</label>
+        <input type="number" id="y-input" min="0" value="0">
       </div>
 
-      <button id="crop-button" class="action-button">Crop IMAGE ➔</button>
+      <button id="crop-button" class="action-button">Cắt Ảnh</button>
 
       <div class="result-container">
         <h3>Ảnh đã cắt:</h3>
         <canvas id="result-canvas"></canvas>
         <a href="#" id="download-button" class="action-button disabled">Tải xuống ảnh</a>
+      </div>
+
+      <div class="mobile-toolbar">
+        <button id="reset-button" class="action-button">Đặt lại</button>
+        <button id="remove-button" class="action-button">Xóa ảnh</button>
       </div>
     </div>
   </div>
