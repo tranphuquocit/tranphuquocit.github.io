@@ -1,4 +1,4 @@
-/* Thiết lập cơ bản để chiếm toàn bộ màn hình */
+/* Thiết lập cơ bản */
 html,
 body {
   width: 100%;
@@ -6,25 +6,21 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  /* Ngăn cuộn trang không mong muốn */
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background-color: #e9ecef;
 }
 
-/* Container chính chiếm toàn bộ không gian */
+/* Container chính */
 .app-container {
   display: flex;
   width: 100vw;
-  /* 100% chiều rộng viewport */
   height: 100vh;
-  /* 100% chiều cao viewport */
   background: white;
 }
 
 /* Vùng làm việc bên trái */
 .editor-panel {
   flex: 1;
-  /* Chiếm toàn bộ không gian còn lại */
   background-color: #000;
   display: flex;
   justify-content: center;
@@ -34,7 +30,6 @@ body {
   height: 100%;
 }
 
-/* Nút tải ảnh mặc định */
 .upload-button-placeholder {
   padding: 8px 16px;
   background-color: #555;
@@ -55,22 +50,22 @@ body {
 }
 
 #image-to-crop {
-  /* Cho phép ảnh co giãn để vừa với editor panel lớn hơn */
   max-width: 100%;
   max-height: 100%;
   display: block;
 }
 
-/* Khung crop */
 #crop-box {
   position: absolute;
   cursor: move;
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
   border: 4px solid #4a90e2;
   display: none;
+  /* Dùng box-sizing để việc tính toán width/height dễ hơn */
+  box-sizing: content-box;
 }
 
-/* Lưới crop */
+/* Các style cho lưới và handle giữ nguyên... */
 .grid-line-hor,
 .grid-line-ver {
   position: absolute;
@@ -107,53 +102,54 @@ body {
   left: 66.66%;
 }
 
-/* Điểm điều khiển */
 .handle {
   position: absolute;
   width: 16px;
   height: 16px;
   background-color: white;
-  border: 1px solid #4a90e2;
+  border: 1px solid #333;
 }
 
 #handle-nw {
-  top: -6px;
-  left: -6px;
-  cursor: nwse-resize;
+  top: -9px;
+  left: -9px;
 }
 
+/* Điều chỉnh vị trí handle cho border 4px */
 #handle-ne {
-  top: -6px;
-  right: -6px;
-  cursor: nesw-resize;
+  top: -9px;
+  right: -9px;
 }
 
 #handle-sw {
-  bottom: -6px;
-  left: -6px;
-  cursor: nesw-resize;
+  bottom: -9px;
+  left: -9px;
 }
 
 #handle-se {
-  bottom: -6px;
-  right: -6px;
+  bottom: -9px;
+  right: -9px;
+}
+
+#handle-nw,
+#handle-se {
   cursor: nwse-resize;
+}
+
+#handle-ne,
+#handle-sw {
+  cursor: nesw-resize;
 }
 
 /* Panel tùy chọn bên phải */
 .options-panel {
   flex-basis: 500px;
-  /* Tăng nhẹ chiều rộng cho cân đối */
   flex-shrink: 0;
   padding: 24px;
   box-sizing: border-box;
-  /* Đảm bảo padding không làm tăng kích thước */
   height: 100vh;
-  /* Chiếm toàn bộ chiều cao */
   overflow-y: auto;
-  /* Thêm thanh cuộn nếu nội dung quá dài */
   border-left: 1px solid #ddd;
-  /* Tạo đường phân cách */
 }
 
 .option-item {
@@ -176,20 +172,6 @@ body {
   font-size: 16px;
 }
 
-#crop-button {
-  width: 100%;
-  padding: 12px;
-  background-color: #4a90e2;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  margin-top: 20px;
-  transition: background-color 0.2s;
-}
-
 #crop-button:hover {
   background-color: #357abd;
 }
@@ -206,4 +188,95 @@ body {
   max-width: 100%;
   border: 1px solid #ddd;
   background-color: #f9f9f9;
+}
+
+.action-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  background-color: #4a90e2;
+  /* Màu xanh dương đồng nhất */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+/* Hiệu ứng hover cho cả hai nút */
+.action-button:hover {
+  background-color: #357abd;
+}
+
+/* Trạng thái disabled cho cả hai nút (nếu cần) */
+.action-button.disabled {
+  background-color: #ccc !important;
+  /* Đổi màu chữ cho dễ đọc hơn */
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Điều chỉnh lại khoảng cách trên của nút tải xuống cho đẹp hơn */
+#download-button {
+  margin-top: 15px;
+  background-color: #28a745;
+}
+
+.result-container {
+  margin-top: 30px;
+}
+
+.result-container h3 {
+  margin-bottom: 10px;
+}
+
+#result-canvas {
+  max-width: 100%;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+/* ---- PHẦN RESPONSIVE CHO TABLET VÀ MOBILE ---- */
+@media (max-width: 992px) {
+
+  /* Cho phép cuộn trên màn hình nhỏ */
+  body,
+  html {
+    overflow: auto;
+    height: auto;
+  }
+
+  /* Chuyển layout thành cột dọc */
+  .app-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  /* Vùng editor chiếm 100% chiều rộng và có chiều cao tự động theo tỉ lệ */
+  .editor-panel {
+    width: 100%;
+    height: auto;
+    min-height: 40vh;
+    /* Chiều cao tối thiểu là 40% chiều cao màn hình */
+    aspect-ratio: 4 / 3;
+    /* Giữ tỉ lệ khung hình 4:3 */
+  }
+
+  /* Panel tùy chọn cũng chiếm 100% chiều rộng và không cuộn nữa */
+  .options-panel {
+    flex-basis: auto;
+    /* Chiều rộng tự động */
+    width: 100%;
+    height: auto;
+    border-left: none;
+    border-top: 1px solid #ddd;
+    /* Thêm đường kẻ phân cách ở trên */
+  }
 }

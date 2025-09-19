@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Công cụ Cắt Ảnh</title>
+  <title>Bai test crop anh</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
   <div class="app-container">
-    <!-- Vùng làm việc bên trái -->
+    <!-- Vùng làm việc bên trái (giữ nguyên) -->
     <div class="editor-panel">
       <div id="image-container">
         <img id="image-to-crop" src="" alt="Hình ảnh gốc">
@@ -26,7 +26,6 @@
           <div class="handle" id="handle-se"></div>
         </div>
       </div>
-      <!-- Nút tải ảnh sẽ nằm đè lên trên khi chưa có ảnh -->
       <label for="image-loader" class="upload-button-placeholder">Choose File</label>
       <input type="file" id="image-loader" accept="image/*" hidden>
     </div>
@@ -50,11 +49,16 @@
         <label for="y-input">Position Y (px)</label>
         <input type="number" id="y-input">
       </div>
-      <button id="crop-button">Crop IMAGE ➔</button>
+
+      <!-- THAY ĐỔI: Thêm class="action-button" -->
+      <button id="crop-button" class="action-button">Crop IMAGE ➔</button>
 
       <div class="result-container">
         <h3>Ảnh đã cắt:</h3>
         <canvas id="result-canvas"></canvas>
+
+        <!-- THAY ĐỔI: Thay class="button" bằng "action-button" -->
+        <a href="#" id="download-button" class="action-button disabled">Tải xuống ảnh</a>
       </div>
     </div>
   </div>

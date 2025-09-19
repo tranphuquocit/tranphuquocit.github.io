@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Lấy các phần tử DOM
+    // Thêm biến cho nút download
+    const downloadButton = document.getElementById('download-button');
+    // Các biến khác giữ nguyên
     const imageLoader = document.getElementById('image-loader');
     const uploadButtonPlaceholder = document.querySelector('.upload-button-placeholder');
     const imageContainer = document.getElementById('image-container');
@@ -15,13 +17,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let action = null;
     let startX, startY;
     let startCropBox;
+    const borderWidth = 4;
 
-    // Các phần 1, 2, 3 (tải ảnh, cập nhật input, kéo thả) giữ nguyên như trước...
-    // 1. Tải ảnh lên
     imageLoader.addEventListener('change', (e) => {
+        // Vô hiệu hóa nút tải xuống khi có ảnh mới
+        downloadButton.classList.add('disabled');
+        downloadButton.removeAttribute('href');
+        // Xóa canvas cũ
+        const ctx = resultCanvas.getContext('2d');
+        ctx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+
+        // Logic tải ảnh lên như cũ
         const file = e.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = (event) => {
             imageToCrop.src = event.target.result;
@@ -29,60 +37,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageContainer.style.display = 'block';
                 cropBox.style.display = 'block';
                 uploadButtonPlaceholder.style.display = 'none';
-
                 const imgWidth = imageToCrop.width;
                 const imgHeight = imageToCrop.height;
                 const defaultWidth = imgWidth * 0.5;
                 const defaultHeight = imgHeight * 0.5;
-
-                cropBox.style.width = `${defaultWidth}px`;
-                cropBox.style.height = `${defaultHeight}px`;
+                cropBox.style.width = `${defaultWidth - 2 * borderWidth}px`;
+                cropBox.style.height = `${defaultHeight - 2 * borderWidth}px`;
                 cropBox.style.left = `${(imgWidth - defaultWidth) / 2}px`;
                 cropBox.style.top = `${(imgHeight - defaultHeight) / 2}px`;
-
                 updateInputs();
             };
         };
         reader.readAsDataURL(file);
     });
 
-    // 2. Cập nhật input
+    // Các hàm update, mousedown, mousemove, mouseup giữ nguyên như phiên bản trước
     function updateInputs() {
         widthInput.value = Math.round(cropBox.clientWidth);
         heightInput.value = Math.round(cropBox.clientHeight);
-        xInput.value = Math.round(parseFloat(cropBox.style.left));
-        yInput.value = Math.round(parseFloat(cropBox.style.top));
+        xInput.value = Math.round(cropBox.offsetLeft);
+        yInput.value = Math.round(cropBox.offsetTop);
     }
 
-    function updateCropBoxFromInputs() {
-        if (!imageToCrop.src) return;
-        const imgWidth = imageToCrop.width;
-        const imgHeight = imageToCrop.height;
-        const borderWidth = 4; // Định nghĩa độ dày border
-        let newX = parseInt(xInput.value) || 0;
-        let newY = parseInt(yInput.value) || 0;
-        let newWidth = parseInt(widthInput.value) || 10;
-        let newHeight = parseInt(heightInput.value) || 10;
-
-        const totalWidth = newWidth + 2 * borderWidth;
-        const totalHeight = newHeight + 2 * borderWidth;
-
-        newX = Math.max(0, Math.min(newX, imgWidth - totalWidth));
-        newY = Math.max(0, Math.min(newY, imgHeight - totalHeight));
-        newWidth = Math.max(10, Math.min(newWidth, imgWidth - newX - 2 * borderWidth));
-        newHeight = Math.max(10, Math.min(newHeight, imgHeight - newY - 2 * borderWidth));
-
-        cropBox.style.left = `${newX}px`;
-        cropBox.style.top = `${newY}px`;
-        cropBox.style.width = `${newWidth}px`;
-        cropBox.style.height = `${newHeight}px`;
-        updateInputs();
-    }
     [widthInput, heightInput, xInput, yInput].forEach(input => {
-        input.addEventListener('change', updateCropBoxFromInputs);
+        input.addEventListener('change', () => {
+            if (!imageToCrop.src) return;
+            const imgWidth = imageToCrop.width;
+            const imgHeight = imageToCrop.height;
+            let newX = parseInt(xInput.value) || 0;
+            let newY = parseInt(yInput.value) || 0;
+            let newWidth = parseInt(widthInput.value) || 10;
+            let newHeight = parseInt(heightInput.value) || 10;
+            const totalWidth = newWidth + 2 * borderWidth;
+            const totalHeight = newHeight + 2 * borderWidth;
+            newX = Math.max(0, Math.min(newX, imgWidth - totalWidth));
+            newY = Math.max(0, Math.min(newY, imgHeight - totalHeight));
+            cropBox.style.left = `${newX}px`;
+            cropBox.style.top = `${newY}px`;
+            cropBox.style.width = `${newWidth}px`;
+            cropBox.style.height = `${newHeight}px`;
+            updateInputs();
+        });
     });
 
-    // 3. Logic kéo/thả và thay đổi kích thước
     imageContainer.addEventListener('mousedown', (e) => {
         e.preventDefault();
         startX = e.clientX;
@@ -91,7 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
             x: cropBox.offsetLeft,
             y: cropBox.offsetTop,
             width: cropBox.offsetWidth,
-            height: cropBox.offsetHeight
+            height: cropBox.offsetHeight,
+            right: cropBox.offsetLeft + cropBox.offsetWidth,
+            bottom: cropBox.offsetTop + cropBox.offsetHeight
         };
         if (e.target.classList.contains('handle')) {
             action = `resize-${e.target.id.split('-')[1]}`;
@@ -103,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mousemove', (e) => {
         if (!action) return;
         e.preventDefault();
-
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
         const imgWidth = imageToCrop.width;
@@ -117,22 +115,33 @@ document.addEventListener('DOMContentLoaded', () => {
             cropBox.style.left = `${newX}px`;
             cropBox.style.top = `${newY}px`;
         } else {
-            const borderWidth = 4;
             let newLeft = startCropBox.x;
             let newTop = startCropBox.y;
             let newWidth = startCropBox.width;
             let newHeight = startCropBox.height;
 
-            if (action.includes('e')) newWidth += dx;
-            if (action.includes('s')) newHeight += dy;
-            if (action.includes('w')) { newWidth -= dx; newLeft += dx; }
-            if (action.includes('n')) { newHeight -= dy; newTop += dy; }
-
-            newWidth = Math.max(20 + 2 * borderWidth, newWidth);
-            newHeight = Math.max(20 + 2 * borderWidth, newHeight);
-
-            if (newLeft < 0) { newWidth += newLeft; newLeft = 0; }
-            if (newTop < 0) { newHeight += newTop; newTop = 0; }
+            if (action.includes('e')) newWidth = startCropBox.width + dx;
+            if (action.includes('s')) newHeight = startCropBox.height + dy;
+            if (action.includes('w')) { newWidth = startCropBox.width - dx; newLeft = startCropBox.x + dx; }
+            if (action.includes('n')) { newHeight = startCropBox.height - dy; newTop = startCropBox.y + dy; }
+            const minContentSize = 20;
+            const minTotalSize = minContentSize + 2 * borderWidth;
+            if (newWidth < minTotalSize) {
+                newWidth = minTotalSize;
+                if (action.includes('w')) newLeft = startCropBox.right - minTotalSize;
+            }
+            if (newHeight < minTotalSize) {
+                newHeight = minTotalSize;
+                if (action.includes('n')) newTop = startCropBox.bottom - minTotalSize;
+            }
+            if (newLeft < 0) {
+                if (action.includes('w')) newWidth = startCropBox.right;
+                newLeft = 0;
+            }
+            if (newTop < 0) {
+                if (action.includes('n')) newHeight = startCropBox.bottom;
+                newTop = 0;
+            }
             if (newLeft + newWidth > imgWidth) newWidth = imgWidth - newLeft;
             if (newTop + newHeight > imgHeight) newHeight = imgHeight - newTop;
 
@@ -146,36 +155,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('mouseup', () => { action = null; });
 
-    // --- PHẦN SỬA LỖI QUAN TRỌNG NHẤT ---
-    // 4. Logic cắt ảnh
+    // --- SỬA LỖI VÀ THÊM LOGIC TẢI XUỐNG TẠI ĐÂY ---
     cropButton.addEventListener('click', () => {
         if (!imageToCrop.src || !imageToCrop.complete) {
             alert('Vui lòng tải ảnh lên trước!');
             return;
         }
-
         const ctx = resultCanvas.getContext('2d');
         const scaleX = imageToCrop.naturalWidth / imageToCrop.width;
+        // SỬA LỖI Ở ĐÂY: imageToDToCrop -> imageToCrop
         const scaleY = imageToCrop.naturalHeight / imageToCrop.height;
-        const borderWidth = 4; // Phải khai báo độ dày border ở đây
-
-        // Tính toán tọa độ và kích thước bên trong border
         const cropParams = {
-            // Tọa độ bắt đầu = tọa độ ngoài + độ dày border
             x: (cropBox.offsetLeft + borderWidth) * scaleX,
             y: (cropBox.offsetTop + borderWidth) * scaleY,
-            // Kích thước = kích thước vùng content (clientWidth/clientHeight)
             width: cropBox.clientWidth * scaleX,
             height: cropBox.clientHeight * scaleY
         };
-
         resultCanvas.width = cropParams.width;
         resultCanvas.height = cropParams.height;
-
         ctx.drawImage(
             imageToCrop,
             cropParams.x, cropParams.y, cropParams.width, cropParams.height,
             0, 0, cropParams.width, cropParams.height
         );
+
+        // --- LOGIC MỚI: Kích hoạt nút tải xuống ---
+        // Chuyển nội dung canvas thành một đường dẫn ảnh dạng base64
+        const dataUrl = resultCanvas.toDataURL('image/png');
+
+        // Gán đường dẫn cho nút và đề xuất tên tệp
+        downloadButton.href = dataUrl;
+        downloadButton.download = 'cropped-image.png';
+
+        // Kích hoạt nút bằng cách xóa class 'disabled'
+        downloadButton.classList.remove('disabled');
     });
 });
