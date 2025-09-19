@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM elements
+    // Các biến và hàm khác giữ nguyên...
     const originalWidthDisplay = document.getElementById('original-width-display');
     const originalHeightDisplay = document.getElementById('original-height-display');
     const downloadButton = document.getElementById('download-button');
@@ -15,17 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const cropButton = document.getElementById('crop-button');
     const resultCanvas = document.getElementById('result-canvas');
     
-    // State variables
     let action = null;
     let startX, startY;
     let startCropBox;
     const borderWidth = 4;
-
-    // THAY ĐỔI QUAN TRỌNG: Biến lưu trữ tỷ lệ
     let scaleX = 1;
     let scaleY = 1;
 
-    // --- Tải ảnh và thiết lập ban đầu ---
+    // --- CẬP NHẬT LOGIC TẢI ẢNH ---
     imageLoader.addEventListener('change', (e) => {
         // Reset state
         downloadButton.classList.add('disabled');
@@ -44,35 +41,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 cropBox.style.display = 'block';
                 uploadButtonPlaceholder.style.display = 'none';
 
-                // THAY ĐỔI QUAN TRỌNG: Tính toán và lưu trữ tỷ lệ
                 scaleX = imageToCrop.naturalWidth / imageToCrop.width;
                 scaleY = imageToCrop.naturalHeight / imageToCrop.height;
 
-                // Hiển thị kích thước gốc
                 originalWidthDisplay.textContent = imageToCrop.naturalWidth;
                 originalHeightDisplay.textContent = imageToCrop.naturalHeight;
                 
-                // Đặt crop box mặc định (vẫn tính theo kích thước hiển thị)
+                // --- LOGIC MỚI CHO CROP-BOX MẶC ĐỊNH ---
                 const imgWidth = imageToCrop.width;
                 const imgHeight = imageToCrop.height;
-                const defaultWidth = imgWidth * 0.6;
-                const defaultHeight = imgHeight * 0.6;
+
+                // 1. Tìm chiều ngắn hơn của ảnh hiển thị
+                const shorterDim = Math.min(imgWidth, imgHeight);
+
+                // 2. Lấy 60% của chiều ngắn hơn đó làm kích thước mặc định
+                const defaultSize = shorterDim * 0.6;
                 
-                cropBox.style.width = `${defaultWidth - 2 * borderWidth}px`;
-                cropBox.style.height = `${defaultHeight - 2 * borderWidth}px`;
-                cropBox.style.left = `${(imgWidth - defaultWidth) / 2}px`;
-                cropBox.style.top = `${(imgHeight - defaultHeight) / 2}px`;
+                // 3. Đặt kích thước và vị trí cho crop-box
+                cropBox.style.width = `${defaultSize - 2 * borderWidth}px`;
+                cropBox.style.height = `${defaultSize - 2 * borderWidth}px`;
+                cropBox.style.left = `${(imgWidth - defaultSize) / 2}px`;
+                cropBox.style.top = `${(imgHeight - defaultSize) / 2}px`;
                 
-                // Cập nhật input lần đầu (sẽ tự động scale lên kích thước gốc)
                 updateInputsFromCropBox();
             };
         };
         reader.readAsDataURL(file);
     });
 
-    // --- Các hàm chuyển đổi và cập nhật ---
-
-    // THAY ĐỔI QUAN TRỌNG: Cập nhật input bằng cách scale-up từ crop-box
+    // Các hàm còn lại giữ nguyên, không cần thay đổi
     function updateInputsFromCropBox() {
         widthInput.value = Math.round(cropBox.offsetWidth * scaleX);
         heightInput.value = Math.round(cropBox.offsetHeight * scaleY);
@@ -80,44 +77,30 @@ document.addEventListener('DOMContentLoaded', () => {
         yInput.value = Math.round(cropBox.offsetTop * scaleY);
     }
     
-    // THAY ĐỔI QUAN TRỌNG: Cập nhật crop-box bằng cách scale-down từ input
     function updateCropBoxFromInputs() {
         if (!imageToCrop.src) return;
-        
-        // Lấy giá trị theo tọa độ gốc
         let w = parseInt(widthInput.value) || 10;
         let h = parseInt(heightInput.value) || 10;
         let x = parseInt(xInput.value) || 0;
         let y = parseInt(yInput.value) || 0;
-        
-        // Ràng buộc giá trị trên tọa độ gốc
         w = Math.max(10, Math.min(w, imageToCrop.naturalWidth));
         h = Math.max(10, Math.min(h, imageToCrop.naturalHeight));
         x = Math.max(0, Math.min(x, imageToCrop.naturalWidth - w));
         y = Math.max(0, Math.min(y, imageToCrop.naturalHeight - h));
-
-        // Chuyển đổi về tọa độ hiển thị để cập nhật CSS
         const displayX = x / scaleX;
         const displayY = y / scaleY;
         const displayW = w / scaleX;
         const displayH = h / scaleY;
-
         cropBox.style.left = `${displayX}px`;
         cropBox.style.top = `${displayY}px`;
         cropBox.style.width = `${displayW - 2 * borderWidth}px`;
         cropBox.style.height = `${displayH - 2 * borderWidth}px`;
-
-        // Đồng bộ lại input sau khi ràng buộc
         updateInputsFromCropBox();
     }
     [widthInput, heightInput, xInput, yInput].forEach(input => {
         input.addEventListener('change', updateCropBoxFromInputs);
     });
-    
-    // --- Logic kéo thả (vẫn hoạt động trên tọa độ hiển thị cho mượt mà) ---
-    
     function getEventCoords(e) { return e.touches ? e.touches[0] : e; }
-
     function handleStart(e) {
         e.preventDefault();
         const coords = getEventCoords(e);
@@ -136,16 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
             action = 'move';
         }
     }
-
     function handleMove(e) {
         if (!action) return;
         e.preventDefault();
         const coords = getEventCoords(e);
         const dx = coords.clientX - startX;
         const dy = coords.clientY - startY;
-        const imgWidth = imageToCrop.width; // Kích thước hiển thị
-        const imgHeight = imageToCrop.height; // Kích thước hiển thị
-
+        const imgWidth = imageToCrop.width;
+        const imgHeight = imageToCrop.height;
         if (action === 'move') {
             let newX = startCropBox.x + dx;
             let newY = startCropBox.y + dy;
@@ -153,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             newY = Math.max(0, Math.min(newY, imgHeight - startCropBox.h));
             cropBox.style.left = `${newX}px`;
             cropBox.style.top = `${newY}px`;
-        } else { // Logic resize
+        } else {
             let { x, y, w, h } = startCropBox;
             if (action.includes('e')) w = Math.min(startCropBox.w + dx, imgWidth - x);
             if (action.includes('s')) h = Math.min(startCropBox.h + dy, imgHeight - y);
@@ -173,13 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
             cropBox.style.width = `${w - (2 * borderWidth)}px`;
             cropBox.style.height = `${h - (2 * borderWidth)}px`;
         }
-        // Sau mỗi lần di chuyển, cập nhật input với giá trị đã scale
         updateInputsFromCropBox();
     }
-    
     function handleEnd() { action = null; }
-
-    // Gán sự kiện
     imageContainer.addEventListener('mousedown', handleStart);
     document.addEventListener('mousemove', handleMove);
     document.addEventListener('mouseup', handleEnd);
@@ -187,20 +164,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('touchmove', handleMove, { passive: false });
     document.addEventListener('touchend', handleEnd);
     document.addEventListener('touchcancel', handleEnd);
-
-    // --- Nút Crop (logic này đã đúng từ đầu vì nó đã dùng scale) ---
     cropButton.addEventListener('click', () => {
         if (!imageToCrop.src || !imageToCrop.complete) { alert('Vui lòng tải ảnh lên trước!'); return; }
-        
         const ctx = resultCanvas.getContext('2d');
-        // Lấy giá trị đã scale từ input để đảm bảo chính xác nhất
         const cropParams = {
             width: parseInt(widthInput.value),
             height: parseInt(heightInput.value),
             x: parseInt(xInput.value),
             y: parseInt(yInput.value)
         };
-
         resultCanvas.width = cropParams.width;
         resultCanvas.height = cropParams.height;
         ctx.drawImage(
@@ -208,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cropParams.x, cropParams.y, cropParams.width, cropParams.height,
             0, 0, cropParams.width, cropParams.height
         );
-        const dataUrl = resultCanvas.toDataURL('image/jpeg', 0.9); // Lưu dưới dạng JPEG chất lượng 90%
+        const dataUrl = resultCanvas.toDataURL('image/jpeg', 0.9);
         downloadButton.href = dataUrl;
         downloadButton.download = 'cropped-image.jpg';
         downloadButton.classList.remove('disabled');

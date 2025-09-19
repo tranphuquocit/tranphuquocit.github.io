@@ -1,4 +1,7 @@
-/* Thiết lập cơ bản */
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   width: 100%;
@@ -15,7 +18,8 @@ body {
   display: flex;
   width: 100vw;
   height: 100vh;
-  background: white;
+  background: #f0f0f0;
+  align-items: flex-start;
 }
 
 /* Vùng làm việc bên trái */
@@ -27,7 +31,12 @@ body {
   align-items: center;
   position: relative;
   overflow: hidden;
-  height: 100%;
+
+  min-height: 400px;
+  /* Đảm bảo panel luôn hiển thị dù chưa có ảnh */
+
+  max-height: 60vh;
+  margin: 24px;
 }
 
 .upload-button-placeholder {
@@ -47,6 +56,7 @@ body {
   display: none;
   line-height: 0;
   user-select: none;
+  max-height: 100%;
 }
 
 #image-to-crop {
@@ -61,11 +71,9 @@ body {
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
   border: 4px solid #4a90e2;
   display: none;
-  /* Dùng box-sizing để việc tính toán width/height dễ hơn */
   box-sizing: content-box;
 }
 
-/* Các style cho lưới và handle giữ nguyên... */
 .grid-line-hor,
 .grid-line-ver {
   position: absolute;
@@ -106,8 +114,8 @@ body {
   position: absolute;
   width: 16px;
   height: 16px;
-  background-color: white;
-  border: 1px solid #333;
+  background-color: #4a90e2;
+  border: 1px solid #4a90e2;
 }
 
 #handle-nw {
@@ -115,7 +123,6 @@ body {
   left: -9px;
 }
 
-/* Điều chỉnh vị trí handle cho border 4px */
 #handle-ne {
   top: -9px;
   right: -9px;
@@ -141,6 +148,15 @@ body {
   cursor: nesw-resize;
 }
 
+.options-panel {
+  flex-basis: 320px;
+  flex-shrink: 0;
+  padding: 24px;
+  height: 100vh;
+  overflow-y: auto;
+  border-left: 1px solid #ddd;
+}
+
 .original-dimensions {
   font-size: 13px;
   color: #555;
@@ -156,17 +172,6 @@ body {
 
 .original-dimensions:empty {
   display: none;
-}
-
-/* Panel tùy chọn bên phải */
-.options-panel {
-  flex-basis: 500px;
-  flex-shrink: 0;
-  padding: 24px;
-  box-sizing: border-box;
-  height: 100vh;
-  overflow-y: auto;
-  border-left: 1px solid #ddd;
 }
 
 .option-item {
@@ -185,12 +190,7 @@ body {
   padding: 10px 12px;
   border: 1px solid #dcdcdc;
   border-radius: 6px;
-  box-sizing: border-box;
   font-size: 16px;
-}
-
-#crop-button:hover {
-  background-color: #357abd;
 }
 
 .result-container {
@@ -203,9 +203,7 @@ body {
 
 #result-canvas {
   width: 100%;
-  /* Chiếm 100% chiều rộng của panel bên phải */
   height: 220px;
-  /* Chiều cao cố định */
   border: 1px solid #ddd;
   background-color: #f0f0f0;
   object-fit: contain;
@@ -215,9 +213,7 @@ body {
   display: block;
   width: 100%;
   padding: 12px;
-  box-sizing: border-box;
   background-color: #4a90e2;
-  /* Màu xanh dương đồng nhất */
   color: white;
   border: none;
   border-radius: 6px;
@@ -230,74 +226,52 @@ body {
   transition: background-color 0.2s, opacity 0.2s;
 }
 
-/* Hiệu ứng hover cho cả hai nút */
 .action-button:hover {
   background-color: #357abd;
 }
 
-/* Trạng thái disabled cho cả hai nút (nếu cần) */
 .action-button.disabled {
-  background-color: #ccc !important;
-  /* Đổi màu chữ cho dễ đọc hơn */
+  background-color: #ccc;
+  color: #666;
   cursor: not-allowed;
   pointer-events: none;
   opacity: 0.7;
 }
 
-/* Điều chỉnh lại khoảng cách trên của nút tải xuống cho đẹp hơn */
 #download-button {
   margin-top: 15px;
-  background-color: #28a745;
-}
-
-.result-container {
-  margin-top: 30px;
-}
-
-.result-container h3 {
-  margin-bottom: 10px;
-}
-
-#result-canvas {
-  max-width: 100%;
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
 }
 
 /* ---- PHẦN RESPONSIVE CHO TABLET VÀ MOBILE ---- */
 @media (max-width: 992px) {
 
-  /* Cho phép cuộn trên màn hình nhỏ */
   body,
   html {
     overflow: auto;
     height: auto;
   }
 
-  /* Chuyển layout thành cột dọc */
   .app-container {
     flex-direction: column;
     height: auto;
+    padding: 16px;
+    align-items: stretch;
   }
 
-  /* Vùng editor chiếm 100% chiều rộng và có chiều cao tự động theo tỉ lệ */
   .editor-panel {
     width: 100%;
     height: auto;
     min-height: 40vh;
-    /* Chiều cao tối thiểu là 40% chiều cao màn hình */
-    aspect-ratio: 4 / 3;
-    /* Giữ tỉ lệ khung hình 4:3 */
+    max-height: 80vh;
+    margin: 0 0 16px 0;
   }
 
-  /* Panel tùy chọn cũng chiếm 100% chiều rộng và không cuộn nữa */
   .options-panel {
     flex-basis: auto;
-    /* Chiều rộng tự động */
     width: 100%;
     height: auto;
     border-left: none;
     border-top: 1px solid #ddd;
-    /* Thêm đường kẻ phân cách ở trên */
+    padding: 24px 0 0 0;
   }
 }
