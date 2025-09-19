@@ -167,14 +167,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!imageToCrop.src) return;
 
     const offset = getImageOffset();
-    let w = parseInt(widthInput.value) || 10;
-    let h = parseInt(heightInput.value) || 10;
+    let w = parseInt(widthInput.value) || 0;
+    let h = parseInt(heightInput.value) || 0;
     let x = parseInt(xInput.value) || 0;
     let y = parseInt(yInput.value) || 0;
 
     // Giới hạn giá trị nhập vào không vượt quá kích thước ảnh
-    w = Math.max(10, Math.min(w, imageToCrop.naturalWidth));
-    h = Math.max(10, Math.min(h, imageToCrop.naturalHeight));
+    w = Math.max(0, Math.min(w, imageToCrop.naturalWidth));
+    h = Math.max(0, Math.min(h, imageToCrop.naturalHeight));
     x = Math.max(0, Math.min(x, imageToCrop.naturalWidth - w));
     y = Math.max(0, Math.min(y, imageToCrop.naturalHeight - h));
 
