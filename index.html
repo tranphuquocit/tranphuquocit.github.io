@@ -1,71 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Công cụ Cắt Ảnh</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cắt hình ảnh</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="app-container">
-    <!-- Vùng làm việc bên trái -->
-    <div class="editor-panel">
-      <div class="loading">Đang xử lý ảnh...</div>
-      <div id="image-container">
-        <img id="image-to-crop" src="" alt="Hình ảnh gốc">
-        <div id="crop-box">
-          <div class="grid-line-hor"></div>
-          <div class="grid-line-hor"></div>
-          <div class="grid-line-ver"></div>
-          <div class="grid-line-ver"></div>
-          <div class="handle" id="handle-nw"></div>
-          <div class="handle" id="handle-ne"></div>
-          <div class="handle" id="handle-sw"></div>
-          <div class="handle" id="handle-se"></div>
+  <div class="app">
+    <div class="editor-wrap">
+      <div class="editor" id="editor">
+        <div class="canvas-stage" id="stage">
+          <canvas id="displayCanvas"></canvas>
+
+          <!-- overlay parts (top/left/right/bottom) to dim outside area -->
+          <div id="overlayTop" class="overlay-part"></div>
+          <div id="overlayLeft" class="overlay-part"></div>
+          <div id="overlayRight" class="overlay-part"></div>
+          <div id="overlayBottom" class="overlay-part"></div>
+
+          <!-- Crop box -->
+          <div id="cropBox" class="crop-box">
+            <div class="grid">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <!-- 8 handle -->
+            <div class="handle tl" data-handle="tl"></div>
+            <div class="handle tr" data-handle="tr"></div>
+            <div class="handle bl" data-handle="bl"></div>
+            <div class="handle br" data-handle="br"></div>
+            <div class="handle t" data-handle="t"></div>
+            <div class="handle b" data-handle="b"></div>
+            <div class="handle l" data-handle="l"></div>
+            <div class="handle r" data-handle="r"></div>
+            <div id="boxLabel"
+              style="position:absolute; left:8px; bottom:6px; pointer-events:none; font-size:12px; color:var(--blue); background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px;">
+            </div>
+          </div>
+
+          <!-- Choose file -->
+          <div class="choose-wrapper" id="chooseWrapper">
+            <label class="btn" id="chooseBtn">Chọn Ảnh</label>
+            <input id="fileInput" type="file" accept="image/*" style="display:none" />
+          </div>
         </div>
       </div>
-      <label for="image-loader" class="upload-button-placeholder">Chọn Ảnh</label>
-      <input type="file" id="image-loader" accept="image/*" hidden>
     </div>
 
-    <!-- Panel tùy chọn bên phải -->
-    <div class="options-panel">
-      <h2>Tùy chọn Cắt Ảnh</h2>
+    <div class="panel" id="panel">
+      <h3>Tùy chọn Cắt Ảnh</h3>
+      <div class="muted" id="origSize">Kích thước gốc: —</div>
 
-      <div class="original-dimensions">
-        Kích thước gốc: <span id="original-width-display">0</span> x <span id="original-height-display">0</span> px
+      <div class="form-row">
+        <label>Chiều rộng (px)</label>
+        <input id="inputW" type="number" min="1" />
       </div>
-
-      <div class="option-item">
-        <label for="width-input">Chiều rộng (px)</label>
-        <input type="number" id="width-input" min="10" value="802">
+      <div class="form-row">
+        <label>Chiều cao (px)</label>
+        <input id="inputH" type="number" min="1" />
       </div>
-      <div class="option-item">
-        <label for="height-input">Chiều cao (px)</label>
-        <input type="number" id="height-input" min="10" value="802">
+      <div class="form-row">
+        <label>Vị trí X (px)</label>
+        <input id="inputX" type="number" min="0" />
       </div>
-      <div class="option-item">
-        <label for="x-input">Vị trí X (px)</label>
-        <input type="number" id="x-input" min="0" value="0">
-      </div>
-      <div class="option-item">
-        <label for="y-input">Vị trí Y (px)</label>
-        <input type="number" id="y-input" min="0" value="0">
+      <div class="form-row">
+        <label>Vị trí Y (px)</label>
+        <input id="inputY" type="number" min="0" />
       </div>
 
-      <button id="crop-button" class="action-button">Cắt Ảnh</button>
-
-      <div class="result-container">
-        <h3>Ảnh đã cắt:</h3>
-        <canvas id="result-canvas"></canvas>
-        <a href="#" id="download-button" class="action-button disabled">Tải xuống ảnh</a>
+      <div class="action-row">
+        <button id="cropBtn" class="btn-block">Cắt Ảnh</button>
       </div>
 
-      <div class="mobile-toolbar">
-        <button id="reset-button" class="action-button">Đặt lại</button>
-        <button id="remove-button" class="action-button">Xóa ảnh</button>
+      <div class="preview">
+        <h4 style="margin:10px 0 6px 0">Ảnh đã cắt:</h4>
+        <div class="thumb" id="previewThumb"></div>
+      </div>
+
+      <div class="action-row">
+        <button id="downloadBtn" class="btn-block btn-download" disabled>Tải xuống ảnh</button>
+      </div>
+
+      <div class="small-actions" style="margin-top:12px; display:flex; gap:8px;">
+        <button id="resetBtn" class="btn secondary" style="flex:1">Đặt lại</button>
+        <button id="clearBtn" class="btn secondary" style="flex:1">Xóa ảnh</button>
       </div>
     </div>
   </div>

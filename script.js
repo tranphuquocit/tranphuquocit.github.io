@@ -1,386 +1,344 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // DOM elements
-  const originalWidthDisplay = document.getElementById('original-width-display');
-  const originalHeightDisplay = document.getElementById('original-height-display');
-  const downloadButton = document.getElementById('download-button');
-  const imageLoader = document.getElementById('image-loader');
-  const uploadButtonPlaceholder = document.querySelector('.upload-button-placeholder');
-  const imageContainer = document.getElementById('image-container');
-  const imageToCrop = document.getElementById('image-to-crop');
-  const cropBox = document.getElementById('crop-box');
-  const widthInput = document.getElementById('width-input');
-  const heightInput = document.getElementById('height-input');
-  const xInput = document.getElementById('x-input');
-  const yInput = document.getElementById('y-input');
-  const cropButton = document.getElementById('crop-button');
-  const resultCanvas = document.getElementById('result-canvas');
-  const loadingIndicator = document.querySelector('.loading');
-  const resetButton = document.getElementById('reset-button');
-  const removeButton = document.getElementById('remove-button');
+const fileInput = document.getElementById('fileInput');
+const chooseBtn = document.getElementById('chooseBtn');
+const displayCanvas = document.getElementById('displayCanvas');
+const stage = document.getElementById('stage');
+const cropBox = document.getElementById('cropBox');
+const boxLabel = document.getElementById('boxLabel');
+const inputW = document.getElementById('inputW');
+const inputH = document.getElementById('inputH');
+const inputX = document.getElementById('inputX');
+const inputY = document.getElementById('inputY');
+const cropBtn = document.getElementById('cropBtn');
+const previewThumb = document.getElementById('previewThumb');
+const downloadBtn = document.getElementById('downloadBtn');
+const resetBtn = document.getElementById('resetBtn');
+const clearBtn = document.getElementById('clearBtn');
+const origSizeEl = document.getElementById('origSize');
 
-  // State variables
-  let action = null;
-  let startX, startY;
-  let startCropBox;
-  const borderWidth = 4;
-  let scaleX = 1;
-  let scaleY = 1;
-  let isFirstLoad = true;
-  let currentRotation = 0;
+const overlayTop = document.getElementById('overlayTop');
+const overlayLeft = document.getElementById('overlayLeft');
+const overlayRight = document.getElementById('overlayRight');
+const overlayBottom = document.getElementById('overlayBottom');
 
-  // Hàm cuộn lên đầu trang
-  function scrollToTop() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }
+let img = new Image();
+let imgLoaded = false;
+let origWidth = 0, origHeight = 0;
 
-  function handleLargeImage(img, maxDimension = 2000) {
-    return new Promise((resolve) => {
-      if (img.naturalWidth <= maxDimension && img.naturalHeight <= maxDimension) {
-        resolve(img.src);
-        return;
-      }
+let dispWidth = 0, dispHeight = 0;
+let dispOffsetX = 0, dispOffsetY = 0;
+let scale = 1;
 
-      const canvas = document.createElement('canvas');
-      let width = img.naturalWidth;
-      let height = img.naturalHeight;
+let box = { x: 0, y: 0, w: 150, h: 150, visible: false };
 
-      // Scale down while maintaining aspect ratio
-      if (width > height) {
-        if (width > maxDimension) {
-          height = Math.round(height * maxDimension / width);
-          width = maxDimension;
-        }
-      } else {
-        if (height > maxDimension) {
-          width = Math.round(width * maxDimension / height);
-          height = maxDimension;
-        }
-      }
+let action = null;
+let pointerStart = { x: 0, y: 0 };
+let boxStart = null;
 
-      canvas.width = width;
-      canvas.height = height;
+const ctx = displayCanvas.getContext('2d');
 
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
+function fitImageToCanvas() {
+  const stageRect = stage.getBoundingClientRect();
+  const containerW = stageRect.width;
+  const containerH = stageRect.height;
 
-      resolve(canvas.toDataURL('image/jpeg', 0.9));
-    });
-  }
+  scale = Math.min(containerW / origWidth, containerH / origHeight);
 
-  function debounce(func, wait) {
-    let timeout;
-    return function (...args) {
-      const context = this;
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(context, args), wait);
-    };
-  }
+  dispWidth = Math.round(origWidth * scale);
+  dispHeight = Math.round(origHeight * scale);
 
-  imageLoader.addEventListener('change', (e) => {
-    downloadButton.classList.add('disabled');
-    downloadButton.removeAttribute('href');
-    const ctx = resultCanvas.getContext('2d');
-    ctx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
-    const file = e.target.files[0];
-    if (!file) return;
+  displayCanvas.width = dispWidth;
+  displayCanvas.height = dispHeight;
+  displayCanvas.style.width = dispWidth + 'px';
+  displayCanvas.style.height = dispHeight + 'px';
+  displayCanvas.style.position = 'absolute';
 
-    loadingIndicator.style.display = 'block';
-    uploadButtonPlaceholder.style.display = 'none';
+  const canvasLeft = (containerW - dispWidth) / 2;
+  const canvasTop = (containerH - dispHeight) / 2;
+  dispOffsetX = canvasLeft;
+  dispOffsetY = canvasTop;
+  displayCanvas.style.left = canvasLeft + 'px';
+  displayCanvas.style.top = canvasTop + 'px';
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const tempImg = new Image();
-      tempImg.onload = async () => {
-        // Xử lý ảnh lớn trước khi hiển thị
-        const resizedDataUrl = await handleLargeImage(tempImg, 2000);
-        imageToCrop.src = resizedDataUrl;
-        imageToCrop.onload = () => {
-          imageContainer.style.display = 'flex';
-          cropBox.style.display = 'block';
-          isFirstLoad = true;
-          currentRotation = 0;
-          loadingIndicator.style.display = 'none';
-          recalculateAndSync(true);
-        };
-      };
-      tempImg.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
+  ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+  ctx.drawImage(img, 0, 0, origWidth, origHeight, 0, 0, dispWidth, dispHeight);
+}
 
-  function recalculateAndSync(isFirstLoadCall = false) {
-    if (!imageToCrop.src || !imageToCrop.complete) return;
+function showChoose() {
+  document.getElementById('chooseWrapper').style.display = 'block';
+  cropBox.style.display = 'none';
+  [overlayTop, overlayLeft, overlayRight, overlayBottom].forEach(o => o.style.display = 'none');
+}
+function showEditorAfterLoad() {
+  document.getElementById('chooseWrapper').style.display = 'none';
+  cropBox.style.display = 'block';
+}
 
-    const imgRect = imageToCrop.getBoundingClientRect();
-    const containerRect = imageContainer.getBoundingClientRect();
+chooseBtn.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', (e) => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  img = new Image();
+  img.onload = () => {
+    imgLoaded = true;
+    origWidth = img.naturalWidth;
+    origHeight = img.naturalHeight;
+    origSizeEl.textContent = `Kích thước gốc: ${origWidth} x ${origHeight} px`;
+    fitImageToCanvas();
 
-    // Đảm bảo scale tính toán chính xác
-    scaleX = imageToCrop.naturalWidth / imgRect.width;
-    scaleY = imageToCrop.naturalHeight / imgRect.height;
-
-    // CHỈ thiết lập crop box mặc định khi là lần đầu tải ảnh
-    if (isFirstLoadCall && isFirstLoad) {
-      originalWidthDisplay.textContent = imageToCrop.naturalWidth;
-      originalHeightDisplay.textContent = imageToCrop.naturalHeight;
-
-      const offset = getImageOffset();
-      const displayWidth = imgRect.width;
-      const displayHeight = imgRect.height;
-      const shorterDim = Math.min(displayWidth, displayHeight);
-      const defaultSize = shorterDim * 0.6;
-
-      // Đặt crop box ở GIỮA ảnh (tính cả offset)
-      const centerX = offset.x + (displayWidth - defaultSize) / 2;
-      const centerY = offset.y + (displayHeight - defaultSize) / 2;
-
-      cropBox.style.width = `${defaultSize - 2 * borderWidth}px`;
-      cropBox.style.height = `${defaultSize - 2 * borderWidth}px`;
-      cropBox.style.left = `${centerX}px`;
-      cropBox.style.top = `${centerY}px`;
-
-      updateInputsFromCropBox();
-      isFirstLoad = false;
-    } else {
-      updateInputsFromCropBox();
-    }
-  }
-
-  function updateInputsFromCropBox() {
-    const offset = getImageOffset();
-
-    // Tính toán position CHÍNH XÁC: trừ đi offset của ảnh
-    const actualX = cropBox.offsetLeft - offset.x;
-    const actualY = cropBox.offsetTop - offset.y;
-
-    // Đảm bảo không âm
-    const validX = Math.max(0, actualX);
-    const validY = Math.max(0, actualY);
-
-    widthInput.value = Math.round(cropBox.offsetWidth * scaleX);
-    heightInput.value = Math.round(cropBox.offsetHeight * scaleY);
-    xInput.value = Math.round(validX * scaleX);
-    yInput.value = Math.round(validY * scaleY);
-  }
-
-  function updateCropBoxFromInputs() {
-    if (!imageToCrop.src) return;
-
-    const offset = getImageOffset();
-    let w = parseInt(widthInput.value) || 0;
-    let h = parseInt(heightInput.value) || 0;
-    let x = parseInt(xInput.value) || 0;
-    let y = parseInt(yInput.value) || 0;
-
-    // Giới hạn giá trị nhập vào không vượt quá kích thước ảnh
-    w = Math.max(0, Math.min(w, imageToCrop.naturalWidth));
-    h = Math.max(0, Math.min(h, imageToCrop.naturalHeight));
-    x = Math.max(0, Math.min(x, imageToCrop.naturalWidth - w));
-    y = Math.max(0, Math.min(y, imageToCrop.naturalHeight - h));
-
-    // Cập nhật giá trị input với giá trị đã được điều chỉnh
-    widthInput.value = w;
-    heightInput.value = h;
-    xInput.value = x;
-    yInput.value = y;
-
-    // Chuyển đổi sang tọa độ hiển thị (cộng thêm offset)
-    const displayX = (x / scaleX) + offset.x;
-    const displayY = (y / scaleY) + offset.y;
-    const displayW = w / scaleX;
-    const displayH = h / scaleY;
-
-    cropBox.style.left = `${displayX}px`;
-    cropBox.style.top = `${displayY}px`;
-    cropBox.style.width = `${displayW - 2 * borderWidth}px`;
-    cropBox.style.height = `${displayH - 2 * borderWidth}px`;
-  }
-
-  [widthInput, heightInput, xInput, yInput].forEach(input => {
-    input.addEventListener('change', updateCropBoxFromInputs);
-    input.addEventListener('input', debounce(updateCropBoxFromInputs, 300));
-  });
-
-  function getEventCoords(e) { return e.touches ? e.touches[0] : e; }
-
-  function handleStart(e) {
-    e.preventDefault();
-    const coords = getEventCoords(e);
-    startX = coords.clientX;
-    startY = coords.clientY;
-    startCropBox = {
-      x: cropBox.offsetLeft, y: cropBox.offsetTop,
-      w: cropBox.offsetWidth, h: cropBox.offsetHeight
-    };
-    const target = e.target;
-    if (target.classList.contains('handle')) { action = `resize-${target.id.split('-')[1]}`; }
-    else if (target === cropBox) { action = 'move'; }
-  }
-
-  function getImageOffset() {
-    const imgRect = imageToCrop.getBoundingClientRect();
-    const containerRect = imageContainer.getBoundingClientRect();
-
-    // Tính offset thực tế của ảnh trong container (cả chiều ngang và dọc)
-    return {
-      x: imgRect.left - containerRect.left,
-      y: imgRect.top - containerRect.top
-    };
-  }
-
-  function handleMove(e) {
-    if (!action) return;
-    e.preventDefault();
-    const coords = getEventCoords(e);
-    const dx = coords.clientX - startX;
-    const dy = coords.clientY - startY;
-
-    const offset = getImageOffset();
-    const imgRect = imageToCrop.getBoundingClientRect();
-
-    if (action === 'move') {
-      let newX = startCropBox.x + dx;
-      let newY = startCropBox.y + dy;
-
-      // Ràng buộc trong phạm vi ẢNH (tính cả offset)
-      newX = Math.max(offset.x, Math.min(newX, offset.x + imgRect.width - startCropBox.w));
-      newY = Math.max(offset.y, Math.min(newY, offset.y + imgRect.height - startCropBox.h));
-
-      cropBox.style.left = `${newX}px`;
-      cropBox.style.top = `${newY}px`;
-    } else {
-      // Logic resize với ràng buộc mới
-      let newLeft = startCropBox.x;
-      let newTop = startCropBox.y;
-      let newWidth = startCropBox.w;
-      let newHeight = startCropBox.h;
-
-      if (action.includes('e')) {
-        newWidth = startCropBox.w + dx;
-        if (newLeft + newWidth > offset.x + imgRect.width) {
-          newWidth = offset.x + imgRect.width - newLeft;
-        }
-      }
-      if (action.includes('s')) {
-        newHeight = startCropBox.h + dy;
-        if (newTop + newHeight > offset.y + imgRect.height) {
-          newHeight = offset.y + imgRect.height - newTop;
-        }
-      }
-      if (action.includes('w')) {
-        newWidth = startCropBox.w - dx;
-        newLeft = startCropBox.x + dx;
-        if (newLeft < offset.x) {
-          newWidth += newLeft - offset.x;
-          newLeft = offset.x;
-        }
-      }
-      if (action.includes('n')) {
-        newHeight = startCropBox.h - dy;
-        newTop = startCropBox.y + dy;
-        if (newTop < offset.y) {
-          newHeight += newTop - offset.y;
-          newTop = offset.y;
-        }
-      }
-
-      const minSize = 20;
-      if (newWidth < minSize) newWidth = minSize;
-      if (newHeight < minSize) newHeight = minSize;
-
-      cropBox.style.left = `${newLeft}px`;
-      cropBox.style.top = `${newTop}px`;
-      cropBox.style.width = `${newWidth - (2 * borderWidth)}px`;
-      cropBox.style.height = `${newHeight - (2 * borderWidth)}px`;
-    }
-    updateInputsFromCropBox();
-  }
-
-  function handleEnd() { action = null; }
-
-  imageContainer.addEventListener('mousedown', handleStart);
-  document.addEventListener('mousemove', handleMove);
-  document.addEventListener('mouseup', handleEnd);
-  imageContainer.addEventListener('touchstart', handleStart, { passive: false });
-  document.addEventListener('touchmove', handleMove, { passive: false });
-  document.addEventListener('touchend', handleEnd);
-  document.addEventListener('touchcancel', handleEnd);
-
-  cropButton.addEventListener('click', () => {
-    if (!imageToCrop.src || !imageToCrop.complete) { alert('Vui lòng tải ảnh lên trước!'); return; }
-    const ctx = resultCanvas.getContext('2d');
-    const cropParams = {
-      width: parseInt(widthInput.value),
-      height: parseInt(heightInput.value),
-      x: parseInt(xInput.value),
-      y: parseInt(yInput.value)
-    };
-    resultCanvas.width = cropParams.width;
-    resultCanvas.height = cropParams.height;
-    ctx.drawImage(
-      imageToCrop,
-      cropParams.x, cropParams.y, cropParams.width, cropParams.height,
-      0, 0, cropParams.width, cropParams.height
-    );
-    const dataUrl = resultCanvas.toDataURL('image/jpeg', 0.9);
-    downloadButton.href = dataUrl;
-    downloadButton.download = 'cropped-image.jpg';
-    downloadButton.classList.remove('disabled');
-  });
-
-  // Reset button functionality
-  resetButton.addEventListener('click', () => {
-    if (!imageToCrop.src) return;
-
-    // Cuộn lên đầu trang
-    scrollToTop();
-
-    // Reset crop box
-    isFirstLoad = true;
-    recalculateAndSync(true);
-  });
-
-  // Remove button functionality - XÓA ẢNH
-  removeButton.addEventListener('click', () => {
-
-    // Xóa ảnh và reset mọi thứ
-    imageToCrop.src = '';
-    imageContainer.style.display = 'none';
-    cropBox.style.display = 'none';
-    uploadButtonPlaceholder.style.display = 'block';
-
-    // Reset các input
-    widthInput.value = '802';
-    heightInput.value = '802';
-    xInput.value = '0';
-    yInput.value = '0';
-
-    // Reset thông tin kích thước
-    originalWidthDisplay.textContent = '0';
-    originalHeightDisplay.textContent = '0';
-
-    // Reset canvas
-    const ctx = resultCanvas.getContext('2d');
-    ctx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
-
-    // Vô hiệu hóa nút download
-    downloadButton.classList.add('disabled');
-    downloadButton.removeAttribute('href');
-
-    // Reset file input
-    imageLoader.value = '';
-    // Cuộn lên đầu trang
-    scrollToTop();
-  });
-
-  window.addEventListener('resize', debounce(() => recalculateAndSync(false), 100));
+    const initialW = Math.round(dispWidth * 0.5);
+    const initialH = Math.round(dispHeight * 0.5);
+    box.w = initialW;
+    box.h = initialH;
+    box.x = Math.round((dispWidth - box.w) / 2);
+    box.y = Math.round((dispHeight - box.h) / 2);
+    box.visible = true;
+    updateCropBoxUI();
+    showEditorAfterLoad();
+    previewThumb.innerHTML = '';
+    downloadBtn.disabled = true;
+    [overlayTop, overlayLeft, overlayRight, overlayBottom].forEach(o => o.style.display = 'block');
+  };
+  img.onerror = () => alert('Không thể đọc file ảnh.');
+  img.src = url;
 });
 
-window.addEventListener('orientationchange', () => {
-  // Đợi một chút để trình duyệt xử lý xoay màn hình
-  setTimeout(() => {
-    recalculateAndSync(false);
-  }, 300);
+window.addEventListener('resize', () => {
+  if (!imgLoaded) return;
+  const prevW = dispWidth || 1, prevH = dispHeight || 1;
+  const rel = {
+    x: box.x / prevW,
+    y: box.y / prevH,
+    w: box.w / prevW,
+    h: box.h / prevH,
+  };
+  fitImageToCanvas();
+  box.x = Math.round(rel.x * dispWidth);
+  box.y = Math.round(rel.y * dispHeight);
+  box.w = Math.round(rel.w * dispWidth);
+  box.h = Math.round(rel.h * dispHeight);
+  constrainBox();
+  updateCropBoxUI();
 });
+
+function updateCropBoxUI() {
+  if (!box.visible) { cropBox.style.display = 'none'; return; }
+  cropBox.style.display = 'block';
+  cropBox.style.width = box.w + 'px';
+  cropBox.style.height = box.h + 'px';
+  cropBox.style.left = (dispOffsetX + box.x) + 'px';
+  cropBox.style.top = (dispOffsetY + box.y) + 'px';
+  const origW = Math.max(1, Math.round(box.w / scale));
+  const origH = Math.max(1, Math.round(box.h / scale));
+  boxLabel.textContent = `${origW} × ${origH} px`;
+
+  inputW.value = origW;
+  inputH.value = origH;
+  inputX.value = Math.max(0, Math.round(box.x / scale));
+  inputY.value = Math.max(0, Math.round(box.y / scale));
+
+  updateOverlays();
+}
+
+function constrainBox() {
+  if (box.w > dispWidth) box.w = dispWidth;
+  if (box.h > dispHeight) box.h = dispHeight;
+  if (box.w < 0) box.w = 0;
+  if (box.h < 0) box.h = 0;
+  if (box.x < 0) box.x = 0;
+  if (box.y < 0) box.y = 0;
+  if (box.x + box.w > dispWidth) box.x = Math.max(0, dispWidth - box.w);
+  if (box.y + box.h > dispHeight) box.y = Math.max(0, dispHeight - box.h);
+}
+
+function updateOverlays() {
+  const stageRect = stage.getBoundingClientRect();
+  const stageW = stageRect.width;
+  const stageH = stageRect.height;
+  const cropTop = dispOffsetY + box.y;
+  const cropLeft = dispOffsetX + box.x;
+  const cropRight = cropLeft + box.w;
+  const cropBottom = cropTop + box.h;
+
+  overlayTop.style.left = '0px';
+  overlayTop.style.top = '0px';
+  overlayTop.style.width = stageW + 'px';
+  overlayTop.style.height = Math.max(0, cropTop) + 'px';
+
+  overlayBottom.style.left = '0px';
+  overlayBottom.style.top = Math.max(0, cropBottom) + 'px';
+  overlayBottom.style.width = stageW + 'px';
+  overlayBottom.style.height = Math.max(0, stageH - cropBottom) + 'px';
+
+  overlayLeft.style.left = '0px';
+  overlayLeft.style.top = Math.max(0, cropTop) + 'px';
+  overlayLeft.style.width = Math.max(0, cropLeft) + 'px';
+  overlayLeft.style.height = Math.max(0, box.h) + 'px';
+
+  overlayRight.style.left = Math.max(0, cropRight) + 'px';
+  overlayRight.style.top = Math.max(0, cropTop) + 'px';
+  overlayRight.style.width = Math.max(0, stageW - cropRight) + 'px';
+  overlayRight.style.height = Math.max(0, box.h) + 'px';
+
+  const show = box.visible && imgLoaded;
+  [overlayTop, overlayLeft, overlayRight, overlayBottom].forEach(o => {
+    o.style.display = show ? 'block' : 'none';
+  });
+}
+
+cropBox.addEventListener('pointerdown', (ev) => {
+  ev.preventDefault();
+  const handle = ev.target.dataset.handle;
+  pointerStart = { x: ev.clientX, y: ev.clientY };
+  boxStart = { x: box.x, y: box.y, w: box.w, h: box.h };
+  if (handle) { action = 'resize-' + handle; }
+  else { action = 'move'; }
+  ev.target.setPointerCapture(ev.pointerId);
+});
+document.addEventListener('pointermove', (ev) => {
+  if (!action) return;
+  const dx = ev.clientX - pointerStart.x;
+  const dy = ev.clientY - pointerStart.y;
+
+  if (action === 'move') {
+    box.x = boxStart.x + dx;
+    box.y = boxStart.y + dy;
+    constrainBox();
+    updateCropBoxUI();
+  } else if (action.startsWith('resize-')) {
+    const corner = action.split('-')[1];
+    if (corner === 'tl') {
+      box.x = boxStart.x + dx;
+      box.y = boxStart.y + dy;
+      box.w = boxStart.w - dx;
+      box.h = boxStart.h - dy;
+    } else if (corner === 'tr') {
+      box.y = boxStart.y + dy;
+      box.w = boxStart.w + dx;
+      box.h = boxStart.h - dy;
+    } else if (corner === 'bl') {
+      box.x = boxStart.x + dx;
+      box.w = boxStart.w - dx;
+      box.h = boxStart.h + dy;
+    } else if (corner === 'br') {
+      box.w = boxStart.w + dx;
+      box.h = boxStart.h + dy;
+    } else if (corner === 't') {
+      box.y = boxStart.y + dy;
+      box.h = boxStart.h - dy;
+    } else if (corner === 'b') {
+      box.h = boxStart.h + dy;
+    } else if (corner === 'l') {
+      box.x = boxStart.x + dx;
+      box.w = boxStart.w - dx;
+    } else if (corner === 'r') {
+      box.w = boxStart.w + dx;
+    }
+    constrainBox();
+    updateCropBoxUI();
+  }
+});
+document.addEventListener('pointerup', (ev) => {
+  action = null;
+});
+
+[inputW, inputH, inputX, inputY].forEach(inp => {
+  inp.addEventListener('blur', () => {
+    if (!imgLoaded) return;
+    let val = parseInt(inp.value, 10);
+    const MIN_VAL = 10;
+
+    let maxVal = (inp === inputW) ? origWidth :
+      (inp === inputH) ? origHeight :
+        (inp === inputX) ? origWidth - MIN_VAL :
+          origHeight - MIN_VAL;
+
+    if (!val || val < MIN_VAL) {
+      val = MIN_VAL;
+    } else if (val > maxVal) {
+      val = maxVal;
+    }
+    inp.value = val;
+
+    let w = parseInt(inputW.value);
+    let h = parseInt(inputH.value);
+    let x = parseInt(inputX.value);
+    let y = parseInt(inputY.value);
+
+    box.w = Math.round(w * scale);
+    box.h = Math.round(h * scale);
+    box.x = Math.round(x * scale);
+    box.y = Math.round(y * scale);
+
+    constrainBox();
+    updateCropBoxUI();
+  });
+});
+
+cropBtn.addEventListener('click', () => {
+  if (!imgLoaded) { alert('Chưa có ảnh để cắt.'); return; }
+
+  const sx = Math.round(box.x / scale);
+  const sy = Math.round(box.y / scale);
+  const sw = Math.round(box.w / scale);
+  const sh = Math.round(box.h / scale);
+
+  if (sw <= 0 || sh <= 0) { alert('Vùng cắt không hợp lệ'); return; }
+
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = sw;
+  outCanvas.height = sh;
+  const outCtx = outCanvas.getContext('2d');
+
+  outCtx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+
+  const dataUrl = outCanvas.toDataURL('image/png');
+  previewThumb.innerHTML = `<img src="${dataUrl}" alt="preview" />`;
+
+  downloadBtn.disabled = false;
+  downloadBtn.onclick = () => {
+    outCanvas.toBlob(blob => {
+      const a = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      a.href = url;
+      a.download = 'cropped.png';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }, 'image/png');
+  };
+});
+
+resetBtn.addEventListener('click', () => {
+  if (!imgLoaded) return;
+  box.w = Math.round(dispWidth * 0.5);
+  box.h = Math.round(dispHeight * 0.5);
+  box.x = Math.round((dispWidth - box.w) / 2);
+  box.y = Math.round((dispHeight - box.h) / 2);
+  updateCropBoxUI();
+  previewThumb.innerHTML = '';
+  downloadBtn.disabled = true;
+  if (window.innerWidth <= 768) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+
+clearBtn.addEventListener('click', () => {
+  img = new Image();
+  imgLoaded = false;
+  origWidth = origHeight = 0;
+  displayCanvas.width = displayCanvas.height = 0;
+  previewThumb.innerHTML = '';
+  origSizeEl.textContent = 'Kích thước gốc: —';
+  showChoose();
+  downloadBtn.disabled = true;
+  fileInput.value = '';
+  if (window.innerWidth <= 768) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+
+// Init UI
+showChoose();
+updateCropBoxUI();
