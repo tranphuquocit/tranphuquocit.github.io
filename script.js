@@ -115,6 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!imageToCrop.src || !imageToCrop.complete) return;
 
     const imgRect = imageToCrop.getBoundingClientRect();
+    const containerRect = imageContainer.getBoundingClientRect();
+
+    // Đảm bảo scale tính toán chính xác
     scaleX = imageToCrop.naturalWidth / imgRect.width;
     scaleY = imageToCrop.naturalHeight / imgRect.height;
 
@@ -123,12 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
       originalWidthDisplay.textContent = imageToCrop.naturalWidth;
       originalHeightDisplay.textContent = imageToCrop.naturalHeight;
 
+      const offset = getImageOffset();
       const displayWidth = imgRect.width;
       const displayHeight = imgRect.height;
       const shorterDim = Math.min(displayWidth, displayHeight);
       const defaultSize = shorterDim * 0.6;
-
-      const offset = getImageOffset();
 
       // Đặt crop box ở GIỮA ảnh (tính cả offset)
       const centerX = offset.x + (displayWidth - defaultSize) / 2;
@@ -221,10 +223,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const imgRect = imageToCrop.getBoundingClientRect();
     const containerRect = imageContainer.getBoundingClientRect();
 
-    // Tính offset thực tế của ảnh trong container
+    // Tính offset thực tế của ảnh trong container (cả chiều ngang và dọc)
     return {
-      x: (containerRect.width - imgRect.width) / 2,
-      y: (containerRect.height - imgRect.height) / 2
+      x: imgRect.left - containerRect.left,
+      y: imgRect.top - containerRect.top
     };
   }
 
@@ -374,4 +376,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.addEventListener('resize', debounce(() => recalculateAndSync(false), 100));
+});
+
+window.addEventListener('orientationchange', () => {
+  // Đợi một chút để trình duyệt xử lý xoay màn hình
+  setTimeout(() => {
+    recalculateAndSync(false);
+  }, 300);
 });
