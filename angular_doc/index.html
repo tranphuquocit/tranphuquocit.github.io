@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tìm Hiểu Về Promise và Observable</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- NÚT HAMBURGER DÀNH CHO DI ĐỘNG -->
+  <button id="menu-hamburger-button" class="hamburger-button" aria-label="Open menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- LỚP PHỦ KHI MỞ MENU -->
+  <div id="menu-overlay" class="menu-overlay"></div>
+
+  <!-- MENU BÊN TRÁI -->
+  <nav id="main-nav">
+    <h2>Đề Mục</h2>
+    <ul>
+      <li><a href="#promise">1. Promise</a></li>
+      <li><a href="#observable">2. Observable</a></li>
+      <li class="has-submenu">
+        <a href="#rxjs-operators" class="menu-toggle">3. Toán tử RxJS</a>
+        <ul class="sub-menu">
+          <li><a href="#rxjs-map">a. map</a></li>
+          <li><a href="#rxjs-filter">b. filter</a></li>
+          <li><a href="#rxjs-tap">c. tap (do)</a></li>
+          <li><a href="#rxjs-debounceTime">d. debounceTime</a></li>
+          <li><a href="#rxjs-catchError">e. catchError</a></li>
+          <li><a href="#rxjs-mergeMap">f. mergeMap</a></li>
+          <li><a href="#rxjs-concatMap">g. concatMap</a></li>
+          <li><a href="#rxjs-switchMap">h. switchMap</a></li>
+          <li><a href="#rxjs-exhaustMap">i. exhaustMap</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#ngrx" class="menu-toggle">4. Angular NgRx</a>
+        <ul class="sub-menu">
+          <li><a href="#ngrx-concepts">a. Tổng quan & Khái niệm</a></li>
+          <li><a href="#ngrx-flow">b. Luồng dữ liệu</a></li>
+          <li><a href="#ngrx-faq">c. Các câu hỏi cụ thể</a></li>
+          <li><a href="#ngrx-example">d. Ví dụ minh họa</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#forms" class="menu-toggle">5. Angular Reactive Forms</a>
+        <ul class="sub-menu">
+          <li><a href="#forms-what-is">a. Reactive Forms là gì?</a></li>
+          <li><a href="#forms-validation">b. Validation</a></li>
+          <li><a href="#forms-integration">c. Tích hợp bên ngoài</a></li>
+          <li><a href="#forms-example">d. Ví dụ hoàn chỉnh</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#angular-core" class="menu-toggle">6. Angular Core Concepts</a>
+        <ul class="sub-menu">
+          <li><a href="#lifecycle-hooks">a. Vòng đời Component</a></li>
+          <li><a href="#dependency-injection">b. Dependency Injection</a></li>
+          <li><a href="#app-structure">c. Cấu trúc Web App</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#directives" class="menu-toggle">7. Các loại Directive</a>
+        <ul class="sub-menu">
+          <li><a href="#directive-what-is">a. Directive là gì?</a></li>
+          <li><a href="#directive-types">b. Phân loại Directive</a></li>
+          <li><a href="#directive-comparison">c. So sánh chi tiết</a></li>
+          <li><a href="#directive-custom">d. Tạo Custom Directives</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#testing-frameworks" class="menu-toggle">8. So sánh Testing Frameworks</a>
+        <ul class="sub-menu">
+          <li><a href="#testing-context">a. Bối cảnh Angular</a></li>
+          <li><a href="#testing-analysis">b. Phân tích từng Framework</a></li>
+          <li><a href="#testing-recommendation">c. So sánh & Khuyến nghị</a></li>
+          <li><a href="#testing-migration">d. Chuyển đổi sang Jest</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#build-angular" class="menu-toggle">9. Build Angular</a>
+        <ul class="sub-menu">
+          <li><a href="#build-process">a. Quy trình Build</a></li>
+          <li><a href="#build-optimizations">b. Kỹ thuật Tối ưu</a></li>
+          <li><a href="#build-tools">c. Công cụ Build</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#performance-optimization" class="menu-toggle">10. Tối ưu hiệu suất</a>
+        <ul class="sub-menu">
+          <li><a href="#perf-virtual-scroll">a. Virtual Scrolling</a></li>
+          <li><a href="#perf-change-detection">b. Change Detection</a></li>
+          <li><a href="#perf-trackby">c. TrackBy Function</a></li>
+          <li><a href="#perf-web-workers">d. Web Workers</a></li>
+          <li><a href="#perf-lazy-loading">e. Lazy Loading</a></li>
+          <li><a href="#perf-scss">f. Optimizing SCSS/CSS</a></li>
+          <li><a href="#perf-memory">g. Memory Management</a></li>
+          <li><a href="#perf-complex-example">h. Ví dụ: Real-time Chart</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#storage" class="menu-toggle">11. Storage: Local, Session, Cookies</a>
+        <ul class="sub-menu">
+          <li><a href="#storage-local">a. LocalStorage</a></li>
+          <li><a href="#storage-session">b. SessionStorage</a></li>
+          <li><a href="#storage-cookies">c. Cookies</a></li>
+          <li><a href="#storage-comparison">d. So sánh chi tiết</a></li>
+          <li><a href="#storage-angular-app">e. Ứng dụng trong Angular</a></li>
+          <li><a href="#storage-best-practices">f. Best Practices & Security</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#git" class="menu-toggle">12. Git Cheatsheet</a>
+        <ul class="sub-menu">
+          <li><a href="#git-install">a. Cài đặt</a></li>
+          <li><a href="#git-setup">b. Cài đặt & khởi tạo</a></li>
+          <li><a href="#git-stage-snapshot">c. Chuẩn bị & chụp ảnh</a></li>
+          <li><a href="#git-branch-merge">d. Nhánh & hợp nhất</a></li>
+          <li><a href="#git-inspect">e. Kiểm tra & so sánh</a></li>
+          <li><a href="#git-path-tracking">f. Theo dõi thay đổi đường dẫn</a></li>
+          <li><a href="#git-stash">g. Commit tạm thời</a></li>
+          <li><a href="#git-ignore">h. Bỏ qua mẫu</a></li>
+          <li><a href="#git-share-update">i. Chia sẻ & cập nhật</a></li>
+          <li><a href="#git-rewrite-history">j. Viết lại lịch sử</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu">
+        <a href="#utility-types" class="menu-toggle">13. Utility Types (TypeScript)</a>
+        <ul class="sub-menu">
+          <li><a href="#utility-partial">a. Partial&lt;T&gt;</a></li>
+          <li><a href="#utility-required">b. Required&lt;T&gt;</a></li>
+          <li><a href="#utility-pick">c. Pick&lt;T, K&gt;</a></li>
+          <li><a href="#utility-omit">d. Omit&lt;T, K&gt;</a></li>
+          <li><a href="#utility-record">e. Record&lt;K, T&gt;</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- NỘI DUNG CHÍNH -->
+  <main id="main-content">
+    <!-- Tiêu đề chính của trang -->
+    <header>
+      <h1>Ghi Chú Lập Trình Toàn Diện</h1>
+      <p>Phân tích chi tiết về Promise, Observable, RxJS, NgRx và các khái niệm cốt lỗi của Angular.</p>
+    </header>
+
+    <!-- Phần 1: Promise -->
+    <section id="promise">
+      <h2>1. Promise</h2>
+      <h3>Định nghĩa Promise</h3>
+      <p>Promise là một đối tượng đại diện cho giá trị kết quả của một tác vụ bất đồng bộ, mà tác vụ đó có thể hoàn
+        thành (thành công) hoặc thất bại vào một thời điểm nào đó trong tương lai.</p>
+      <h3>Đặc điểm Promise</h3>
+      <ul>
+        <li>
+          <strong>Đơn trị:</strong> Chỉ xử lý một giá trị duy nhất (resolve hoặc reject).
+        </li>
+        <li>
+          <strong>Eager (Nóng):</strong> Được thực thi ngay lập tức tại thời điểm được khởi tạo.
+        </li>
+        <li>
+          <strong>Không thể hủy (No Cancellation):</strong> Một khi đã được khởi chạy, nó sẽ chạy đến cùng.
+        </li>
+        <li>
+          <strong>Xử lý lỗi:</strong> Sử dụng <code>.catch()</code> hoặc <code>try/catch</code> với
+          <code>async/await</code>.
+        </li>
+      </ul>
+      <h3>Khi nào dùng Promise</h3>
+      <p>Khi thực hiện các tác vụ bất đồng bộ một lần và chỉ mong đợi một kết quả. Ví dụ:</p>
+      <ul>
+        <li>Gọi API để lấy dữ liệu (GET user, POST order,...).</li>
+        <li>Đọc/ghi file.</li>
+      </ul>
+      <h3>Ví dụ Promise</h3>
+      <div class="code-block">
+        <code class="language-javascript">
+          <span class="comment">// Tạo một Promise</span>
+          <span class="keyword">const</span> <span class="variable">fetchUserData</span> <span class="punctuation">=</span> <span class="keyword">new</span> <span class="function-name">Promise</span><span class="punctuation">((</span><span class="variable">resolve</span><span class="punctuation">,</span> <span class="variable">reject</span><span class="punctuation">)</span> <span class="punctuation">=></span> <span class="punctuation">{</span>
+            <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">log</span><span class="punctuation">(</span><span class="string">'Đang gọi API...'</span><span class="punctuation">);</span> <span class="comment">// Chạy ngay lập tức</span>
+            <span class="function-name">setTimeout</span><span class="punctuation">(()</span> <span class="punctuation">=></span> <span class="punctuation">{</span>
+              <span class="keyword">const</span> <span class="variable">success</span> <span class="punctuation">=</span> <span class="boolean">true</span><span class="punctuation">;</span>
+              <span class="keyword">if</span> <span class="punctuation">(</span><span class="variable">success</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+                <span class="function-name">resolve</span><span class="punctuation">({</span> <span class="object-key">id</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span> <span class="object-key">name</span><span class="punctuation">:</span> <span class="string">'Nguyễn Văn A'</span> <span class="punctuation">});</span>
+              <span class="punctuation">}</span> <span class="keyword">else</span> <span class="punctuation">{</span>
+                <span class="function-name">reject</span><span class="punctuation">(</span><span class="string">'Lỗi: Không tìm thấy user'</span><span class="punctuation">);</span>
+              <span class="punctuation">}</span>
+            <span class="punctuation">},</span> <span class="number">1500</span><span class="punctuation">);</span>
+          <span class="punctuation">});</span>
+
+          <span class="comment">// Sử dụng Promise</span>
+          <span class="variable">fetchUserData</span>
+          <span class="punctuation">.</span><span class="function-name">then</span><span class="punctuation">(</span><span class="variable">user</span> <span class="punctuation">=></span> <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">log</span><span class="punctuation">(</span><span class="string">'Dữ liệu user:'</span><span class="punctuation">,</span> <span class="variable">user</span><span class="punctuation">))</span>
+          <span class="punctuation">.</span><span class="function-name">catch</span><span class="punctuation">(</span><span class="variable">error</span> <span class="punctuation">=></span> <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">error</span><span class="punctuation">(</span><span class="string">'Có lỗi xảy ra:'</span><span class="punctuation">,</span> <span class="variable">error</span><span class="punctuation">));</span>
+    </section>
+
+    <!-- Phần 2: Observable -->
+    <section id="observable"> <h2>2. Observable</h2>
+      <h3>Định nghĩa Observable</h3>
+      <p>Observable (RxJS) là một đối tượng đại diện cho một luồng dữ liệu (stream) có thể xảy ra theo thời gian. Nó có
+        thể phát ra không, một, nhiều, hoặc vô hạn giá trị.</p>
+      <h3>Đặc điểm Observable</h3>
+      <ul>
+        <li><strong>Đa trị:</strong> Có thể phát ra nhiều giá trị theo thời gian.</li>
+        <li><strong>Lazy (Lạnh):</strong> Chỉ được thực thi khi có subscriber đăng ký (subscribe).</li>
+        <li><strong>Hủy được (Cancellation):</strong> Có thể hủy bỏ bằng <code>unsubscribe()</code>, giúp tránh rò rỉ
+        bộ
+        nhớ.</li>
+        <li><strong>Hệ sinh thái toán tử phong phú:</strong> Cung cấp các toán tử như <code>map</code>,
+          <code>filter</code>, <code>debounceTime</code>,...
+        </li>
+        </ul>
+        <h3>Khi nào dùng Observable</h3>
+        <p>Khi cần xử lý các luồng dữ liệu hoặc sự kiện theo thời gian. Ví dụ:</p>
+        <ul>
+          <li>Xử lý sự kiện từ DOM (clicks, keypresses).</li>
+          <li>Làm việc với WebSockets để nhận dữ liệu real-time.</li>
+          <li>Xử lý các HTTP request có thể hủy.</li>
+        </ul>
+        <h3>Ví dụ Observable</h3>
+        <div class="code-block">
+          <code class="language-javascript"><span class="comment">// Giả sử đã import các hàm cần thiết</span>
+            <span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">Observable</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs'</span><span class="punctuation">;</span>
+            <span class="keyword">const</span> <span class="variable">countdownObservable</span> <span class="punctuation">=</span> <span class="keyword">new</span> <span class="function-name">Observable</span><span class="punctuation">(</span><span class="variable">subscriber</span> <span class="punctuation">=></span> <span class="punctuation">{</span>
+              <span class="keyword">let</span> <span class="variable">count</span> <span class="punctuation">=</span> <span class="number">3</span><span class="punctuation">;</span>
+              <span class="keyword">const</span> <span class="variable">intervalId</span> <span class="punctuation">=</span> <span class="function-name">setInterval</span><span class="punctuation">(()</span> <span class="punctuation">=></span> <span class="punctuation">{</span>
+                <span class="variable">subscriber</span><span class="punctuation">.</span><span class="function-name">next</span><span class="punctuation">(</span><span class="variable">count</span><span class="punctuation">--);</span>
+                <span class="keyword">if</span> <span class="punctuation">(</span><span class="variable">count</span> <span class="punctuation">&lt;</span> <span class="number">0</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+                  <span class="variable">subscriber</span><span class="punctuation">.</span><span class="function-name">complete</span><span class="punctuation">();</span>
+                <span class="punctuation">}</span>
+              <span class="punctuation">},</span> <span class="number">1000</span><span class="punctuation">);</span>
+              <span class="comment">// Hàm dọn dẹp khi unsubscribe</span>
+              <span class="keyword">return</span> <span class="punctuation">()</span> <span class="punctuation">=></span> <span class="function-name">clearInterval</span><span class="punctuation">(</span><span class="variable">intervalId</span><span class="punctuation">);</span>
+            <span class="punctuation">});</span>
+          </code>
+        </div>
+    </section>
+
+    <!-- Phần 3: Toán tử RxJS -->
+    <section id="rxjs-operators">
+      <h2>3. Toán tử RxJS</h2>
+      <p>Toán tử là các pure function cho phép xử lý các collection một cách "declarative". Trong RxJS, toán tử là những
+        viên gạch xây dựng nên logic xử lý luồng dữ liệu của bạn.</p>
+
+      <h3 id="rxjs-map">a. map</h3>
+      <h4>Định nghĩa</h4>
+      <p><code>map</code> là toán tử dùng để biến đổi từng giá trị được phát ra từ một Observable thành một giá trị mới,
+        tương tự như <code>Array.prototype.map</code>.</p>
+      <h4>Khi nào dùng</h4>
+      <p>Khi bạn cần biến đổi đơn giản từng giá trị trong luồng (ví dụ: trích xuất thuộc tính, format dữ liệu, tính
+        toán).</p>
+      <h4>Ví dụ</h4>
+      <div class="code-block"><code class="language-javascript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">of</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs'</span><span class="punctuation">;</span>
+        <span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">map</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs/operators'</span><span class="punctuation">;</span>
+        <span class="function-name">of</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">).</span><span class="function-name">pipe</span><span class="punctuation">(</span>
+          <span class="function-name">map</span><span class="punctuation">(</span><span class="variable">x</span> <span class="punctuation">=></span> <span class="variable">x</span> <span class="punctuation">*</span> <span class="number">10</span><span class="punctuation">)</span>
+        <span class="punctuation">).</span><span class="function-name">subscribe</span><span class="punctuation">(</span><span class="variable">val</span> <span class="punctuation">=></span> <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">log</span><span class="punctuation">(</span><span class="variable">val</span><span class="punctuation">));</span>
+        <span class="comment">// Output: 10, 20, 30</span></code>
+      </div>
+
+      <h3 id="rxjs-filter">b. filter</h3>
+      <h4>Định nghĩa</h4>
+      <p><code>filter</code> là toán tử dùng để lọc các giá trị được phát ra từ Observable. Chỉ những giá trị nào thỏa
+        mãn điều kiện (hàm trả về <code>true</code>) mới được đi tiếp.</p>
+      <h4>Khi nào dùng</h4>
+      <p>Khi bạn cần loại bỏ những giá trị không mong muốn ra khỏi luồng dữ liệu.</p>
+      <h4>Ví dụ</h4>
+      <div class="code-block"><code class="language-javascript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">of</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs'</span><span class="punctuation">;</span>
+<span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">filter</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs/operators'</span><span class="punctuation">;</span>
+
+<span class="function-name">of</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">,</span> <span class="number">4</span><span class="punctuation">,</span> <span class="number">5</span><span class="punctuation">).</span><span class="function-name">pipe</span><span class="punctuation">(</span>
+  <span class="function-name">filter</span><span class="punctuation">(</span><span class="variable">x</span> <span class="punctuation">=></span> <span class="variable">x</span> <span class="punctuation">%</span> <span class="number">2</span> <span class="punctuation">===</span> <span class="number">0</span><span class="punctuation">)</span> <span class="comment">// Chỉ lấy số chẵn</span>
+<span class="punctuation">).</span><span class="function-name">subscribe</span><span class="punctuation">(</span><span class="variable">val</span> <span class="punctuation">=></span> <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">log</span><span class="punctuation">(</span><span class="variable">val</span><span class="punctuation">));</span>
+        <span class="comment">// Output: 2, 4</span></code>
+      </div>
+
+      <h3 id="rxjs-tap">c. tap (do)</h3>
+      <h4>Định nghĩa</h4>
+      <p><code>tap</code> (trước đây là <code>do</code>) cho phép bạn thực hiện một hành động phụ (side effect) cho mỗi
+        giá trị trong luồng mà không làm thay đổi giá trị đó. Nó giống như "nghe lén" luồng dữ liệu.</p>
+      <h4>Khi nào dùng</h4>
+      <p>Cực kỳ hữu ích cho việc debug (ví dụ: `console.log` giá trị tại một điểm nào đó) hoặc thực hiện các hành động
+        không liên quan đến việc biến đổi dữ liệu (ví dụ: lưu vào `localStorage`).</p>
+      <h4>Ví dụ</h4>
+      <div class="code-block"><code class="language-javascript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">of</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs'</span><span class="punctuation">;</span>
+        <span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">tap</span><span class="punctuation">,</span> <span class="variable">map</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs/operators'</span><span class="punctuation">;</span>
+
+        <span class="function-name">of</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">).</span><span class="function-name">pipe</span><span class="punctuation">(</span>
+          <span class="function-name">tap</span><span class="punctuation">(</span><span class="variable">val</span> <span class="punctuation">=></span> <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">log</span><span class="punctuation">(</span><span class="string">`Original value: </span><span class="variable">${val}</span><span class="string">`</span><span class="punctuation">)),</span>
+          <span class="function-name">map</span><span class="punctuation">(</span><span class="variable">val</span> <span class="punctuation">=></span> <span class="variable">val</span> <span class="punctuation">+</span> <span class="number">100</span><span class="punctuation">),</span>
+          <span class="function-name">tap</span><span class="punctuation">(</span><span class="variable">val</span> <span class="punctuation">=></span> <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">log</span><span class="punctuation">(</span><span class="string">`Transformed value: </span><span class="variable">${val}</span><span class="string">`</span><span class="punctuation">))</span>
+        <span class="punctuation">).</span><span class="function-name">subscribe</span><span class="punctuation">();</span>
+        <span class="comment">// Output:
+        // "Original value: 1"
+        // "Transformed value: 101"
+        // "Original value: 2"
+        // "Transformed value: 102"
+        // ...</span></code>
+      </div>
+
+      <h3 id="rxjs-debounceTime">d. debounceTime</h3>
+      <h4>Định nghĩa</h4>
+      <p><code>debounceTime</code> chỉ phát ra giá trị gần nhất sau một khoảng thời gian yên tĩnh (không có giá trị mới
+        nào được phát ra). Nó bỏ qua các giá trị được phát ra quá nhanh.</p>
+      <h4>Khi nào dùng</h4>
+      <p>Rất phổ biến trong việc xử lý input của người dùng, ví dụ như thanh tìm kiếm (chỉ gọi API sau khi người dùng
+        ngừng gõ một lúc) để tránh gọi API liên tục.</p>
+      <h4>Ví dụ</h4>
+      <div class="code-block"><code
+          class="language-javascript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">fromEvent</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs'</span><span class="punctuation">;</span>
+        <span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">debounceTime</span><span class="punctuation">,</span> <span class="variable">map</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs/operators'</span><span class="punctuation">;</span>
+        <span class="keyword">const</span> <span class="variable">searchInput</span> <span class="punctuation">=</span> <span class="function-name">document</span><span class="punctuation">.</span><span class="function-name">getElementById</span><span class="punctuation">(</span><span class="string">'search'</span><span class="punctuation">);</span>
+        <span class="function-name">fromEvent</span><span class="punctuation">(</span><span class="variable">searchInput</span><span class="punctuation">,</span> <span class="string">'input'</span><span class="punctuation">).</span><span class="function-name">pipe</span><span class="punctuation">(</span>
+          <span class="function-name">map</span><span class="punctuation">(</span><span class="variable">event</span> <span class="punctuation">=></span> <span class="variable">event</span><span class="punctuation">.</span><span class="variable">target</span><span class="punctuation">.</span><span class="variable">value</span><span class="punctuation">),</span>
+          <span class="function-name">debounceTime</span><span class="punctuation">(</span><span class="number">500</span><span class="punctuation">)</span> <span class="comment">// Chờ 500ms sau khi ngừng gõ</span>
+        <span class="punctuation">).</span><span class="function-name">subscribe</span><span class="punctuation">(</span><span class="variable">val</span> <span class="punctuation">=></span> <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">log</span><span class="punctuation">(</span><span class="string">`Searching for: </span><span class="variable">${val}</span><span class="string">`</span><span class="punctuation">));</span></code>
+      </div>
+
+      <h3 id="rxjs-catchError">e. catchError</h3>
+      <h4>Định nghĩa</h4>
+      <p><code>catchError</code> bắt lỗi xảy ra trong một Observable và cho phép bạn xử lý nó, ví dụ như trả về một
+        Observable khác hoặc một giá trị mặc định.</p>
+      <h4>Khi nào dùng</h4>
+      <p>Bắt buộc phải dùng khi làm việc với các tác vụ có thể thất bại như gọi API. Nếu không có `catchError`, một lỗi
+        sẽ làm "chết" toàn bộ stream.</p>
+      <h4>Ví dụ</h4>
+      <div class="code-block"><code class="language-javascript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">throwError</span><span class="punctuation">,</span> <span class="variable">of</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs'</span><span class="punctuation">;</span>
+<span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">catchError</span><span class="punctuation">,</span> <span class="variable">map</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs/operators'</span><span class="punctuation">;</span>
+
+<span class="function-name">throwError</span><span class="punctuation">(</span><span class="string">'Oops! Something went wrong'</span><span class="punctuation">).</span><span class="function-name">pipe</span><span class="punctuation">(</span>
+  <span class="function-name">catchError</span><span class="punctuation">(</span><span class="variable">error</span> <span class="punctuation">=></span> <span class="punctuation">{</span>
+    <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">error</span><span class="punctuation">(</span><span class="string">'Caught error:'</span><span class="punctuation">,</span> <span class="variable">error</span><span class="punctuation">);</span>
+    <span class="keyword">return</span> <span class="function-name">of</span><span class="punctuation">([]);</span> <span class="comment">// Trả về giá trị mặc định (mảng rỗng)</span>
+  <span class="punctuation">})</span>
+<span class="punctuation">).</span><span class="function-name">subscribe</span><span class="punctuation">(</span><span class="variable">val</span> <span class="punctuation">=></span> <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">log</span><span class="punctuation">(</span><span class="string">'Result:'</span><span class="punctuation">,</span> <span class="variable">val</span><span class="punctuation">));</span>
+<span class="comment">// Output:
+// "Caught error: Oops! Something went wrong"
+// "Result: []"</span></code></div>
+
+      <h3 id="rxjs-mergeMap">f. mergeMap</h3>
+      <h4>Định nghĩa</h4>
+      <p><code>mergeMap</code> ánh xạ mỗi giá trị từ Observable gốc thành một Observable mới, sau đó gộp và phát ra các
+        giá trị từ tất cả các Observable con một cách song song, không theo thứ tự.</p>
+      <h4>Khi nào dùng</h4>
+      <p>Khi các tác vụ bất đồng bộ độc lập và có thể chạy song song, không quan trọng thứ tự hoàn thành. Ví dụ: Gọi
+        nhiều API độc lập cùng lúc.</p>
+
+      <h3 id="rxjs-concatMap">g. concatMap</h3>
+      <h4>Định nghĩa</h4>
+      <p><code>concatMap</code> ánh xạ mỗi giá trị thành một Observable con, nhưng nối tiếp các Observable con lại với
+        nhau. Nó chỉ subscribe vào Observable con tiếp theo khi Observable con trước đó đã hoàn thành.</p>
+      <h4>Khi nào dùng</h4>
+      <p>Khi các tác vụ bất đồng bộ cần được thực hiện theo đúng thứ tự, tuần tự. Ví dụ: Gửi lần lượt các request lên
+        server mà thứ tự là quan trọng.</p>
+
+      <h3 id="rxjs-switchMap">h. switchMap</h3>
+      <h4>Định nghĩa</h4>
+      <p><code>switchMap</code> ánh xạ mỗi giá trị thành một Observable con. Khi Observable gốc phát ra giá trị mới, nó
+        sẽ hủy Observable con trước đó và chuyển sang subscribe Observable con mới nhất.</p>
+      <h4>Khi nào dùng</h4>
+      <p>Khi bạn chỉ quan tâm đến kết quả của yêu cầu mới nhất và muốn hủy các yêu cầu trước đó. Ví dụ điển hình: Tính
+        năng tìm kiếm theo từ khóa (type-ahead search).</p>
+
+      <h3 id="rxjs-exhaustMap">i. exhaustMap</h3>
+      <h4>Định nghĩa</h4>
+      <p><code>exhaustMap</code> ánh xạ mỗi giá trị thành một Observable con. Nó sẽ bỏ qua tất cả các giá trị mới từ
+        Observable gốc cho đến khi Observable con hiện tại hoàn thành.</p>
+      <h4>Khi nào dùng</h4>
+      <p>Khi bạn muốn chống spam các sự kiện. Ví dụ: Ngăn người dùng gửi nhiều form cùng lúc bằng cách click nút submit
+        nhiều lần.</p>
+    </section>
+
+    <!-- NỘI DUNG MỚI: ANGULAR NGRX -->
+    <section id="ngrx">
+      <h2>4. Angular NgRx</h2>
+      <p>NgRx là một framework để xây dựng các ứng dụng reactive trong Angular bằng cách sử dụng kiến trúc Redux. Nó
+        quản lý trạng thái toàn cục (global state) của ứng dụng một cách nhất quán và có thể dự đoán.</p>
+
+      <h3 id="ngrx-concepts">a. Tổng quan & Khái niệm</h3>
+      <h4>NgRx là gì?</h4>
+      <p>NgRx quản lý trạng thái ứng dụng tại một nơi duy nhất gọi là <strong>Store</strong>, làm cho trạng thái trở nên
+        có thể dự đoán được và dễ dàng debug.</p>
+
+      <h4>Tại sao dùng NgRx?</h4>
+      <ul>
+        <li><strong>Quản lý State phức tạp:</strong> Giải quyết vấn đề truyền dữ liệu qua nhiều cấp component.</li>
+        <li><strong>Tính dự đoán được:</strong> State chỉ có thể được thay đổi thông qua các Action rõ ràng.</li>
+        <li><strong>Debug mạnh mẽ:</strong> Công cụ Redux DevTools cho phép "travel back in time".</li>
+        <li><strong>Dễ dàng testing:</strong> Các pure function (reducers) và effects độc lập rất dễ test.</li>
+      </ul>
+
+      <h4>Các khái niệm chính</h4>
+      <ul>
+        <li><strong>State:</strong> Một object JavaScript đại diện cho trạng thái của toàn bộ ứng dụng.</li>
+        <li><strong>Action:</strong> Một object mô tả một sự kiện đã xảy ra (ví dụ: `[User Page] Load Users`).</li>
+        <li><strong>Reducer:</strong> Một pure function nhận vào State hiện tại và một Action, trả về State mới.</li>
+        <li><strong>Selector:</strong> Một function để lấy ra một phần dữ liệu cụ thể từ State.</li>
+        <li><strong>Effect:</strong> Nơi xử lý các side effect như gọi API. Nó lắng nghe Actions và dispatch các Actions
+          mới.</li>
+        <li><strong>Store:</strong> Nơi lưu trữ State, cung cấp phương thức `dispatch()` và `select()`.</li>
+      </ul>
+
+      <h3 id="ngrx-flow">b. Luồng dữ liệu (Flow)</h3>
+      <p>Luồng dữ liệu trong NgRx là một chiều (unidirectional), giúp dễ dàng theo dõi và hiểu.</p>
+      <div class="code-block" style="background-color: #21252b; font-family: monospace;">
+        Component --dispatches--> Action --> Reducer --> Store --> Selector --> Component
+        ^ |
+        |___________________________ Effect (API call) _________________________|
+      </div>
+
+      <h4>Flow chi tiết khi lấy dữ liệu từ server:</h4>
+      <ol>
+        <li><strong>Component</strong> dispatch một Action: `this.store.dispatch(loadUsers());`</li>
+        <li><strong>Effect</strong> lắng nghe Action đó, gọi API service.</li>
+        <li><strong>Effect</strong> dispatch Action mới: `loadUsersSuccess({ users })` nếu thành công, hoặc
+          `loadUsersFailure({ error })` nếu thất bại.</li>
+        <li><strong>Reducer</strong> xử lý Action mới (`loadUsersSuccess`) và cập nhật mảng users vào state.</li>
+        <li><strong>Store</strong> được cập nhật với state mới.</li>
+        <li><strong>Selector</strong> đã được component đăng ký sẽ phát ra giá trị mới.</li>
+        <li><strong>Component</strong> nhận dữ liệu mới qua `async` pipe và render lại view.</li>
+      </ol>
+
+      <h3 id="ngrx-faq">c. Các câu hỏi cụ thể</h3>
+      <h4>Cách lấy 1 dữ liệu trong store?</h4>
+      <p>Sử dụng <strong>Selectors</strong>, đặc biệt là `createSelector` để tối ưu hiệu năng. Bạn có thể tạo selector
+        để lấy cả danh sách hoặc một item cụ thể theo ID.</p>
+      <div class="code-block"><code
+          class="language-typescript"><span class="comment">// Lấy tất cả user</span>
+<span class="variable">users$</span> <span class="punctuation">=</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">store</span><span class="punctuation">.</span><span class="function-name">select</span><span class="punctuation">(</span><span class="variable">selectAllUsers</span><span class="punctuation">);</span>
+
+<span class="comment">// Lấy 1 user theo ID</span>
+<span class="variable">user$</span> <span class="punctuation">=</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">store</span><span class="punctuation">.</span><span class="function-name">select</span><span class="punctuation">(</span><span class="function-name">selectUserById</span><span class="punctuation">(</span><span class="number">5</span><span class="punctuation">));</span></code>
+      </div>
+
+      <h4>Load lại khi reload trang vẫn giữ?</h4>
+      <p>Mặc định state sẽ mất. Để giữ lại, bạn cần sử dụng một library như <code>ngrx-store-localstorage</code> để tự
+        động đồng bộ một phần state vào localStorage và khôi phục (rehydrate) lại khi ứng dụng khởi động.</p>
+
+      <h4>Cái gì hay ho trong NgRx?</h4>
+      <ul>
+        <li><strong>Redux DevTools:</strong> "Du hành thời gian" để debug, xem lại từng action và state.</li>
+        <li><strong>Entity State Adapter:</strong> Tối ưu hóa việc thao tác với collections trong state, giúp reducer
+          cực kỳ gọn gàng.</li>
+        <li><strong>ComponentStore:</strong> Giải pháp quản lý state "local" cho một component hoặc một feature nhỏ.
+        </li>
+        <li><strong>Tính nhất quán (Consistency):</strong> Toàn bộ team sẽ làm việc theo một kiến trúc và quy ước thống
+          nhất.</li>
+      </ul>
+
+      <h3 id="ngrx-example">d. Ví dụ minh họa</h3>
+      <h4>1. Định nghĩa Actions (user.actions.ts)</h4>
+      <div class="code-block"><code
+          class="language-typescript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">createAction</span><span class="punctuation">,</span> <span class="variable">props</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'@ngrx/store'</span><span class="punctuation">;</span>
+<span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">User</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'../models/user.model'</span><span class="punctuation">;</span>
+
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="variable">loadUsers</span> <span class="punctuation">=</span> <span class="function-name">createAction</span><span class="punctuation">(</span><span class="string">'[User Page] Load Users'</span><span class="punctuation">);</span>
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="variable">loadUsersSuccess</span> <span class="punctuation">=</span> <span class="function-name">createAction</span><span class="punctuation">(</span><span class="string">'[User API] Load Users Success'</span><span class="punctuation">,</span> <span class="function-name">props</span><span class="punctuation">&lt;{</span> <span class="variable">users</span><span class="punctuation">:</span> <span class="variable">User</span><span class="punctuation">[]</span> <span class="punctuation">}>());</span>
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="variable">loadUsersFailure</span> <span class="punctuation">=</span> <span class="function-name">createAction</span><span class="punctuation">(</span><span class="string">'[User API] Load Users Failure'</span><span class="punctuation">,</span> <span class="function-name">props</span><span class="punctuation">&lt;{</span> <span class="variable">error</span><span class="punctuation">:</span> <span class="variable">string</span> <span class="punctuation">}>());</span></code>
+      </div>
+
+      <h4>2. Định nghĩa Reducer (user.reducer.ts)</h4>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">createReducer</span><span class="punctuation">,</span> <span class="variable">on</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'@ngrx/store'</span><span class="punctuation">;</span>
+<span class="keyword">import</span> <span class="punctuation">*</span> <span class="keyword">as</span> <span class="variable">UserActions</span> <span class="keyword">from</span> <span class="string">'./user.actions'</span><span class="punctuation">;</span>
+
+<span class="comment">// ... định nghĩa UserState interface</span>
+
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="variable">userReducer</span> <span class="punctuation">=</span> <span class="function-name">createReducer</span><span class="punctuation">(</span>
+  <span class="variable">initialState</span><span class="punctuation">,</span>
+  <span class="function-name">on</span><span class="punctuation">(</span><span class="variable">UserActions</span><span class="punctuation">.</span><span class="variable">loadUsers</span><span class="punctuation">,</span> <span class="punctuation">(</span><span class="variable">state</span><span class="punctuation">)</span> <span class="punctuation">=></span> <span class="punctuation">({</span> <span class="punctuation">...</span><span class="variable">state</span><span class="punctuation">,</span> <span class="object-key">status</span><span class="punctuation">:</span> <span class="string">'loading'</span> <span class="punctuation">})),</span>
+  <span class="function-name">on</span><span class="punctuation">(</span><span class="variable">UserActions</span><span class="punctuation">.</span><span class="variable">loadUsersSuccess</span><span class="punctuation">,</span> <span class="punctuation">(</span><span class="variable">state</span><span class="punctuation">,</span> <span class="punctuation">{</span> <span class="variable">users</span> <span class="punctuation">})</span> <span class="punctuation">=></span> <span class="punctuation">({</span> <span class="punctuation">...</span><span class="variable">state</span><span class="punctuation">,</span> <span class="object-key">users</span><span class="punctuation">:</span> <span class="variable">users</span><span class="punctuation">,</span> <span class="object-key">status</span><span class="punctuation">:</span> <span class="string">'success'</span> <span class="punctuation">})),</span>
+  <span class="function-name">on</span><span class="punctuation">(</span><span class="variable">UserActions</span><span class="punctuation">.</span><span class="variable">loadUsersFailure</span><span class="punctuation">,</span> <span class="punctuation">(</span><span class="variable">state</span><span class="punctuation">,</span> <span class="punctuation">{</span> <span class="variable">error</span> <span class="punctuation">})</span> <span class="punctuation">=></span> <span class="punctuation">({</span> <span class="punctuation">...</span><span class="variable">state</span><span class="punctuation">,</span> <span class="object-key">error</span><span class="punctuation">:</span> <span class="variable">error</span><span class="punctuation">,</span> <span class="object-key">status</span><span class="punctuation">:</span> <span class="string">'error'</span> <span class="punctuation">}))</span>
+<span class="punctuation">);</span></code></div>
+
+      <h4>3. Định nghĩa Effects (user.effects.ts)</h4>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">Actions</span><span class="punctuation">,</span> <span class="variable">createEffect</span><span class="punctuation">,</span> <span class="variable">ofType</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'@ngrx/effects'</span><span class="punctuation">;</span>
+<span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">catchError</span><span class="punctuation">,</span> <span class="variable">map</span><span class="punctuation">,</span> <span class="variable">mergeMap</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs/operators'</span><span class="punctuation">;</span>
+<span class="comment">// ...</span>
+<span class="keyword">export</span> <span class="keyword">class</span> <span class="variable">UserEffects</span> <span class="punctuation">{</span>
+  <span class="variable">loadUsers$</span> <span class="punctuation">=</span> <span class="function-name">createEffect</span><span class="punctuation">(()</span> <span class="punctuation">=></span>
+    <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">actions$</span><span class="punctuation">.</span><span class="function-name">pipe</span><span class="punctuation">(</span>
+      <span class="function-name">ofType</span><span class="punctuation">(</span><span class="variable">UserActions</span><span class="punctuation">.</span><span class="variable">loadUsers</span><span class="punctuation">),</span>
+      <span class="function-name">mergeMap</span><span class="punctuation">(()</span> <span class="punctuation">=></span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">userService</span><span class="punctuation">.</span><span class="function-name">getUsers</span><span class="punctuation">().</span><span class="function-name">pipe</span><span class="punctuation">(</span>
+          <span class="function-name">map</span><span class="punctuation">(</span><span class="variable">users</span> <span class="punctuation">=></span> <span class="variable">UserActions</span><span class="punctuation">.</span><span class="function-name">loadUsersSuccess</span><span class="punctuation">({</span> <span class="variable">users</span> <span class="punctuation">})),</span>
+          <span class="function-name">catchError</span><span class="punctuation">(</span><span class="variable">error</span> <span class="punctuation">=></span> <span class="function-name">of</span><span class="punctuation">(</span><span class="variable">UserActions</span><span class="punctuation">.</span><span class="function-name">loadUsersFailure</span><span class="punctuation">({</span> <span class="object-key">error</span><span class="punctuation">:</span> <span class="variable">error</span><span class="punctuation">.</span><span class="variable">message</span> <span class="punctuation">})))</span>
+        <span class="punctuation">)</span>
+      <span class="punctuation">)</span>
+    <span class="punctuation">)</span>
+  <span class="punctuation">);</span>
+  <span class="comment">// ... constructor</span>
+<span class="punctuation">}</span></code></div>
+
+      <h4>4. Định nghĩa Selectors (user.selectors.ts)</h4>
+      <div class="code-block"><code
+          class="language-typescript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">createSelector</span><span class="punctuation">,</span> <span class="variable">createFeatureSelector</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'@ngrx/store'</span><span class="punctuation">;</span>
+<span class="comment">// ...</span>
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="variable">selectUserState</span> <span class="punctuation">=</span> <span class="function-name">createFeatureSelector</span><span class="punctuation">&lt;</span><span class="variable">UserState</span><span class="punctuation">>(</span><span class="string">'users'</span><span class="punctuation">);</span>
+
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="variable">selectAllUsers</span> <span class="punctuation">=</span> <span class="function-name">createSelector</span><span class="punctuation">(</span><span class="variable">selectUserState</span><span class="punctuation">,</span> <span class="punctuation">(</span><span class="variable">state</span><span class="punctuation">)</span> <span class="punctuation">=></span> <span class="variable">state</span><span class="punctuation">.</span><span class="variable">users</span><span class="punctuation">);</span>
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="variable">selectUserStatus</span> <span class="punctuation">=</span> <span class="function-name">createSelector</span><span class="punctuation">(</span><span class="variable">selectUserState</span><span class="punctuation">,</span> <span class="punctuation">(</span><span class="variable">state</span><span class="punctuation">)</span> <span class="punctuation">=></span> <span class="variable">state</span><span class="punctuation">.</span><span class="variable">status</span><span class="punctuation">);</span></code>
+      </div>
+
+      <h4>5. Component sử dụng (user.component.ts & html)</h4>
+      <div class="code-block"><code class="language-html"><span class="tag">&lt;div</span> <span class="variable">*ngIf</span>=<span class="string">"status$ | async as status"</span><span class="tag">></span>
+  <span class="tag">&lt;p></span>Status: {{ status }}<span class="tag">&lt;/p></span>
+<span class="tag">&lt;/div></span>
+
+<span class="tag">&lt;ul></span>
+  <span class="tag">&lt;li</span> <span class="variable">*ngFor</span>=<span class="string">"let user of users$ | async"</span><span class="tag">></span>{{ user.name }}<span class="tag">&lt;/li></span>
+<span class="tag">&lt;/ul></span></code></div>
+    </section>
+
+    <section id="forms">
+      <h2>5. Angular Reactive Forms</h2>
+      <p>Reactive Forms là một mô hình mạnh mẽ để quản lý trạng thái của form trong các ứng dụng Angular, cung cấp khả
+        năng kiểm soát, kiểm thử và mở rộng vượt trội.</p>
+
+      <h3 id="forms-what-is">a. Reactive Forms là gì?</h3>
+      <p>Đây là mô hình quản lý form mà ở đó cấu trúc và logic của form được định nghĩa rõ ràng trong Component class
+        (TypeScript) thay vì trong template.</p>
+
+      <h4>Ưu điểm vượt trội</h4>
+      <ul>
+        <li><strong>Kiểm soát hoàn toàn:</strong> Mọi thứ đều được định nghĩa trong code, dễ dàng debug và bảo trì.</li>
+        <li><strong>Dễ dàng Unit Test:</strong> Có thể test logic form mà không cần render UI.</li>
+        <li><strong>Validation mạnh mẽ:</strong> Hỗ trợ custom sync/async validator, kết hợp validator dễ dàng.</li>
+        <li><strong>Form động:</strong> Thêm, xóa control tại runtime một cách đơn giản.</li>
+        <li><strong>Reactive Programming:</strong> Tích hợp hoàn hảo với RxJS, cho phép phản ứng với các thay đổi của
+          form.</li>
+      </ul>
+
+      <h4>Các lớp cơ bản</h4>
+      <ul>
+        <li><code>FormControl</code>: Quản lý giá trị và trạng thái validation của một form field.</li>
+        <li><code>FormGroup</code>: Quản lý một nhóm các <code>FormControl</code> và <code>FormArray</code>.</li>
+        <li><code>FormArray</code>: Quản lý một mảng động các <code>FormControl</code>.</li>
+      </ul>
+
+      <h3 id="forms-validation">b. Validation trong Reactive Forms</h3>
+      <h4>Validators tích hợp sẵn</h4>
+      <p>Angular cung cấp sẵn các validator thông dụng: <code>Validators.required</code>,
+        <code>Validators.minLength()</code>, <code>Validators.email</code>, etc.
+      </p>
+      <div class="code-block"><code class="language-typescript">
+<span class="keyword">this</span><span class="punctuation">.</span><span class="variable">profileForm</span> <span class="punctuation">=</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">fb</span><span class="punctuation">.</span><span class="function-name">group</span><span class="punctuation">({</span>
+  <span class="object-key">username</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">''</span><span class="punctuation">,</span> <span class="punctuation">[</span><span class="variable">Validators</span><span class="punctuation">.</span><span class="variable">required</span><span class="punctuation">,</span> <span class="variable">Validators</span><span class="punctuation">.</span><span class="function-name">minLength</span><span class="punctuation">(</span><span class="number">3</span><span class="punctuation">)]],</span>
+  <span class="object-key">email</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">''</span><span class="punctuation">,</span> <span class="punctuation">[</span><span class="variable">Validators</span><span class="punctuation">.</span><span class="variable">required</span><span class="punctuation">,</span> <span class="variable">Validators</span><span class="punctuation">.</span><span class="variable">email</span><span class="punctuation">]],</span>
+<span class="punctuation">});</span></code></div>
+
+      <h4>Custom Sync Validator</h4>
+      <p>Là một hàm nhận vào <code>AbstractControl</code> và trả về một object lỗi nếu không hợp lệ, hoặc
+        <code>null</code> nếu hợp lệ.
+      </p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">export</span> <span class="keyword">function</span> <span class="function-name">usernameValidator</span><span class="punctuation">(</span><span class="variable">control</span><span class="punctuation">:</span> <span class="variable">AbstractControl</span><span class="punctuation">)</span><span class="punctuation">:</span> <span class="variable">ValidationErrors</span> <span class="punctuation">|</span> <span class="keyword">null</span> <span class="punctuation">{</span>
+  <span class="keyword">const</span> <span class="variable">hasSpace</span> <span class="punctuation">=</span> <span class="variable">control</span><span class="punctuation">.</span><span class="variable">value</span><span class="punctuation">.</span><span class="function-name">includes</span><span class="punctuation">(</span><span class="string">' '</span><span class="punctuation">);</span>
+  <span class="keyword">return</span> <span class="variable">hasSpace</span> <span class="punctuation">?</span> <span class="punctuation">{</span> <span class="object-key">invalidUsername</span><span class="punctuation">:</span> <span class="boolean">true</span> <span class="punctuation">}</span> <span class="punctuation">:</span> <span class="keyword">null</span><span class="punctuation">;</span>
+<span class="punctuation">}</span></code></div>
+
+      <h4>Custom Async Validator</h4>
+      <p>Thường dùng để kiểm tra với server (ví dụ: check username tồn tại). Validator này trả về một
+        <code>Observable</code> hoặc <code>Promise</code>.
+      </p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">validate</span><span class="punctuation">(</span><span class="variable">control</span><span class="punctuation">:</span> <span class="variable">AbstractControl</span><span class="punctuation">)</span><span class="punctuation">:</span> <span class="variable">Observable</span><span class="punctuation">&lt;</span><span class="variable">ValidationErrors</span> <span class="punctuation">|</span> <span class="keyword">null</span><span class="punctuation">></span> <span class="punctuation">{</span>
+  <span class="keyword">return</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">userService</span><span class="punctuation">.</span><span class="function-name">checkUsernameAvailable</span><span class="punctuation">(</span><span class="variable">control</span><span class="punctuation">.</span><span class="variable">value</span><span class="punctuation">).</span><span class="function-name">pipe</span><span class="punctuation">(</span>
+    <span class="function-name">map</span><span class="punctuation">(</span><span class="variable">isAvailable</span> <span class="punctuation">=></span> <span class="punctuation">(</span><span class="variable">isAvailable</span> <span class="punctuation">?</span> <span class="keyword">null</span> <span class="punctuation">:</span> <span class="punctuation">{</span> <span class="object-key">usernameExists</span><span class="punctuation">:</span> <span class="boolean">true</span> <span class="punctuation">}))</span>
+  <span class="punctuation">);</span>
+<span class="punctuation">}</span></code></div>
+
+      <h4>Validator Composability (cho FormGroup)</h4>
+      <p>Khả năng kết hợp validator ở cấp <code>FormGroup</code> để so sánh các control với nhau là điểm mạnh nhất.</p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">this</span><span class="punctuation">.</span><span class="variable">registrationForm</span> <span class="punctuation">=</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">fb</span><span class="punctuation">.</span><span class="function-name">group</span><span class="punctuation">({</span>
+  <span class="comment">// ... controls</span>
+<span class="punctuation">},</span> <span class="punctuation">{</span>
+  <span class="object-key">validators</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="keyword">this</span><span class="punctuation">.</span><span class="variable">passwordMatchValidator</span><span class="punctuation">]</span>
+<span class="punctuation">});</span></code></div>
+
+      <h3 id="forms-integration">c. Tích hợp Validation từ bên ngoài</h3>
+      <h4>Library class-validator</h4>
+      <p>Đây là thư viện validation mạnh mẽ sử dụng decorators, cho phép bạn định nghĩa các quy tắc validation ngay trên
+        DTO class.</p>
+      <div class="code-block"><code class="language-bash">npm install class-validator class-transformer</code></div>
+      <h4>Tạo DTO Class với Validation</h4>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">export</span> <span class="keyword">class</span> <span class="variable">UserRegistrationDto</span> <span class="punctuation">{</span>
+  <span class="variable">@IsNotEmpty</span><span class="punctuation">({</span> <span class="object-key">message</span><span class="punctuation">:</span> <span class="string">'Username is required'</span> <span class="punctuation">})</span>
+  <span class="variable">@MinLength</span><span class="punctuation">(</span><span class="number">3</span><span class="punctuation">)</span>
+  <span class="variable">username</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+
+  <span class="variable">@IsEmail</span><span class="punctuation">()</span>
+  <span class="variable">email</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+<span class="punctuation">}</span></code></div>
+      <p>Bạn có thể tạo một adapter function để chuyển đổi các quy tắc từ <code>class-validator</code> sang
+        <code>ValidatorFn</code> của Angular để tái sử dụng logic validation.
+      </p>
+
+      <h3 id="forms-example">d. Ví dụ hoàn chỉnh</h3>
+      <h4>Component Class (registration.component.ts)</h4>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">export</span> <span class="keyword">class</span> <span class="variable">RegistrationComponent</span> <span class="punctuation">{</span>
+  <span class="variable">registrationForm</span><span class="punctuation">:</span> <span class="variable">FormGroup</span><span class="punctuation">;</span>
+
+  <span class="keyword">constructor</span><span class="punctuation">(</span><span class="variable">private fb</span><span class="punctuation">:</span> <span class="variable">FormBuilder</span><span class="punctuation">,</span> <span class="comment">/* ... */</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+    <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">registrationForm</span> <span class="punctuation">=</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">fb</span><span class="punctuation">.</span><span class="function-name">group</span><span class="punctuation">({</span>
+      <span class="object-key">personalInfo</span><span class="punctuation">:</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">fb</span><span class="punctuation">.</span><span class="function-name">group</span><span class="punctuation">({</span>
+        <span class="object-key">username</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">''</span><span class="punctuation">,</span> <span class="punctuation">{</span>
+          <span class="object-key">validators</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="variable">Validators</span><span class="punctuation">.</span><span class="variable">required</span><span class="punctuation">,</span> <span class="variable">usernameValidator</span><span class="punctuation">],</span>
+          <span class="object-key">asyncValidators</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="comment">/* async validator */</span><span class="punctuation">],</span>
+          <span class="object-key">updateOn</span><span class="punctuation">:</span> <span class="string">'blur'</span>
+        <span class="punctuation">}],</span>
+        <span class="object-key">email</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">''</span><span class="punctuation">,</span> <span class="punctuation">[</span><span class="variable">Validators</span><span class="punctuation">.</span><span class="variable">required</span><span class="punctuation">,</span> <span class="variable">Validators</span><span class="punctuation">.</span><span class="variable">email</span><span class="punctuation">]],</span>
+      <span class="punctuation">}),</span>
+      <span class="object-key">passwords</span><span class="punctuation">:</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">fb</span><span class="punctuation">.</span><span class="function-name">group</span><span class="punctuation">({</span>
+        <span class="object-key">password</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">''</span><span class="punctuation">,</span> <span class="punctuation">[</span><span class="variable">Validators</span><span class="punctuation">.</span><span class="variable">required</span><span class="punctuation">,</span> <span class="variable">Validators</span><span class="punctuation">.</span><span class="function-name">minLength</span><span class="punctuation">(</span><span class="number">8</span><span class="punctuation">)]],</span>
+        <span class="object-key">confirmPassword</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">''</span><span class="punctuation">]</span>
+      <span class="punctuation">},</span> <span class="punctuation">{</span> <span class="object-key">validators</span><span class="punctuation">:</span> <span class="variable">passwordMatchValidator</span> <span class="punctuation">})</span>
+    <span class="punctuation">});</span>
+  <span class="punctuation">}</span>
+  <span class="comment">// ... onSubmit method</span>
+<span class="punctuation">}</span></code></div>
+
+      <h4>Template HTML (registration.component.html)</h4>
+      <div class="code-block"><code class="language-html"><span class="tag">&lt;form</span> <span class="variable">[formGroup]</span>=<span class="string">"registrationForm"</span> <span class="variable">(ngSubmit)</span>=<span class="string">"onSubmit()"</span><span class="tag">></span>
+  <span class="tag">&lt;div</span> <span class="variable">formGroupName</span>=<span class="string">"personalInfo"</span><span class="tag">></span>
+    <span class="comment">&lt;!-- Username Field --></span>
+    <span class="tag">&lt;div</span> <span class="variable">class</span>=<span class="string">"form-group"</span><span class="tag">></span>
+      <span class="tag">&lt;label</span> <span class="variable">for</span>=<span class="string">"username"</span><span class="tag">></span>Username<span class="tag">&lt;/label></span>
+      <span class="tag">&lt;input</span> <span class="variable">formControlName</span>=<span class="string">"username"</span><span class="tag">></span>
+      <span class="tag">&lt;div</span> <span class="variable">*ngIf</span>=<span class="string">"username.invalid && username.touched"</span> <span class="variable">class</span>=<span class="string">"invalid-feedback"</span><span class="tag">></span>
+        <span class="tag">&lt;div</span> <span class="variable">*ngIf</span>=<span class="string">"username.errors?.['required']"</span><span class="tag">></span>Username is required.<span class="tag">&lt;/div></span>
+        <span class="tag">&lt;div</span> <span class="variable">*ngIf</span>=<span class="string">"username.errors?.['usernameExists']"</span><span class="tag">></span>This username is already taken.<span class="tag">&lt;/div></span>
+      <span class="tag">&lt;/div></span>
+      <span class="tag">&lt;small</span> <span class="variable">*ngIf</span>=<span class="string">"username.pending"</span><span class="tag">></span>Checking availability...<span class="tag">&lt;/small></span>
+    <span class="tag">&lt;/div></span>
+  <span class="tag">&lt;/div></span>
+
+  <span class="tag">&lt;div</span> <span class="variable">formGroupName</span>=<span class="string">"passwords"</span><span class="tag">></span>
+    <span class="comment">&lt;!-- Password Fields --></span>
+    <span class="comment">&lt;!-- ... --></span>
+    <span class="tag">&lt;div</span> <span class="variable">*ngIf</span>=<span class="string">"passwords.errors?.['passwordMismatch']"</span><span class="tag">></span>Passwords do not match.<span class="tag">&lt;/div></span>
+  <span class="tag">&lt;/div></span>
+
+  <span class="tag">&lt;button</span> <span class="variable">type</span>=<span class="string">"submit"</span> <span class="variable">[disabled]</span>=<span class="string">"registrationForm.invalid"</span><span class="tag">></span>Register<span class="tag">&lt;/button></span>
+<span class="tag">&lt;/form></span></code></div>
+    </section>
+
+    <section id="angular-core">
+      <h2>6. Angular Lifecycle, DI & Structure</h2>
+      <p>Đây là những khái niệm nền tảng giúp bạn xây dựng các ứng dụng Angular một cách hiệu quả, dễ bảo trì và mở
+        rộng.</p>
+
+      <h3 id="lifecycle-hooks">a. Vòng đời Component (Lifecycle Hooks)</h3>
+      <p>Lifecycle Hooks là các phương thức cho phép bạn thực thi code tại các thời điểm quan trọng trong vòng đời của
+        component, từ khi tạo ra cho đến khi bị hủy.</p>
+      <h4>Trình tự chạy và mục đích</h4>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Hook</th>
+              <th>Giai đoạn</th>
+              <th>Mục đích & Lý do chạy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>constructor</strong></td>
+              <td>Khởi tạo Class</td>
+              <td>Chạy đầu tiên (JS feature). Dùng để DI, khởi tạo thuộc tính cơ bản. <strong>Không</strong> truy cập
+                <code>@Input()</code> ở đây.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>ngOnChanges</strong></td>
+              <td>Input Thay đổi</td>
+              <td>Chạy khi <code>@Input()</code> thay đổi. Nhận <code>SimpleChanges</code> để theo dõi giá trị cũ/mới.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>ngOnInit</strong></td>
+              <td>Khởi tạo Component</td>
+              <td>Chạy <strong>một lần</strong> sau <code>ngOnChanges</code> lần đầu. Nơi lý tưởng để gọi API, khởi tạo
+                dữ
+                liệu phức tạp.</td>
+            </tr>
+            <tr>
+              <td><strong>ngDoCheck</strong></td>
+              <td>Phát hiện thay đổi</td>
+              <td>Chạy trong mọi chu kỳ change detection. Dùng cho các thay đổi mà Angular không tự bắt được.</td>
+            </tr>
+            <tr>
+              <td><strong>ngAfterContentInit</strong></td>
+              <td>Content Projection</td>
+              <td>Chạy <strong>một lần</strong> sau khi external content (<code>&lt;ng-content&gt;</code>) được đưa vào.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>ngAfterContentChecked</strong></td>
+              <td>Kiểm tra Content</td>
+              <td>Chạy sau mỗi lần kiểm tra content được project.</td>
+            </tr>
+            <tr>
+              <td><strong>ngAfterViewInit</strong></td>
+              <td>View & Children</td>
+              <td>Chạy <strong>một lần</strong> sau khi view của component và các child components đã khởi tạo xong. Nơi
+                an toàn để thao tác DOM (<code>@ViewChild</code>).</td>
+            </tr>
+            <tr>
+              <td><strong>ngAfterViewChecked</strong></td>
+              <td>Kiểm tra View</td>
+              <td>Chạy sau mỗi lần kiểm tra view.</td>
+            </tr>
+            <tr>
+              <td><strong>ngOnDestroy</strong></td>
+              <td>Hủy Component</td>
+              <td>Chạy ngay trước khi component bị hủy. Nơi <strong>bắt buộc</strong> để dọn dẹp, hủy subscriptions,
+                tránh
+                memory leak.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="dependency-injection">b. Dependency Injection (DI)</h3>
+      <p>DI là một design pattern trong đó một class không tự tạo ra các dependencies (sự phụ thuộc) của nó, mà các
+        dependencies này được "tiêm" (inject) vào từ bên ngoài, giúp code dễ test, linh hoạt và tái sử dụng.</p>
+      <h4>Injector Hierarchy & Component DI</h4>
+      <p>Khi một component yêu cầu một dependency, Angular sẽ tìm kiếm nó theo thứ tự:</p>
+      <ol>
+        <li><strong>Injector của chính component đó</strong> (từ mảng `providers` trong `@Component`).</li>
+        <li><strong>Injector của component cha</strong>, rồi ông nội,... cho đến root.</li>
+        <li><strong>Root Injector</strong> (các service `providedIn: 'root'` hoặc trong `AppModule`).</li>
+      </ol>
+      <p><strong>Ý nghĩa:</strong> <code>providedIn: 'root'</code> tạo một singleton duy nhất cho toàn app (nên dùng cho
+        hầu hết services). Cung cấp trong `@Component` sẽ tạo một instance riêng cho component đó và các con của nó.</p>
+
+      <h3 id="app-structure">c. Cấu trúc Web App</h3>
+      <p>Một cấu trúc thư mục rõ ràng là chìa khóa cho việc bảo trì và mở rộng ứng dụng.</p>
+      <h4>Kiến trúc Thư mục (Folder Structure)</h4>
+      <div class="code-block structure">
+        <pre><code><span class="folder">src/</span>
+├── <span class="folder">app/</span>
+│   ├── <span class="folder">core/</span>                   <span class="comment-block"># Chứa những thứ chỉ được khởi tạo 1 lần cho app</span>
+│   │   ├── <span class="folder">services/</span>           <span class="comment-block"># Singleton services (providedIn: 'root')</span>
+│   │   ├── <span class="folder">guards/</span>             <span class="comment-block"># Auth guards</span>
+│   │   ├── <span class="folder">interceptors/</span>       <span class="comment-block"># HTTP Interceptors</span>
+│   │   └── <span class="file">core.module.ts</span>
+│   │
+│   ├── <span class="folder">shared/</span>                 <span class="comment-block"># Chứa các thành phần dùng chung across nhiều module</span>
+│   │   ├── <span class="folder">components/</span>         <span class="comment-block"># Shared components (buttons, modals)</span>
+│   │   ├── <span class="folder">pipes/</span>              <span class="comment-block"># Shared pipes</span>
+│   │   ├── <span class="folder">directives/</span>         <span class="comment-block"># Shared directives</span>
+│   │   ├── <span class="folder">models/</span>             <span class="comment-block"># Shared interfaces/classes</span>
+│   │   └── <span class="file">shared.module.ts</span>
+│   │
+│   ├── <span class="folder">features/</span>               <span class="comment-block"># Mỗi feature là một thư mục (Module-based)</span>
+│   │   ├── <span class="folder">products/</span>           <span class="comment-block"># Feature module "Products"</span>
+│   │   │   ├── <span class="folder">components/</span>
+│   │   │   ├── <span class="folder">services/</span>
+│   │   │   ├── <span class="file">products-routing.module.ts</span>
+│   │   │   └── <span class="file">products.module.ts</span>
+│   │   └── <span class="folder">users/</span>              <span class="comment-block"># Feature module "Users"</span>
+│   │
+│   ├── <span class="file">app-routing.module.ts</span>   <span class="comment-block"># Root routing</span>
+│   ├── <span class="file">app.component.ts</span>
+│   └── <span class="file">app.module.ts</span>
+│
+├── <span class="folder">assets/</span>                     <span class="comment-block"># Static files (images, fonts, icons)</span>
+└── <span class="folder">environments/</span>               <span class="comment-block"># Environment configurations (dev, prod)</span></code></pre>
+      </div>
+
+      <h4>Sơ đồ luồng dữ liệu</h4>
+      <div class="code-block flow">
+        <pre><code><span class="flow-box">┌─────────────────┐</span>    <span class="flow-label">(1) Events</span>     <span class="flow-box">┌─────────────────┐</span>
+<span class="flow-box">│   Component     │</span> <span class="flow-arrow">───────────────></span> <span class="flow-box">│     Service     │</span>
+<span class="flow-box">│   (Template)    │</span> <span class="flow-arrow"><───────────────</span> <span class="flow-box">│  (Logic, API)   │</span>
+<span class="flow-box">└─────────────────┘</span>    <span class="flow-label">(4) Data</span>       <span class="flow-box">└─────────────────┘</span>
+         <span class="flow-path">│</span>                                  <span class="flow-path">│</span>
+         <span class="flow-path">│</span> <span class="flow-label">(2) Dispatch Action</span>              <span class="flow-path">│</span> <span class="flow-label">(3) Call API</span>
+         <span class="flow-path">▼</span>                                  <span class="flow-path">▼</span>
+<span class="flow-box">┌─────────────────┐</span>                <span class="flow-box">┌──────────────────┐</span>
+<span class="flow-box">│     NgRx        │</span>                <span class="flow-box">│   Backend API    │</span>
+<span class="flow-box">│    (Store)      │</span>                <span class="flow-box">│    (Server)      │</span>
+<span class="flow-box">└─────────────────┘</span>                <span class="flow-box">└──────────────────┘</span>
+         <span class="flow-path">│</span>
+         <span class="flow-path">│</span> <span class="flow-label">(5) State Change</span>
+         <span class="flow-path">▼</span>
+<span class="flow-box">┌─────────────────┐</span>
+<span class="flow-box">│   Selectors     │</span>
+<span class="flow-box">│  (Queries)      │</span>
+<span class="flow-box">└─────────────────┘</span>
+         <span class="flow-path">│</span>
+         <span class="flow-path">│</span> <span class="flow-label">(6) New Data</span>
+         <span class="flow-path">▼</span>
+<span class="flow-box">┌─────────────────┐</span>
+<span class="flow-box">│   Component     │</span>
+<span class="flow-box">│ (Async Pipe)    │</span>
+<span class="flow-box">└─────────────────┘</span></code></pre>
+      </div>
+      <p>Cấu trúc này đảm bảo tách biệt rõ ràng giữa <strong>UI (Component)</strong>, <strong>Logic nghiệp vụ
+          (Service)</strong>, và <strong>State Management (NgRx)</strong>, làm cho ứng dụng dễ hiểu, dễ test và dễ mở
+        rộng.</p>
+    </section>
+
+    <section id="directives">
+      <h2>7. Các loại Directive trong Angular</h2>
+      <p>Directive là một trong những khối xây dựng cơ bản nhất trong Angular, cho phép bạn thêm hành vi hoặc thay đổi
+        cấu trúc của các phần tử DOM một cách linh hoạt.</p>
+
+      <h3 id="directive-what-is">a. Directive là gì?</h3>
+      <h4>Định nghĩa</h4>
+      <p>Directive là các lớp được khai báo với decorator <code>@Directive</code>, có nhiệm vụ thêm hành vi (behavior)
+        hoặc thay đổi cấu trúc (structure) cho các phần tử DOM trong ứng dụng Angular.</p>
+      <h4>Mục đích</h4>
+      <p>Directive cho phép bạn mở rộng và tùy chỉnh hành vi của HTML. Thay vì tạo các component phức tạp, bạn có thể
+        dùng directive để thêm các tính năng cụ thể một cách linh hoạt và có thể tái sử dụng.</p>
+
+      <h3 id="directive-types">b. Phân loại Directive</h3>
+      <p>Angular chia directive thành 3 loại chính:</p>
+      <ol>
+        <li>
+          <strong>Components:</strong> Một Component thực chất là một directive với template. Chúng là thành phần chính
+          để xây dựng giao diện người dùng, được khai báo với <code>@Component</code>.
+        </li>
+        <li>
+          <strong>Attribute Directives:</strong> Các directive này thay đổi giao diện hoặc hành vi của một phần tử DOM.
+          Chúng được áp dụng như một thuộc tính HTML và không có template riêng. Ví dụ tích hợp sẵn:
+          <code>NgClass</code>, <code>NgStyle</code>.
+        </li>
+        <li>
+          <strong>Structural Directives:</strong> Các directive này thay đổi cấu trúc layout bằng cách thêm, xóa, hoặc
+          thao tác các phần tử DOM. Chúng thường được bắt đầu bằng dấu <code>*</code>. Ví dụ tích hợp sẵn:
+          <code>*ngIf</code>, <code>*ngFor</code>, <code>*ngSwitch</code>.
+        </li>
+      </ol>
+
+      <h3 id="directive-comparison">c. So sánh chi tiết</h3>
+      <h4>Bảng so sánh</h4>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tiêu chí</th>
+              <th>Component</th>
+              <th>Attribute Directive</th>
+              <th>Structural Directive</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Mục đích</strong></td>
+              <td>Tạo một phần UI độc lập</td>
+              <td>Thay đổi hành vi/giao diện phần tử</td>
+              <td>Thay đổi cấu trúc DOM</td>
+            </tr>
+            <tr>
+              <td><strong>Template</strong></td>
+              <td>Có</td>
+              <td>Không</td>
+              <td>Không (nhưng thao tác với template)</td>
+            </tr>
+            <tr>
+              <td><strong>Cú pháp</strong></td>
+              <td><code>&lt;app-name&gt;&lt;/app-name&gt;</code></td>
+              <td><code>&lt;div appDirective&gt;&lt;/div&gt;</code></td>
+              <td><code>&lt;div *appDirective&gt;&lt;/div&gt;</code></td>
+            </tr>
+            <tr>
+              <td><strong>API chính</strong></td>
+              <td>-</td>
+              <td><code>ElementRef</code>, <code>Renderer2</code>, <code>HostListener</code></td>
+              <td><code>ViewContainerRef</code>, <code>TemplateRef</code></td>
+            </tr>
+            <tr>
+              <td><strong>Ví dụ</strong></td>
+              <td>UserCardComponent</td>
+              <td>appHighlight, NgClass</td>
+              <td>*ngIf, *ngFor, appDelay</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Khi nào dùng loại nào?</h4>
+      <ul>
+        <li><strong>Dùng Component:</strong> Khi bạn cần một khối UI độc lập với giao diện và logic riêng biệt (ví dụ:
+          một card sản phẩm, một form đăng nhập).</li>
+        <li><strong>Dùng Attribute Directive:</strong> Khi bạn cần thay đổi hành vi hoặc style của một phần tử có sẵn mà
+          không cần tạo component mới (ví dụ: tooltip, auto-focus, validation highlight).</li>
+        <li><strong>Dùng Structural Directive:</strong> Khi bạn cần điều kiển việc hiển thị của các phần tử DOM một cách
+          động (ví dụ: hiển thị/ẩn, lặp lại).</li>
+      </ul>
+
+      <h3 id="directive-custom">d. Tạo Custom Directives</h3>
+      <h4>4.1. Custom Attribute Directive: `appHighlight`</h4>
+      <p><strong>1. Tạo directive:</strong></p>
+      <div class="code-block"><code class="language-bash">ng generate directive directives/highlight</code></div>
+      <p><strong>2. Code directive (highlight.directive.ts):</strong></p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">Directive</span><span class="punctuation">,</span> <span class="variable">ElementRef</span><span class="punctuation">,</span> <span class="variable">HostListener</span><span class="punctuation">,</span> <span class="variable">Input</span><span class="punctuation">,</span> <span class="variable">Renderer2</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'@angular/core'</span><span class="punctuation">;</span>
+
+<span class="variable">@Directive</span><span class="punctuation">({</span>
+  <span class="object-key">selector</span><span class="punctuation">:</span> <span class="string">'[appHighlight]'</span>
+<span class="punctuation">})</span>
+<span class="keyword">export</span> <span class="keyword">class</span> <span class="variable">HighlightDirective</span> <span class="punctuation">{</span>
+  <span class="variable">@Input</span><span class="punctuation">(</span><span class="string">'appHighlight'</span><span class="punctuation">)</span> <span class="variable">highlightColor</span> <span class="punctuation">=</span> <span class="string">'yellow'</span><span class="punctuation">;</span> 
+
+  <span class="keyword">constructor</span><span class="punctuation">(</span><span class="keyword">private</span> <span class="variable">el</span><span class="punctuation">:</span> <span class="variable">ElementRef</span><span class="punctuation">,</span> <span class="keyword">private</span> <span class="variable">renderer</span><span class="punctuation">:</span> <span class="variable">Renderer2</span><span class="punctuation">)</span> <span class="punctuation">{</span> <span class="punctuation">}</span>
+
+  <span class="variable">@HostListener</span><span class="punctuation">(</span><span class="string">'mouseenter'</span><span class="punctuation">)</span> <span class="function-name">onMouseEnter</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+    <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">renderer</span><span class="punctuation">.</span><span class="function-name">setStyle</span><span class="punctuation">(</span><span class="keyword">this</span><span class="punctuation">.</span><span class="variable">el</span><span class="punctuation">.</span><span class="variable">nativeElement</span><span class="punctuation">,</span> <span class="string">'background-color'</span><span class="punctuation">,</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">highlightColor</span><span class="punctuation">);</span>
+  <span class="punctuation">}</span>
+
+  <span class="variable">@HostListener</span><span class="punctuation">(</span><span class="string">'mouseleave'</span><span class="punctuation">)</span> <span class="function-name">onMouseLeave</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+    <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">renderer</span><span class="punctuation">.</span><span class="function-name">setStyle</span><span class="punctuation">(</span><span class="keyword">this</span><span class="punctuation">.</span><span class="variable">el</span><span class="punctuation">.</span><span class="variable">nativeElement</span><span class="punctuation">,</span> <span class="string">'background-color'</span><span class="punctuation">,</span> <span class="keyword">null</span><span class="punctuation">);</span>
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span></code></div>
+      <p><strong>3. Sử dụng directive (app.component.html):</strong></p>
+      <div class="code-block"><code
+          class="language-html"><span class="comment">&lt;!-- Sử dụng màu mặc định (vàng) --></span>
+<span class="tag">&lt;p</span> <span class="variable">appHighlight</span><span class="tag">></span>Hover over me!<span class="tag">&lt;/p></span>
+
+<span class="comment">&lt;!-- Truyền màu cụ thể --></span>
+<span class="tag">&lt;p</span> <span class="variable">[appHighlight]</span>=<span class="string">"'lightblue'"</span><span class="tag">></span>Hover over me!<span class="tag">&lt;/p></span></code>
+      </div>
+
+      <h4>4.2. Custom Structural Directive: `*appDelay`</h4>
+      <p><strong>1. Tạo directive:</strong></p>
+      <div class="code-block"><code class="language-bash">ng generate directive directives/delay</code></div>
+      <p><strong>2. Code directive (delay.directive.ts):</strong></p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">Directive</span><span class="punctuation">,</span> <span class="variable">Input</span><span class="punctuation">,</span> <span class="variable">TemplateRef</span><span class="punctuation">,</span> <span class="variable">ViewContainerRef</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'@angular/core'</span><span class="punctuation">;</span>
+
+<span class="variable">@Directive</span><span class="punctuation">({</span>
+  <span class="object-key">selector</span><span class="punctuation">:</span> <span class="string">'[appDelay]'</span>
+<span class="punctuation">})</span>
+<span class="keyword">export</span> <span class="keyword">class</span> <span class="variable">DelayDirective</span> <span class="punctuation">{</span>
+  <span class="keyword">constructor</span><span class="punctuation">(</span>
+    <span class="keyword">private</span> <span class="variable">templateRef</span><span class="punctuation">:</span> <span class="variable">TemplateRef</span><span class="punctuation">&lt;</span><span class="keyword">any</span><span class="punctuation">>,</span> 
+    <span class="keyword">private</span> <span class="variable">vcRef</span><span class="punctuation">:</span> <span class="variable">ViewContainerRef</span>
+  <span class="punctuation">)</span> <span class="punctuation">{</span> <span class="punctuation">}</span>
+
+  <span class="variable">@Input</span><span class="punctuation">()</span> <span class="keyword">set</span> <span class="function-name">appDelay</span><span class="punctuation">(</span><span class="variable">time</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+    <span class="function-name">setTimeout</span><span class="punctuation">(()</span> <span class="punctuation">=></span> <span class="punctuation">{</span>
+      <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">vcRef</span><span class="punctuation">.</span><span class="function-name">createEmbeddedView</span><span class="punctuation">(</span><span class="keyword">this</span><span class="punctuation">.</span><span class="variable">templateRef</span><span class="punctuation">);</span>
+    <span class="punctuation">},</span> <span class="variable">time</span><span class="punctuation">);</span>
+  <span class="punctuation">}</span>
+<span class="punctuation">}</span></code></div>
+      <p><strong>3. Sử dụng directive (app.component.html):</strong></p>
+      <div class="code-block"><code class="language-html"><span class="comment">&lt;!-- Content này sẽ hiển thị sau 2 giây --></span>
+<span class="tag">&lt;div</span> <span class="variable">*appDelay</span>=<span class="string">"2000"</span><span class="tag">></span>
+  <span class="tag">&lt;h2></span>This appears after 2 seconds.<span class="tag">&lt;/h2></span>
+<span class="tag">&lt;/div></span></code></div>
+      <h4>Giải thích cơ chế `*` (Syntactic Sugar):</h4>
+      <p>Khi bạn viết <code>*appDelay="2000"</code>, Angular sẽ chuyển đổi nó thành:</p>
+      <div class="code-block"><code class="language-html"><span class="tag">&lt;ng-template</span> <span class="variable">[appDelay]</span>=<span class="string">"2000"</span><span class="tag">></span>
+  <span class="tag">&lt;div></span>...<span class="tag">&lt;/div></span>
+<span class="tag">&lt;/ng-template></span></code></div>
+      <p>Directive của bạn sau đó được áp dụng trên thẻ <code>&lt;ng-template&gt;</code>, nơi nó có quyền truy cập vào
+        <code>TemplateRef</code> (nội dung bên trong) và <code>ViewContainerRef</code> (nơi để hiển thị nội dung đó).
+      </p>
+    </section>
+
+    <section id="testing-frameworks">
+      <h2>8. So sánh Jest, Mocha, Jasmine, Vitest cho Angular</h2>
+      <p>Lựa chọn đúng testing framework là một quyết định quan trọng, ảnh hưởng trực tiếp đến tốc độ phát triển và chất
+        lượng của dự án Angular.</p>
+
+      <h3 id="testing-context">a. Tổng quan & Bối cảnh Angular</h3>
+      <h4>Testing trong Angular</h4>
+      <p>Angular được thiết kế với khả năng testability là một tiêu chí hàng đầu, cung cấp các công cụ mạnh mẽ như
+        <code>TestBed</code> và <code>@angular/core/testing</code> để thiết lập môi trường test.
+      </p>
+      <h4>Vai trò của Karma</h4>
+      <p>Theo truyền thống, Angular CLI sử dụng <strong>Jasmine</strong> làm framework test (để viết `describe`, `it`,
+        `expect`) và <strong>Karma</strong> làm test runner (để khởi chạy trình duyệt, chạy tests, và báo cáo kết quả).
+        Karma chạy test trong trình duyệt thật, giúp mô phỏng môi trường người dùng nhưng có nhược điểm là chậm hơn.</p>
+
+      <h3 id="testing-analysis">b. Phân tích từng Framework</h3>
+      <h4>2.1. Jasmine</h4>
+      <ul>
+        <li><strong>Là gì?</strong> Một BDD framework "all-in-one", đã bao gồm assertion, spies, và mocking.</li>
+        <li><strong>Ưu điểm:</strong> Mặc định trong Angular (zero-config), cú pháp rõ ràng.</li>
+        <li><strong>Nhược điểm:</strong> Phụ thuộc vào Karma nên tốc độ chậm.</li>
+      </ul>
+      <h4>2.2. Mocha</h4>
+      <ul>
+        <li><strong>Là gì?</strong> Một test framework linh hoạt, chạy trên Node.js và browser.</li>
+        <li><strong>Ưu điểm:</strong> Rất linh hoạt, bạn có thể tự chọn assertion library (thường là Chai) và mocking
+          (Sinon.js).</li>
+        <li><strong>Nhược điểm:</strong> Cấu hình phức tạp, cần tự lắp ráp "bộ công cụ".</li>
+      </ul>
+      <h4>2.3. Jest</h4>
+      <ul>
+        <li><strong>Là gì?</strong> Một "zero-configuration" testing platform được Facebook phát triển.</li>
+        <li><strong>Ưu điểm:</strong> Tốc độ cực nhanh (chạy trong Node.js với jsdom), all-in-one, có Snapshot Testing,
+          mocking tự động và watch mode thông minh.</li>
+        <li><strong>Nhược điểm:</strong> Đôi khi cần cấu hình thêm để làm việc với một số module nhất định.</li>
+      </ul>
+      <h4>2.4. Vitest</h4>
+      <ul>
+        <li><strong>Là gì?</strong> Một unit test framework siêu nhanh, được xây dựng dành cho Vite.</li>
+        <li><strong>Ưu điểm:</strong> Tốc độ cực kỳ nhanh (tận dụng Vite), API tương thích với Jest, Developer
+          Experience (DX) tuyệt vời.</li>
+        <li><strong>Nhược điểm:</strong> Tối ưu nhất cho các dự án Vite, việc tích hợp vào Angular (dùng Webpack) có thể
+          phức tạp.</li>
+      </ul>
+
+      <h3 id="testing-recommendation">c. So sánh & Khuyến nghị cho Angular</h3>
+      <h4>Bảng so sánh</h4>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tiêu chí</th>
+              <th>Jasmine (+Karma)</th>
+              <th>Mocha (+Chai)</th>
+              <th>Jest</th>
+              <th>Vitest</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tốc độ</strong></td>
+              <td>Chậm</td>
+              <td>Chậm</td>
+              <td><strong>Rất Nhanh</strong></td>
+              <td><strong>Cực nhanh</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Cấu hình</strong></td>
+              <td>Zero (Mặc định)</td>
+              <td>Phức tạp</td>
+              <td>Rất dễ</td>
+              <td>Trung bình (với Angular)</td>
+            </tr>
+            <tr>
+              <td><strong>All-in-One</strong></td>
+              <td>✅</td>
+              <td>❌</td>
+              <td>✅</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td><strong>Snapshot Testing</strong></td>
+              <td>❌</td>
+              <td>❌</td>
+              <td>✅</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td><strong>Mocking</strong></td>
+              <td>Cơ bản</td>
+              <td>Mạnh (với Sinon)</td>
+              <td><strong>Rất mạnh</strong></td>
+              <td>Mạnh</td>
+            </tr>
+            <tr>
+              <td><strong>Angular Integration</strong></td>
+              <td>Mặc định</td>
+              <td>Thủ công</td>
+              <td><strong>Dễ dàng</strong></td>
+              <td>Phức tạp</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h4>Lựa chọn tốt nhất & Lý do</h4>
+      <p>🎯 <strong>Jest là lựa chọn TỐT NHẤT cho dự án Angular hiện đại.</strong></p>
+      <ul>
+        <li><strong>Tốc độ vượt trội:</strong> Chạy test trong Node.js với jsdom nhanh hơn hàng chục lần so với Karma.
+        </li>
+        <li><strong>Developer Experience (DX) tuyệt vời:</strong> Watch mode thông minh, error reporting rõ ràng.</li>
+        <li><strong>Tính năng mạnh mẽ:</strong> Snapshot testing là "game changer" để test component output.</li>
+        <li><strong>Cộng đồng lớn & Dễ chuyển đổi:</strong> Jest là tiêu chuẩn trong hệ sinh thái JS. Hầu hết code
+          Jasmine hiện có đều tương thích.</li>
+      </ul>
+
+      <h3 id="testing-migration">d. Hướng dẫn chuyển đổi sang Jest</h3>
+      <h4>1. Cài đặt</h4>
+      <p>Gỡ các package cũ và cài đặt các package mới cần thiết cho Jest.</p>
+      <div class="code-block"><code class="language-bash">npm uninstall karma karma-chrome-launcher karma-coverage karma-jasmine jasmine-core
+npm install --save-dev jest @types/jest jest-preset-angular</code></div>
+
+      <h4>2. Cấu hình</h4>
+      <p><strong>Tạo file `setup-jest.ts` tại root project:</strong></p>
+      <div class="code-block"><code
+          class="language-typescript"><span class="comment">// setup-jest.ts</span>
+<span class="keyword">import</span> <span class="string">'jest-preset-angular/setup-jest'</span><span class="punctuation">;</span></code></div>
+
+      <p><strong>Cập nhật `angular.json`:</strong> Sửa lại mục `test` thành:</p>
+      <div class="code-block"><code class="language-json">{
+  <span class="object-key">"test"</span>: {
+    <span class="object-key">"builder"</span>: <span class="string">"@angular-devkit/build-angular:jest"</span>,
+    <span class="object-key">"options"</span>: {
+      <span class="object-key">"setupFilesAfterEnv"</span>: [<span class="string">"&lt;rootDir>/setup-jest.ts"</span>]
+    }
+  }
+}</code></div>
+
+      <p><strong>Cập nhật `tsconfig.spec.json`:</strong></p>
+      <div class="code-block"><code class="language-json">{
+  <span class="object-key">"compilerOptions"</span>: {
+    <span class="object-key">"types"</span>: [<span class="string">"jest"</span>, <span class="string">"node"</span>] <span class="comment">// Thêm "jest", xóa "jasmine"</span>
+  }
+}</code></div>
+
+      <h4>3. Chạy test</h4>
+      <div class="code-block"><code class="language-bash"><span class="comment"># Chạy test một lần</span>
+ng test
+
+<span class="comment"># Chạy test ở chế độ watch</span>
+ng test --watch</code></div>
+      <p>Sau khi chuyển đổi, bạn sẽ thấy tốc độ chạy test được cải thiện ấn tượng mà hầu như không phải sửa bất kỳ file
+        test nào đã viết.</p>
+    </section>
+
+    <section id="build-angular">
+      <h2>9. Build Angular</h2>
+      <p>Hiểu rõ quy trình build trong Angular là chìa khóa để tối ưu hóa hiệu năng, kích thước bundle và tốc độ tải
+        trang của ứng dụng.</p>
+
+      <h3 id="build-process">1. Quy Trình Build Tổng Quát</h3>
+      <p>Công cụ build (Webpack/esbuild) sẽ thực hiện một chuỗi các bước để biến đổi mã nguồn TypeScript, HTML, và
+        CSS/SCSS của bạn thành các tệp JavaScript tĩnh, tối ưu mà trình duyệt có thể hiểu được.</p>
+      <h4>Sơ đồ quy trình</h4>
+      <div class="code-block structure">
+        <pre><code>[<span class="folder">TypeScript (*.ts)</span>] -> [<span class="variable">TS Compiler</span>] -> [<span class="file">JavaScript (*.js)</span>] -+
+        [<span class="folder">HTML Templates (*.html)</span>] -> [<span class="variable">Angular AoT Compiler</span>] ---------+-> [<span class="flow-box">Dependency Graph</span>] -> [<span class="flow-box">Optimization</span>] -> [<span class="flow-box">Bundling</span>] -> [<span class="file">Final Bundles</span>]
+        [<span class="folder">Styles (*.scss, *.css)</span>] -> [<span class="variable">SASS/LESS Compiler</span>] ------------+</code></pre>
+      </div>
+
+      <h3 id="build-optimizations">2. Phân Tích Các Kỹ Thuật Tối Ưu Chính</h3>
+      <h4>2.1. Ahead-of-Time (AoT) Compilation</h4>
+      <ul>
+        <li><strong>Lý do dùng:</strong> Phát hiện lỗi sớm, hiệu năng runtime cao hơn (trình duyệt không cần biên dịch),
+          và kích thước bundle nhỏ hơn (không cần đóng gói Angular Compiler).</li>
+        <li><strong>Cách thực thi:</strong> Được kích hoạt mặc định khi build với lệnh `ng build --configuration
+          production`.</li>
+      </ul>
+      <p><strong>Ví dụ:</strong> AoT sẽ biến đổi template HTML của bạn thành các hàm JavaScript thuần túy, hiệu quả cao
+        để tạo và cập nhật DOM.</p>
+      <div class="code-block"><code class="language-javascript"><span class="comment">// Template: &lt;h1&gt;Hello {{ name }}&lt;/h1&gt;</span>
+        <span class="comment">// Sẽ được AoT Compiler chuyển thành hàm JavaScript tối ưu như sau:</span>
+        <span class="keyword">function</span> <span class="function-name">AppComponent_ng_container_0_Template</span><span class="punctuation">(</span><span class="variable">rf</span><span class="punctuation">,</span> <span class="variable">ctx</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+          <span class="keyword">if</span> <span class="punctuation">(</span><span class="variable">rf</span> <span class="punctuation">&</span> <span class="number">1</span><span class="punctuation">)</span> <span class="punctuation">{</span> <span class="comment">// create mode</span>
+            <span class="variable">i0</span><span class="punctuation">.</span><span class="function-name">ɵɵelementStart</span><span class="punctuation">(</span><span class="number">0</span><span class="punctuation">,</span> <span class="string">"h1"</span><span class="punctuation">);</span>
+            <span class="variable">i0</span><span class="punctuation">.</span><span class="function-name">ɵɵtext</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">);</span>
+            <span class="variable">i0</span><span class="punctuation">.</span><span class="function-name">ɵɵelementEnd</span><span class="punctuation">();</span>
+          <span class="punctuation">}</span>
+          <span class="keyword">if</span> <span class="punctuation">(</span><span class="variable">rf</span> <span class="punctuation">&</span> <span class="number">2</span><span class="punctuation">)</span> <span class="punctuation">{</span> <span class="comment">// update mode</span>
+            <span class="keyword">const</span> <span class="variable">ctx_r0</span> <span class="punctuation">=</span> <span class="variable">i0</span><span class="punctuation">.</span><span class="function-name">ɵɵnextContext</span><span class="punctuation">();</span>
+            <span class="variable">i0</span><span class="punctuation">.</span><span class="function-name">ɵɵadvance</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">);</span>
+            <span class="variable">i0</span><span class="punctuation">.</span><span class="function-name">ɵɵtextInterpolate1</span><span class="punctuation">(</span><span class="string">"Hello "</span><span class="punctuation">,</span> <span class="variable">ctx_r0</span><span class="punctuation">.</span><span class="variable">name</span><span class="punctuation">,</span> <span class="string">""</span><span class="punctuation">);</span>
+          <span class="punctuation">}</span>
+        <span class="punctuation">}</span></code></div>
+
+      <h4>2.2. Tree Shaking (Rung cây)</h4>
+      <ul>
+        <li><strong>Lý do dùng:</strong> Giảm kích thước bundle bằng cách loại bỏ code không sử dụng ("dead code").</li>
+        <li><strong>Cách thực thi:</strong> Tự động bật trong production build. Yêu cầu code phải dùng cú pháp ES
+          Modules (`import`/`export`).</li>
+      </ul>
+      <p><strong>Ví dụ:</strong> Nếu bạn `export` hai hàm từ một file nhưng chỉ `import` và sử dụng một hàm, hàm còn lại
+        sẽ bị loại bỏ hoàn toàn khỏi bundle cuối cùng.</p>
+
+      <h4>2.3. Bundling & Code Splitting</h4>
+      <ul>
+        <li><strong>Lý do dùng:</strong> <strong>Bundling</strong> giúp giảm số lượng request HTTP. <strong>Code
+            Splitting</strong> chia nhỏ bundle lớn thành các "chunk" nhỏ, chỉ tải code khi cần (lazy loading), giúp giảm
+          kích thước tải ban đầu.</li>
+        <li><strong>Cách thực thi:</strong> Kích hoạt Code Splitting thông qua cú pháp `import()` trong cấu hình
+          routing.</li>
+      </ul>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">const</span> <span class="variable">routes</span><span class="punctuation">:</span> <span class="variable">Routes</span> <span class="punctuation">=</span> <span class="punctuation">[</span>
+        <span class="punctuation">{</span>
+          <span class="object-key">path</span><span class="punctuation">:</span> <span class="string">'admin'</span><span class="punctuation">,</span>
+          <span class="object-key">loadChildren</span><span class="punctuation">:</span> <span class="punctuation">()</span> <span class="punctuation">=></span> <span class="keyword">import</span><span class="punctuation">(</span><span class="string">'./admin/admin.module'</span><span class="punctuation">).</span><span class="function-name">then</span><span class="punctuation">(</span><span class="variable">m</span> <span class="punctuation">=></span> <span class="variable">m</span><span class="punctuation">.</span><span class="variable">AdminModule</span><span class="punctuation">)</span>
+        <span class="punctuation">}</span>
+      <span class="punctuation">];</span></code></div>
+
+      <h4>2.4. Minification & Obfuscation</h4>
+      <ul>
+        <li><strong>Lý do dùng:</strong> Giảm kích thước file bằng cách loại bỏ ký tự thừa, rút gọn tên biến. Đồng thời
+          gây khó khăn cho việc đọc và reverse-engineer code.</li>
+        <li><strong>Cách thực thi:</strong> Tự động bật trong production build.</li>
+      </ul>
+      <p><strong>Ví dụ:</strong> Một hàm dài với tên biến rõ ràng sẽ được biến đổi thành một dòng code ngắn gọn với các
+        tên biến một ký tự.</p>
+
+      <h3 id="build-tools">3. Công Cụ (Builder) Thực Thi</h3>
+      <h4>3.1. Webpack</h4>
+      <ul>
+        <li><strong>Vai trò:</strong> Module bundler truyền thống, mạnh mẽ và có hệ sinh thái plugin phong phú.</li>
+        <li><strong>Cách Angular dùng:</strong> Angular CLI sử dụng Webpack ẩn đằng sau các lệnh, CLI đã trừu tượng hóa
+          các cấu hình phức tạp.</li>
+      </ul>
+
+      <h4>3.2. esbuild</h4>
+      <ul>
+        <li><strong>Vai trò:</strong> Bundler thế hệ mới, được viết bằng Go, có tốc độ cực nhanh.</li>
+        <li><strong>Cách Angular dùng:</strong> Kể từ Angular CLI v16+, <strong>esbuild</strong> được dùng làm mặc định
+          cho production builds, giúp tăng tốc độ build lên đáng kể (có thể nhanh hơn 2-3 lần).</li>
+      </ul>
+    </section>
+
+    <section id="performance-optimization">
+      <h2>10. Tối ưu hiệu suất Angular - HTML - SCSS</h2>
+      <p>Tối ưu hóa hiệu suất là một quá trình liên tục nhằm đảm bảo ứng dụng chạy nhanh, mượt mà và mang lại trải
+        nghiệm tốt nhất cho người dùng, đặc biệt khi ứng dụng phát triển lớn mạnh.</p>
+
+      <h3 id="perf-virtual-scroll">a. Virtual Scrolling</h3>
+      <p>Đây là kỹ thuật chỉ render các phần tử đang hiển thị trong viewport thay vì toàn bộ danh sách, giảm đáng kể số
+        lượng DOM elements khi làm việc với danh sách cực lớn.</p>
+      <h4>Ví dụ với Angular CDK</h4>
+      <div class="code-block"><code class="language-html"><span class="comment">&lt;!-- virtual-scroll.component.html --></span>
+        <span class="tag">&lt;cdk-virtual-scroll-viewport</span> <span class="variable">itemSize</span>=<span class="string">"50"</span> <span class="variable">class</span>=<span class="string">"viewport"</span><span class="tag">></span>
+          <span class="tag">&lt;div</span> <span class="variable">*cdkVirtualFor</span>=<span class="string">"let item of largeDataSet"</span> <span class="variable">class</span>=<span class="string">"item"</span><span class="tag">></span>
+            {{ item.name }}
+          <span class="tag">&lt;/div></span>
+        <span class="tag">&lt;/cdk-virtual-scroll-viewport></span></code></div>
+      <p><code>*cdkVirtualFor</code> thay thế cho <code>*ngFor</code>, và <code>itemSize</code> giúp CDK tính toán và
+        chỉ render những phần tử cần thiết, giúp giảm memory usage và tăng tốc độ render.</p>
+
+      <h3 id="perf-change-detection">b. Change Detection Strategy</h3>
+      <p>Chiến lược <code>OnPush</code> giảm số lần Angular kiểm tra thay đổi, chỉ kích hoạt change detection khi input
+        thay đổi (tham chiếu mới) hoặc event được emit, giúp cải thiện hiệu suất đáng kể.</p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">Component</span><span class="punctuation">,</span> <span class="variable">ChangeDetectionStrategy</span><span class="punctuation">,</span> <span class="variable">Input</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'@angular/core'</span><span class="punctuation">;</span>
+        <span class="variable">@Component</span><span class="punctuation">({</span>
+          <span class="object-key">selector</span><span class="punctuation">:</span> <span class="string">'app-optimized'</span><span class="punctuation">,</span>
+          <span class="object-key">template</span><span class="punctuation">:</span> <span class="string">`&lt;div>{{ data.name }}&lt;/div>`</span><span class="punctuation">,</span>
+          <span class="object-key">changeDetection</span><span class="punctuation">:</span> <span class="variable">ChangeDetectionStrategy</span><span class="punctuation">.</span><span class="variable">OnPush</span>
+        <span class="punctuation">})</span>
+        <span class="keyword">export</span> <span class="keyword">class</span> <span class="variable">OptimizedComponent</span> <span class="punctuation">{</span>
+          <span class="variable">@Input</span><span class="punctuation">()</span> <span class="variable">data</span><span class="punctuation">:</span> <span class="keyword">any</span><span class="punctuation">;</span>
+        <span class="punctuation">}</span></code></div>
+
+      <h3 id="perf-trackby">c. TrackBy Function với *ngFor</h3>
+      <p>Hàm <code>trackBy</code> giúp Angular nhận diện các item trong một danh sách một cách hiệu quả, tránh việc
+        render lại toàn bộ DOM khi danh sách thay đổi, chỉ cập nhật những item thực sự thay đổi.</p>
+      <div class="code-block"><code
+          class="language-html"><span class="tag">&lt;div</span> <span class="variable">*ngFor</span>=<span class="string">"let item of items; trackBy: trackById"</span><span class="tag">></span>{{ item.name }}<span class="tag">&lt;/div></span></code>
+      </div>
+      <div class="code-block"><code class="language-typescript"><span class="comment">// list.component.ts</span>
+        <span class="function-name">trackById</span><span class="punctuation">(</span><span class="variable">index</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">,</span> <span class="variable">item</span><span class="punctuation">:</span> <span class="keyword">any</span><span class="punctuation">)</span><span class="punctuation">:</span> <span class="variable">number</span> <span class="punctuation">{</span>
+          <span class="keyword">return</span> <span class="variable">item</span><span class="punctuation">.</span><span class="variable">id</span><span class="punctuation">;</span>
+        <span class="punctuation">}</span></code></div>
+
+      <h3 id="perf-web-workers">d. Web Workers cho xử lý nặng</h3>
+      <p>Web Workers cho phép chạy JavaScript trên một background thread, giúp xử lý các tác vụ nặng (tính toán phức
+        tạp, xử lý dữ liệu lớn) mà không làm "đơ" UI thread chính.</p>
+      <div class="code-block"><code
+          class="language-typescript"><span class="comment">// main.ts</span>
+        <span class="keyword">const</span> <span class="variable">worker</span> <span class="punctuation">=</span> <span class="keyword">new</span> <span class="function-name">Worker</span><span class="punctuation">(</span><span class="keyword">new</span> <span class="function-name">URL</span><span class="punctuation">(</span><span class="string">'./app.worker'</span><span class="punctuation">,</span> <span class="keyword">import</span><span class="punctuation">.</span><span class="variable">meta</span><span class="punctuation">.</span><span class="variable">url</span><span class="punctuation">),</span> <span class="punctuation">{</span> <span class="object-key">type</span><span class="punctuation">:</span> <span class="string">'module'</span> <span class="punctuation">});</span>
+        <span class="variable">worker</span><span class="punctuation">.</span><span class="function-name">onmessage</span> <span class="punctuation">=</span> <span class="punctuation">({</span> <span class="variable">data</span> <span class="punctuation">})</span> <span class="punctuation">=></span> <span class="punctuation">{</span>
+          <span class="function-name">console</span><span class="punctuation">.</span><span class="function-name">log</span><span class="punctuation">(</span><span class="string">'Worker message:'</span><span class="punctuation">,</span> <span class="variable">data</span><span class="punctuation">);</span>
+        <span class="punctuation">};</span>
+        <span class="variable">worker</span><span class="punctuation">.</span><span class="function-name">postMessage</span><span class="punctuation">({</span> <span class="object-key">action</span><span class="punctuation">:</span> <span class="string">'process'</span><span class="punctuation">,</span> <span class="object-key">data</span><span class="punctuation">:</span> <span class="variable">largeData</span> <span class="punctuation">});</span></code>
+      </div>
+
+      <h3 id="perf-lazy-loading">e. Lazy Loading Modules</h3>
+      <p>Lazy loading chỉ tải các module khi cần thiết (thường là khi người dùng điều hướng đến một route), giúp giảm
+        kích thước bundle ban đầu và tăng tốc độ khởi động ứng dụng.</p>
+      <div class="code-block"><code class="language-typescript"><span class="comment">// app-routing.module.ts</span>
+        <span class="keyword">const</span> <span class="variable">routes</span><span class="punctuation">:</span> <span class="variable">Routes</span> <span class="punctuation">=</span> <span class="punctuation">[</span>
+          <span class="punctuation">{</span>
+            <span class="object-key">path</span><span class="punctuation">:</span> <span class="string">'admin'</span><span class="punctuation">,</span>
+            <span class="object-key">loadChildren</span><span class="punctuation">:</span> <span class="punctuation">()</span> <span class="punctuation">=></span> <span class="keyword">import</span><span class="punctuation">(</span><span class="string">'./admin/admin.module'</span><span class="punctuation">).</span><span class="function-name">then</span><span class="punctuation">(</span><span class="variable">m</span> <span class="punctuation">=></span> <span class="variable">m</span><span class="punctuation">.</span><span class="variable">AdminModule</span><span class="punctuation">)</span>
+          <span class="punctuation">}</span>
+        <span class="punctuation">];</span></code></div>
+
+      <h3 id="perf-scss">f. Optimizing SCSS/CSS Performance</h3>
+      <p>Sử dụng selector đơn giản và tránh nesting quá sâu giúp trình duyệt render nhanh hơn và CSS dễ bảo trì hơn.</p>
+      <div class="code-block"><code class="language-scss"><span class="comment">/* KHÔNG NÊN - Nesting quá sâu */</span>
+        <span class="variable">.container</span> <span class="punctuation">{</span>
+          <span class="variable">.header</span> <span class="punctuation">{</span>
+            <span class="variable">.nav</span> <span class="punctuation">{</span>
+              <span class="variable">ul</span> <span class="punctuation">{</span> <span class="variable">li</span> <span class="punctuation">{</span> <span class="variable">a</span> <span class="punctuation">{</span> <span class="object-key">color</span><span class="punctuation">:</span> <span class="variable">blue</span><span class="punctuation">;</span> <span class="punctuation">}</span> <span class="punctuation">}</span> <span class="punctuation">}</span>
+            <span class="punctuation">}</span>
+          <span class="punctuation">}</span>
+        <span class="punctuation">}</span>
+
+        <span class="comment">/* NÊN DÙNG - Selector đơn giản, rõ ràng */</span>
+        <span class="variable">.nav-link</span> <span class="punctuation">{</span>
+          <span class="object-key">color</span><span class="punctuation">:</span> <span class="variable">blue</span><span class="punctuation">;</span>
+        <span class="punctuation">}</span></code></div>
+
+      <h3 id="perf-memory">g. Memory Management</h3>
+      <p>Quản lý bộ nhớ hiệu quả bằng cách luôn hủy (unsubscribe) các Observables khi component bị destroy để tránh rò
+        rỉ bộ nhớ (memory leaks).</p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">Component</span><span class="punctuation">,</span> <span class="variable">OnDestroy</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'@angular/core'</span><span class="punctuation">;</span>
+        <span class="keyword">import</span> <span class="punctuation">{</span> <span class="variable">Subscription</span> <span class="punctuation">}</span> <span class="keyword">from</span> <span class="string">'rxjs'</span><span class="punctuation">;</span>
+
+        <span class="variable">@Component</span><span class="punctuation">({</span><span class="comment">/*...*/</span><span class="punctuation">})</span>
+        <span class="keyword">export</span> <span class="keyword">class</span> <span class="variable">SafeComponent</span> <span class="keyword">implements</span> <span class="variable">OnDestroy</span> <span class="punctuation">{</span>
+          <span class="keyword">private</span> <span class="variable">subscriptions</span> <span class="punctuation">=</span> <span class="keyword">new</span> <span class="function-name">Subscription</span><span class="punctuation">();</span>
+
+          <span class="function-name">ngOnInit</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+            <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">subscriptions</span><span class="punctuation">.</span><span class="function-name">add</span><span class="punctuation">(</span><span class="variable">someObservable$</span><span class="punctuation">.</span><span class="function-name">subscribe</span><span class="punctuation">(</span><span class="comment">/*...*/</span><span class="punctuation">));</span>
+          <span class="punctuation">}</span>
+
+          <span class="function-name">ngOnDestroy</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+            <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">subscriptions</span><span class="punctuation">.</span><span class="function-name">unsubscribe</span><span class="punctuation">();</span>
+          <span class="punctuation">}</span>
+        <span class="punctuation">}</span></code></div>
+
+      <h3 id="perf-complex-example">h. Ví dụ: Real-time Data Visualization</h3>
+      <p>Xây dựng biểu đồ real-time hiển thị hàng nghìn điểm dữ liệu đòi hỏi kết hợp nhiều kỹ thuật: WebSocket cho
+        streaming, thư viện render hiệu quả như D3.js, và giới hạn số lượng điểm dữ liệu hiển thị trên màn hình.</p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">private</span> <span function-name>renderChart</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+        <span class="comment">// Sử dụng D3.js để render chart hiệu quả</span>
+        <span class="keyword">const</span> <span class="variable">bars</span> <span class="punctuation">=</span> <span class="keyword">this</span><span class="punctuation">.</span><span class="variable">svg</span><span class="punctuation">.</span><span class="function-name">selectAll</span><span class="punctuation">(</span><span class="string">'.bar'</span><span class="punctuation">)</span>
+          <span class="punctuation">.</span><span class="function-name">data</span><span class="punctuation">(</span><span class="keyword">this</span><span class="punctuation">.</span><span class="variable">data</span><span class="punctuation">,</span> <span class="punctuation">(</span><span class="variable">d</span><span class="punctuation">:</span> <span class="keyword">any</span><span class="punctuation">)</span> <span class="punctuation">=></span> <span class="variable">d</span><span class="punctuation">.</span><span class="variable">id</span><span class="punctuation">);</span> <span class="comment">// Data binding với key</span>
+
+        <span class="variable">bars</span><span class="punctuation">.</span><span class="function-name">enter</span><span class="punctuation">()</span> <span class="comment">// Thêm các phần tử mới</span>
+          <span class="punctuation">.</span><span class="function-name">append</span><span class="punctuation">(</span><span class="string">'rect'</span><span class="punctuation">)</span>
+          <span class="punctuation">.</span><span class="function-name">merge</span><span class="punctuation">(</span><span class="variable">bars</span><span class="punctuation">)</span> <span class="comment">// Gộp với các phần tử đã có để cập nhật</span>
+          <span class="comment">/* ... set attributes ... */</span>
+
+        <span class="variable">bars</span><span class="punctuation">.</span><span class="function-name">exit</span><span class="punctuation">().</span><span class="function-name">remove</span><span class="punctuation">();</span> <span class="comment">// Xóa các phần tử không còn trong data</span>
+      <span class="punctuation">}</span></code></div>
+    </section>
+
+    <section id="storage">
+      <h2>11. Kiến thức về LocalStorage, SessionStorage và Cookies</h2>
+      <p>Hiểu rõ các cơ chế lưu trữ trên trình duyệt là nền tảng để xây dựng các ứng dụng web có trạng thái, cá nhân hóa
+        và bảo mật.</p>
+
+      <h3 id="storage-local">a. LocalStorage</h3>
+      <p>Là một cơ chế lưu trữ dữ liệu dạng key-value trên trình duyệt mà không có thời hạn hết hạn. Dữ liệu sẽ tồn tại
+        ngay cả khi đóng trình duyệt và mở lại.</p>
+      <h4>Lý do dùng</h4>
+      <ul>
+        <li>Lưu trữ dữ liệu lâu dài phía client (caching, cài đặt người dùng).</li>
+        <li>Dung lượng lớn (thường 5-10MB).</li>
+        <li>Không tự động gửi lên server với mỗi request, tiết kiệm băng thông.</li>
+      </ul>
+      <h4>Ví dụ</h4>
+      <div class="code-block"><code
+          class="language-javascript"><span class="comment">// Lưu dữ liệu (value phải là string, dùng JSON.stringify cho object)</span>
+        <span class="variable">localStorage</span><span class="punctuation">.</span><span class="function-name">setItem</span><span class="punctuation">(</span><span class="string">'userSettings'</span><span class="punctuation">,</span> <span class="variable">JSON</span><span class="punctuation">.</span><span class="function-name">stringify</span><span class="punctuation">({</span> <span class="object-key">theme</span><span class="punctuation">:</span> <span class="string">'dark'</span> <span class="punctuation">}));</span>
+
+        <span class="comment">// Lấy dữ liệu</span>
+        <span class="keyword">const</span> <span class="variable">settings</span> <span class="punctuation">=</span> <span class="variable">JSON</span><span class="punctuation">.</span><span class="function-name">parse</span><span class="punctuation">(</span><span class="variable">localStorage</span><span class="punctuation">.</span><span class="function-name">getItem</span><span class="punctuation">(</span><span class="string">'userSettings'</span><span class="punctuation">));</span>
+
+        <span class="comment">// Xóa một item</span>
+        <span class="variable">localStorage</span><span class="punctuation">.</span><span class="function-name">removeItem</span><span class="punctuation">(</span><span class="string">'userSettings'</span><span class="punctuation">);</span>
+
+        <span class="comment">// Xóa tất cả</span>
+        <span class="variable">localStorage</span><span class="punctuation">.</span><span class="function-name">clear</span><span class="punctuation">();</span></code>
+      </div>
+
+      <h3 id="storage-session">b. SessionStorage</h3>
+      <p>Tương tự LocalStorage nhưng dữ liệu chỉ tồn tại trong phiên làm việc (session) hiện tại. Dữ liệu sẽ bị xóa khi
+        người dùng đóng tab hoặc cửa sổ trình duyệt.</p>
+      <h4>Lý do dùng</h4>
+      <ul>
+        <li>Lưu trữ dữ liệu tạm thời trong một phiên làm việc (ví dụ: dữ liệu form đang điền dở).</li>
+        <li>Dữ liệu không được chia sẻ giữa các tab/window khác nhau, dù cùng một trang.</li>
+      </ul>
+      <h4>Ví dụ</h4>
+      <div class="code-block"><code
+          class="language-javascript"><span class="comment">// Lưu dữ liệu</span>
+        <span class="variable">sessionStorage</span><span class="punctuation">.</span><span class="function-name">setItem</span><span class="punctuation">(</span><span class="string">'currentStep'</span><span class="punctuation">,</span> <span class="string">'2'</span><span class="punctuation">);</span>
+
+        <span class="comment">// Lấy dữ liệu</span>
+        <span class="keyword">const</span> <span class="variable">step</span> <span class="punctuation">=</span> <span class="variable">sessionStorage</span><span class="punctuation">.</span><span class="function-name">getItem</span><span class="punctuation">(</span><span class="string">'currentStep'</span><span class="punctuation">);</span></code>
+      </div>
+
+      <h3 id="storage-cookies">c. Cookies</h3>
+      <p>Là các đoạn dữ liệu nhỏ được lưu trữ trên trình duyệt và được tự động gửi kèm đến server với mỗi HTTP request.
+        Cookies có thể được thiết lập thời gian hết hạn và các thuộc tính bảo mật.</p>
+      <h4>Lý do dùng</h4>
+      <ul>
+        <li>Lưu trữ dữ liệu nhỏ (tối đa 4KB).</li>
+        <li>Phù hợp cho việc xác thực (authentication) và theo dõi (tracking) người dùng.</li>
+        <li>Có thể được truy cập bởi cả client và server.</li>
+      </ul>
+      <h4>Ví dụ</h4>
+      <div class="code-block"><code
+          class="language-javascript"><span class="comment">// Tạo cookie hết hạn sau 30 ngày, chỉ gửi qua HTTPS</span>
+        <span class="variable">document</span><span class="punctuation">.</span><span class="variable">cookie</span> <span class="punctuation">=</span> <span class="string">"authToken=xyz123; max-age=2592000; path=/; secure; samesite=strict"</span><span class="punctuation">;</span>
+
+        <span class="comment">// Xóa cookie bằng cách đặt thời gian hết hạn trong quá khứ</span>
+        <span class="variable">document</span><span class="punctuation">.</span><span class="variable">cookie</span> <span class="punctuation">=</span> <span class="string">"authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"</span><span class="punctuation">;</span></code>
+      </div>
+
+      <h3 id="storage-comparison">d. So sánh chi tiết</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tính năng</th>
+              <th>LocalStorage</th>
+              <th>SessionStorage</th>
+              <th>Cookies</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Dung lượng</strong></td>
+              <td>5-10MB</td>
+              <td>5-10MB</td>
+              <td>4KB</td>
+            </tr>
+            <tr>
+              <td><strong>Thời hạn</strong></td>
+              <td>Vĩnh viễn</td>
+              <td>Hết phiên làm việc</td>
+              <td>Có thể thiết lập</td>
+            </tr>
+            <tr>
+              <td><strong>Gửi đến Server</strong></td>
+              <td>Không</td>
+              <td>Không</td>
+              <td><strong>Có, tự động</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Truy cập từ</strong></td>
+              <td>Client-side</td>
+              <td>Client-side</td>
+              <td>Client & Server</td>
+            </tr>
+            <tr>
+              <td><strong>API</strong></td>
+              <td>Đơn giản (key-value)</td>
+              <td>Đơn giản (key-value)</td>
+              <td>Phức tạp (string-based)</td>
+            </tr>
+            <tr>
+              <td><strong>Bảo mật</strong></td>
+              <td>Không an toàn cho data nhạy cảm</td>
+              <td>Không an toàn cho data nhạy cảm</td>
+              <td>Có tùy chọn bảo mật (<code>secure</code>, <code>httponly</code>)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="storage-angular-app">e. Ứng dụng thực tế trong Angular</h3>
+      <h4>Service quản lý Storage</h4>
+      <p>Tạo một service trừu tượng hóa việc truy cập storage giúp code sạch sẽ, dễ bảo trì và dễ dàng thay đổi cơ chế
+        lưu trữ trong tương lai.</p>
+      <div class="code-block"><code class="language-typescript"><span class="variable">@Injectable</span><span class="punctuation">({</span> <span class="object-key">providedIn</span><span class="punctuation">:</span> <span class="string">'root'</span> <span class="punctuation">})</span>
+        <span class="keyword">export</span> <span class="keyword">class</span> <span class="variable">StorageService</span> <span class="punctuation">{</span>
+          <span class="function-name">setLocalItem</span><span class="punctuation">(</span><span class="variable">key</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">,</span> <span class="variable">value</span><span class="punctuation">:</span> <span class="keyword">any</span><span class="punctuation">)</span><span class="punctuation">:</span> <span class="keyword">void</span> <span class="punctuation">{</span>
+            <span class="variable">localStorage</span><span class="punctuation">.</span><span class="function-name">setItem</span><span class="punctuation">(</span><span class="variable">key</span><span class="punctuation">,</span> <span class="variable">JSON</span><span class="punctuation">.</span><span class="function-name">stringify</span><span class="punctuation">(</span><span class="variable">value</span><span class="punctuation">));</span>
+          <span class="punctuation">}</span>
+
+          <span class="function-name">getLocalItem</span><span class="punctuation">(</span><span class="variable">key</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">)</span><span class="punctuation">:</span> <span class="keyword">any</span> <span class="punctuation">{</span>
+            <span class="keyword">const</span> <span class="variable">item</span> <span class="punctuation">=</span> <span class="variable">localStorage</span><span class="punctuation">.</span><span class="function-name">getItem</span><span class="punctuation">(</span><span class="variable">key</span><span class="punctuation">);</span>
+            <span class="keyword">return</span> <span class="variable">item</span> <span class="punctuation">?</span> <span class="variable">JSON</span><span class="punctuation">.</span><span class="function-name">parse</span><span class="punctuation">(</span><span class="variable">item</span><span class="punctuation">)</span> <span class="punctuation">:</span> <span class="keyword">null</span><span class="punctuation">;</span>
+          <span class="punctuation">}</span>
+          <span class="comment">// ... các hàm khác cho session và cookie</span>
+        <span class="punctuation">}</span></code></div>
+
+      <h4>Interceptor cho Authentication Token</h4>
+      <p>Sử dụng <code>HttpInterceptor</code> để tự động đính kèm token (lấy từ storage) vào header của mỗi request gửi
+        đi.</p>
+      <div class="code-block"><code class="language-typescript"><span class="variable">@Injectable</span><span class="punctuation">()</span>
+        <span class="keyword">export</span> <span class="keyword">class</span> <span class="variable">AuthInterceptor</span> <span class="keyword">implements</span> <span class="variable">HttpInterceptor</span> <span class="punctuation">{</span>
+          <span class="function-name">intercept</span><span class="punctuation">(</span><span class="variable">req</span><span class="punctuation">:</span> <span class="variable">HttpRequest</span><span class="punctuation">&lt;</span><span class="keyword">any</span><span class="punctuation">>,</span> <span class="variable">next</span><span class="punctuation">:</span> <span class="variable">HttpHandler</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+            <span class="keyword">const</span> <span class="variable">token</span> <span class="punctuation">=</span> <span class="variable">localStorage</span><span class="punctuation">.</span><span class="function-name">getItem</span><span class="punctuation">(</span><span class="string">'authToken'</span><span class="punctuation">);</span>
+            <span class="keyword">if</span> <span class="punctuation">(</span><span class="variable">token</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+              <span class="keyword">const</span> <span class="variable">cloned</span> <span class="punctuation">=</span> <span class="variable">req</span><span class="punctuation">.</span><span class="function-name">clone</span><span class="punctuation">({</span>
+                <span class="object-key">headers</span><span class="punctuation">:</span> <span class="variable">req</span><span class="punctuation">.</span><span class="variable">headers</span><span class="punctuation">.</span><span class="function-name">set</span><span class="punctuation">(</span><span class="string">'Authorization'</span><span class="punctuation">,</span> <span class="string">`Bearer </span><span class="variable">${token}</span><span class="string">`</span><span class="punctuation">)</span>
+              <span class="punctuation">});</span>
+              <span class="keyword">return</span> <span class="variable">next</span><span class="punctuation">.</span><span class="function-name">handle</span><span class="punctuation">(</span><span class="variable">cloned</span><span class="punctuation">);</span>
+            <span class="punctuation">}</span>
+            <span class="keyword">return</span> <span class="variable">next</span><span class="punctuation">.</span><span class="function-name">handle</span><span class="punctuation">(</span><span class="variable">req</span><span class="punctuation">);</span>
+          <span class="punctuation">}</span>
+        <span class="punctuation">}</span></code></div>
+
+      <h3 id="storage-best-practices">f. Best Practices và Security Considerations</h3>
+      <ul>
+        <li><strong>Bảo mật:</strong> <strong>Không bao giờ</strong> lưu thông tin nhạy cảm (mật khẩu, API key bí mật)
+          trong LocalStorage/SessionStorage. Sử dụng cookie với cờ <code>HttpOnly</code> và <code>Secure</code> cho
+          token xác thực để chống lại tấn công XSS.</li>
+        <li><strong>Hiệu suất:</strong> Tránh lưu trữ dữ liệu quá lớn trong cookies vì nó sẽ làm tăng kích thước của mỗi
+          request.</li>
+        <li><strong>Quản lý:</strong> Luôn sử dụng <code>JSON.stringify</code>/<code>JSON.parse</code> cho dữ liệu
+          object. Xử lý các trường hợp lỗi khi storage đầy hoặc không được trình duyệt hỗ trợ.</li>
+      </ul>
+    </section>
+
+    <section id="git">
+      <h2>12. Git Cheatsheet</h2>
+      <p>Tổng hợp các câu lệnh Git thường dùng trong quá trình phát triển phần mềm, giúp bạn quản lý mã nguồn một cách
+        hiệu quả.</p>
+
+      <h3 id="git-install">a. Cài đặt</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git config --global user.name "[firstname Lastname]"</code></p>
+        <p class="git-explanation">Đặt tên có thể nhận diện để ghi công xem lại lịch sử phiên bản</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git config --global user.email "[email@example.com]"</code></p>
+        <p class="git-explanation">Đặt địa chỉ email sẽ được liên kết với mỗi dấu hiệu lịch sử</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git config --global color.ui auto</code></p>
+        <p class="git-explanation">Đặt màu tự động cho dòng lệnh cho Git để xem lại dễ dàng</p>
+      </div>
+
+      <h3 id="git-setup">b. Cài đặt & khởi tạo</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git init</code></p>
+        <p class="git-explanation">Khởi tạo một thư mục hiện có làm kho lưu trữ Git</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git clone [url]</code></p>
+        <p class="git-explanation">Lấy toàn bộ kho lưu trữ từ một vị trí lưu trữ qua URL</p>
+      </div>
+
+      <h3 id="git-stage-snapshot">c. Chuẩn bị & chụp ảnh (Stage & Snapshot)</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git status</code></p>
+        <p class="git-explanation">Hiển thị các file đã sửa đổi trong thư mục, chuẩn bị cho commit tiếp</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git add [file]</code></p>
+        <p class="git-explanation">Thêm file như nó hiện tại vào commit tiếp theo (staging)</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git reset [file]</code></p>
+        <p class="git-explanation">Hủy chuẩn bị file (unstage) trong khi giữ lại các thay đổi trong thư mục làm việc</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git diff</code></p>
+        <p class="git-explanation">Sự khác biệt của những gì đã thay đổi nhưng chưa được chuẩn bị (unstaged)</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git diff --staged</code></p>
+        <p class="git-explanation">Sự khác biệt của những gì đã chuẩn bị (staged) nhưng chưa được commit</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git commit -m "[descriptive message]"</code></p>
+        <p class="git-explanation">Commit nội dung đã chuẩn bị dưới dạng ảnh chụp nhanh (snapshot) mới</p>
+      </div>
+
+      <h3 id="git-branch-merge">d. Nhánh & hợp nhất (Branch & Merge)</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git branch</code></p>
+        <p class="git-explanation">Liệt kê các nhánh; dấu `*` sẽ xuất hiện bên cạnh nhánh đang hoạt động</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git branch [branch-name]</code></p>
+        <p class="git-explanation">Tạo nhánh mới tại commit hiện tại</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git checkout [branch-name]</code></p>
+        <p class="git-explanation">Chuyển sang nhánh khác và cập nhật thư mục làm việc</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git merge [branch]</code></p>
+        <p class="git-explanation">Hợp nhất lịch sử của nhánh được chỉ định vào nhánh hiện tại</p>
+      </div>
+
+      <h3 id="git-inspect">e. Kiểm tra & so sánh</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git log</code></p>
+        <p class="git-explanation">Hiển thị lịch sử commit cho nhánh đang hoạt động</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git log branchB..branchA</code></p>
+        <p class="git-explanation">Hiển thị các commit trên `branchA` nhưng không có trên `branchB`</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git log --follow [file]</code></p>
+        <p class="git-explanation">Hiển thị các commit đã thay đổi file, ngay cả khi file được đổi tên</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git diff branchB..branchA</code></p>
+        <p class="git-explanation">Hiển thị sự khác biệt của những gì trong `branchA` nhưng không có trong `branchB`</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git show [SHA]</code></p>
+        <p class="git-explanation">Hiển thị bất kỳ đối tượng nào trong Git dưới dạng dễ đọc cho con người</p>
+      </div>
+
+      <h3 id="git-path-tracking">f. Theo dõi thay đổi đường dẫn</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git rm [file]</code></p>
+        <p class="git-explanation">Xóa file khỏi dự án và chuẩn bị (stage) việc xóa để commit</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git mv [existing-path] [new-path]</code></p>
+        <p class="git-explanation">Thay đổi đường dẫn file hiện có và chuẩn bị (stage) việc di chuyển</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git log --stat -M</code></p>
+        <p class="git-explanation">Hiển thị tất cả nhật ký commit với chỉ báo về bất kỳ đường dẫn nào đã di chuyển</p>
+      </div>
+
+      <h3 id="git-stash">g. Commit tạm thời</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git stash</code></p>
+        <p class="git-explanation">Lưu các thay đổi đã sửa đổi và đã chuẩn bị (staged) vào một nơi tạm</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git stash list</code></p>
+        <p class="git-explanation">Liệt kê danh sách các thay đổi đã được `stash`</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git stash pop</code></p>
+        <p class="git-explanation">Áp dụng thay đổi từ `stash` gần nhất và xóa nó khỏi danh sách</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git stash drop</code></p>
+        <p class="git-explanation">Loại bỏ thay đổi từ `stash` gần nhất mà không áp dụng</p>
+      </div>
+
+      <h3 id="git-ignore">h. Bỏ qua mẫu</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>logs/</code></p>
+        <p class="git-explanation">Lưu các mẫu file/thư mục cần bỏ qua vào file `.gitignore`</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git config --global core.excludesfile [file]</code></p>
+        <p class="git-explanation">Thiết lập một file bỏ qua mẫu trên toàn hệ thống cho tất cả các kho lưu trữ</p>
+      </div>
+
+      <h3 id="git-share-update">i. Chia sẻ & cập nhật</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git remote add [alias] [url]</code></p>
+        <p class="git-explanation">Thêm một kho lưu trữ từ xa (remote) với một tên đại diện (alias)</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git fetch [alias]</code></p>
+        <p class="git-explanation">Tải xuống tất cả các nhánh từ kho lưu trữ từ xa</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git merge [alias]/[branch]</code></p>
+        <p class="git-explanation">Hợp nhất nhánh từ xa vào nhánh hiện tại để cập nhật</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git push [alias] [branch]</code></p>
+        <p class="git-explanation">Đẩy các commit của nhánh cục bộ lên nhánh của kho lưu trữ từ xa</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git pull</code></p>
+        <p class="git-explanation">Tải và hợp nhất bất kỳ commit nào từ nhánh theo dõi từ xa (`fetch` + `merge`)</p>
+      </div>
+
+      <h3 id="git-rewrite-history">j. Viết lại lịch sử</h3>
+      <div class="git-command-block">
+        <p class="git-command"><code>git rebase [branch]</code></p>
+        <p class="git-explanation">Áp dụng các commit của nhánh hiện tại lên trên đỉnh của nhánh được chỉ định</p>
+      </div>
+      <div class="git-command-block">
+        <p class="git-command"><code>git reset --hard [commit]</code></p>
+        <p class="git-explanation">Xóa khu vực chuẩn bị (staging), viết lại thư mục làm việc từ commit được chỉ định
+          (mất các thay đổi chưa commit)</p>
+      </div>
+    </section>
+
+    <section id="utility-types">
+      <h2>13. Khi Nào Nên Dùng Utility Types (TypeScript)</h2>
+      <p>Utility Types là các công cụ có sẵn của TypeScript giúp bạn biến đổi và tái sử dụng các kiểu (types) hiện có
+        một cách linh hoạt, giúp code an toàn và dễ bảo trì hơn.</p>
+
+      <h3 id="utility-partial">a. Partial&lt;T&gt;</h3>
+      <p><strong>Công dụng:</strong> Biến tất cả các thuộc tính của kiểu `T` thành tùy chọn (optional).</p>
+      <p><strong>Khi nào dùng:</strong> Cực kỳ hữu ích trong các tình huống cập nhật dữ liệu (ví dụ: form edit, update
+        API), khi bạn chỉ muốn cung cấp một vài trường thay đổi thay vì toàn bộ object.</p>
+      <div class="code-block"><code
+          class="language-typescript"><span class="keyword">interface</span> <span class="variable">User</span> <span class="punctuation">{</span>
+  <span class="object-key">id</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span>
+  <span class="object-key">name</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Tất cả thuộc tính của User đều trở thành tùy chọn (id?: number, name?: string)</span>
+<span class="keyword">type</span> <span class="variable">UserUpdate</span> <span class="punctuation">=</span> <span class="variable">Partial</span><span class="punctuation">&lt;</span><span class="variable">User</span><span class="punctuation">>;</span>
+
+<span class="keyword">function</span> <span class="function-name">updateUser</span><span class="punctuation">(</span><span class="variable">id</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">,</span> <span class="variable">data</span><span class="punctuation">:</span> <span class="variable">UserUpdate</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+  <span class="comment">// ... Gửi chỉ các trường thay đổi lên server</span>
+<span class="punctuation">}</span>
+
+<span class="function-name">updateUser</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="punctuation">{</span> <span class="object-key">name</span><span class="punctuation">:</span> <span class="string">"Jane Doe"</span> <span class="punctuation">});</span> <span class="comment">// Hợp lệ</span></code>
+      </div>
+
+      <h3 id="utility-required">b. Required&lt;T&gt;</h3>
+      <p><strong>Công dụng:</strong> Ngược lại với `Partial`, `Required` biến tất cả các thuộc tính của `T` thành bắt
+        buộc (required), kể cả những thuộc tính tùy chọn ban đầu.</p>
+      <p><strong>Khi nào dùng:</strong> Khi bạn cần đảm bảo một object phải có đầy đủ tất cả các thuộc tính trong một
+        ngữ cảnh cụ thể, ví dụ như lúc khởi tạo ứng dụng từ một file cấu hình.</p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">interface</span> <span class="variable">AppConfig</span> <span class="punctuation">{</span>
+  <span class="object-key">apiUrl</span><span class="punctuation">?:</span> <span class="variable">string</span><span class="punctuation">;</span>
+  <span class="object-key">timeout</span><span class="punctuation">?:</span> <span class="variable">number</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Yêu cầu tất cả thuộc tính phải được cung cấp (apiUrl: string, timeout: number)</span>
+<span class="keyword">type</span> <span class="variable">StrictConfig</span> <span class="punctuation">=</span> <span class="variable">Required</span><span class="punctuation">&lt;</span><span class="variable">AppConfig</span><span class="punctuation">>;</span>
+
+<span class="keyword">const</span> <span class="variable">config</span><span class="punctuation">:</span> <span class="variable">StrictConfig</span> <span class="punctuation">=</span> <span class="punctuation">{</span>
+  <span class="object-key">apiUrl</span><span class="punctuation">:</span> <span class="string">"https://api.example.com"</span><span class="punctuation">,</span>
+  <span class="object-key">timeout</span><span class="punctuation">:</span> <span class="number">5000</span>
+<span class="punctuation">};</span> <span class="comment">// Thiếu 1 trong 2 sẽ báo lỗi</span></code></div>
+
+      <h3 id="utility-pick">c. Pick&lt;T, K&gt;</h3>
+      <p><strong>Công dụng:</strong> "Chọn ra" (pick) một tập hợp các thuộc tính (`K`) từ kiểu `T` để tạo thành một kiểu
+        mới.</p>
+      <p><strong>Khi nào dùng:</strong> Khi bạn chỉ cần một phần dữ liệu từ một object lớn. Rất hay dùng để tạo các view
+        model (ví dụ: hiển thị danh sách tóm tắt) hoặc các DTO (Data Transfer Object).</p>
+      <div class="code-block"><code
+          class="language-typescript"><span class="keyword">interface</span> <span class="variable">Product</span> <span class="punctuation">{</span>
+  <span class="object-key">id</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span>
+  <span class="object-key">name</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+  <span class="object-key">price</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span>
+  <span class="object-key">description</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Chỉ chọn 'id' và 'name' từ Product</span>
+<span class="keyword">type</span> <span class="variable">ProductPreview</span> <span class="punctuation">=</span> <span class="variable">Pick</span><span class="punctuation">&lt;</span><span class="variable">Product</span><span class="punctuation">,</span> <span class="string">'id'</span> <span class="punctuation">|</span> <span class="string">'name'</span><span class="punctuation">>;</span>
+<span class="comment">// ProductPreview giờ là: { id: number; name: string; }</span>
+
+<span class="keyword">const</span> <span class="variable">productList</span><span class="punctuation">:</span> <span class="variable">ProductPreview</span><span class="punctuation">[]</span> <span class="punctuation">=</span> <span class="punctuation">[];</span></code>
+      </div>
+
+      <h3 id="utility-omit">d. Omit&lt;T, K&gt;</h3>
+      <p><strong>Công dụng:</strong> Ngược với `Pick`, `Omit` dùng để "loại bỏ" một tập hợp thuộc tính (`K`) khỏi kiểu
+        `T`.</p>
+      <p><strong>Khi nào dùng:</strong> Cực kỳ hữu ích để loại bỏ các thuộc tính nhạy cảm (như password) hoặc các thuộc
+        tính không cần thiết trước khi trả dữ liệu về cho client hoặc khi tạo form.</p>
+      <div class="code-block"><code class="language-typescript"><span class="keyword">interface</span> <span class="variable">User</span> <span class="punctuation">{</span>
+  <span class="object-key">id</span><span class="punctuation">:</span> <span class="variable">number</span><span class="punctuation">;</span>
+  <span class="object-key">name</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+  <span class="object-key">email</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span>
+  <span class="object-key">password</span><span class="punctuation">:</span> <span class="variable">string</span><span class="punctuation">;</span> <span class="comment">// Nhạy cảm</span>
+<span class="punctuation">}</span>
+
+<span class="comment">// Loại bỏ 'password' để tạo DTO cho việc đăng ký</span>
+<span class="keyword">type</span> <span class="variable">UserRegistrationDto</span> <span class="punctuation">=</span> <span class="variable">Omit</span><span class="punctuation">&lt;</span><span class="variable">User</span><span class="punctuation">,</span> <span class="string">'id'</span> <span class="punctuation">|</span> <span class="string">'password'</span><span class="punctuation">>;</span>
+<span class="comment">// UserRegistrationDto giờ là: { name: string; email: string; }</span></code></div>
+
+      <h3 id="utility-record">e. Record&lt;K, T&gt;</h3>
+      <p><strong>Công dụng:</strong> Xây dựng một kiểu object có các khóa (keys) thuộc kiểu `K` và các giá trị (values)
+        thuộc kiểu `T`.</p>
+      <p><strong>Khi nào dùng:</strong> Khi bạn muốn khai báo một object với các key động nhưng có cấu trúc value thống
+        nhất. Nó rõ ràng và an toàn hơn so với việc dùng index signature `({ [key: string]: T })`.</p>
+      <div class="code-block"><code class="language-typescript"><span class="comment">// Định nghĩa một tập hợp các quyền có thể có</span>
+<span class="keyword">type</span> <span class="variable">Permission</span> <span class="punctuation">=</span> <span class="string">'canRead'</span> <span class="punctuation">|</span> <span class="string">'canWrite'</span> <span class="punctuation">|</span> <span class="string">'canDelete'</span><span class="punctuation">;</span>
+
+<span class="comment">// Tạo một object yêu cầu tất cả các quyền phải được định nghĩa là boolean</span>
+<span class="keyword">type</span> <span class="variable">UserPermissions</span> <span class="punctuation">=</span> <span class="variable">Record</span><span class="punctuation">&lt;</span><span class="variable">Permission</span><span class="punctuation">,</span> <span class="variable">boolean</span><span class="punctuation">>;</span>
+
+<span class="keyword">const</span> <span class="variable">adminPermissions</span><span class="punctuation">:</span> <span class="variable">UserPermissions</span> <span class="punctuation">=</span> <span class="punctuation">{</span>
+  <span class="object-key">canRead</span><span class="punctuation">:</span> <span class="boolean">true</span><span class="punctuation">,</span>
+  <span class="object-key">canWrite</span><span class="punctuation">:</span> <span class="boolean">true</span><span class="punctuation">,</span>
+  <span class="object-key">canDelete</span><span class="punctuation">:</span> <span class="boolean">true</span>
+<span class="punctuation">};</span> <span class="comment">// Thiếu một quyền sẽ báo lỗi</span></code></div>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+
+</html>
